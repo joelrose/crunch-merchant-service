@@ -64,8 +64,6 @@ func getPemCert() []byte {
 func main() {
 	e := echo.New()
 
-	e.Logger.SetLevel(log.INFO)
-
 	c := config.LoadConfig()
 
 	setupRoutes(e, c.InternalAuthToken)
