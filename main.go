@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	certificateDirectory = "certificates/crunch-app.pem"
+	certificateDirectory = "certificates/auth0.pem"
 )
 
 func setupRoutes(e *echo.Echo, internalAuthKey string) {
