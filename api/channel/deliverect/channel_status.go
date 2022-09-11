@@ -6,6 +6,7 @@ import (
 	"github.com/joelrose/crunch-merchant-service/db"
 	"github.com/joelrose/crunch-merchant-service/db/dtos/deliverect"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/gommon/log"
 )
 
 func convertToEnum(status string) deliverect.ChannelStatus {
@@ -20,90 +21,63 @@ func convertToEnum(status string) deliverect.ChannelStatus {
 }
 
 func DeliverectChannelStatus(c echo.Context) error {
-	db := c.Get("dbContextKey").(*db.DB)
+	db := c.Get("db").(*db.DB)
 
+	// Bind request body
 	channelStatusRequest := deliverect.ChannelStatusRequest{}
+
 	err := c.Bind(&channelStatusRequest)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "channel model is invalid")
+		log.Errorf("failed to bind request body: %v", err)
+		return echo.NewHTTPError(http.StatusBadRequest)
 	}
 
-	// store_id = channelLocationId
-
-	// Check if merchant with channel_location_id exists
+	// Check if [ChannelLocationId=StoreId] exists
 	_, err = db.GetStore(channelStatusRequest.ChannelLocationId)
 
 	if err != nil {
-		return echo.NewHTTPError(http.StatusNotFound, "cannot find chanenl location")
+		log.Errorf("failed to get store: %v", err)
+		return echo.NewHTTPError(http.StatusBadRequest)
 	}
-	/*
-		// Check if Channel exists
-		channel, err := db.GetChannel(channelStatusRequest.ChannelLocationId, channelStatusRequest.LocationId)
 
-		channelStatus := convertToEnum(channelStatusRequest.Status)
+	// Check if channel exists
+	_, err = db.GetChannel(channelStatusRequest.ChannelLocationId, channelStatusRequest.LocationId)
+
+	channelStatus := convertToEnum(channelStatusRequest.Status)
+
+	if err != nil {
+		// Create new channel
+		err := db.CreateChannel(
+			channelStatusRequest.ChannelLocationId,
+			channelStatusRequest.LocationId,
+			channelStatus,
+		)
 
 		if err != nil {
-			// Create new channel
-			// INSERTR
+			log.Errorf("error creating channel: %v", err)
+			return echo.NewHTTPError(http.StatusInternalServerError)
+		}
+	} else {
+		// Update existing channel
+		err := db.UpdateChannelStatus(
+			channelStatus,
+			channelStatusRequest.ChannelLocationId,
+			channelStatusRequest.LocationId,
+		)
 
-			err := db.CreateChannel()
-		} else {
-			// UPDATE
-		}*/
+		if err != nil {
+			log.Errorf("error updating channel status: %v", err)
+			return echo.NewHTTPError(http.StatusInternalServerError)
+		}
+	}
 
-	/*
+	response := deliverect.ChannelStatusReponse{
+		StatusUpdateURL:   "",
+		MenuUpdateURL:     "",
+		SnoozeUnsnoozeURL: "",
+		BusyModeURL:       "",
+		UpdatePrepTimeURL: "",
+	}
 
-			var merchant = await _merchantRepository.GetById(Guid.Parse(request.Model.ChannelLocationId));
-
-		            if (merchant == null)
-		            {
-		                throw new NotFoundException();
-		            }
-
-		            var channelStatus = request.Model.Status switch
-		            {
-		                "register" => ChannelStatus.Register,
-		                "active" => ChannelStatus.Active,
-		                "inactive" => ChannelStatus.Inactive,
-		                _ => throw new BadRequestException()
-		            };
-
-		            if (merchant.Channel == null)
-		            {
-		                if (channelStatus != ChannelStatus.Register)
-		                {
-		                    throw new BadRequestException();
-		                }
-
-		                merchant.Channel = new ChannelModel
-		                {
-		                    ChannelLinkId = request.Model.ChannelLinkId,
-		                    ChannelLocationId = request.Model.ChannelLocationId,
-		                    Status = channelStatus,
-		                    LocationId = request.Model.LocationId,
-		                };
-		            }
-		            else
-		            {
-		                merchant.Channel.ChannelLocationId = request.Model.ChannelLocationId;
-		                merchant.Channel.Status = channelStatus;
-		                merchant.Channel.LocationId = request.Model.LocationId;
-		            }
-
-		            await _merchantRepository.Save();
-
-		            var baseUrl = _handlerRepository.GetBaseUrl();
-
-		            string BuildUrl(string mode) =>
-		                $"{baseUrl}/api/deliverect/{mode}";
-
-		            return new DeliverectWebhookUrlDto
-		            {
-		                StatusUpdateURL = BuildUrl("orderstatus"),
-		                MenuUpdateURL = BuildUrl("menupush"),
-		                SnoozeUnsnoozeURL = BuildUrl("snoozeUnsnoozeProduct"),
-		                BusyModeURL = BuildUrl("busyMode"),
-		                UpdatePrepTimeURL = BuildUrl("preparationTimeUpdate"),
-		            };*/
-	return nil
+	return c.JSON(http.StatusOK, response)
 }

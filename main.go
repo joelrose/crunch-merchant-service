@@ -5,6 +5,7 @@ import (
 	"os"
 
 	_ "github.com/golang-migrate/migrate/v4/source/file"
+	"github.com/joelrose/crunch-merchant-service/api/channel/deliverect"
 	"github.com/joelrose/crunch-merchant-service/api/users"
 	"github.com/joelrose/crunch-merchant-service/api/whitelist"
 	"github.com/joelrose/crunch-merchant-service/auth_middleware"
@@ -28,6 +29,12 @@ func setupRoutes(e *echo.Echo, config config.Config) {
 
 	apiGroup.GET("/whitelist", whitelist.IsWhitelisted)
 
+	channelGroup := apiGroup.Group("/channel")
+
+	deliverectGroup := channelGroup.Group("/deliverect")
+
+	deliverectGroup.POST("/channel_status", deliverect.DeliverectChannelStatus)
+
 	dashboardGroup := apiGroup.Group("/dashboard", auth_middleware.Auth0Auth())
 
 	dashboardGroup.GET("/status", okHandler)
@@ -50,7 +57,7 @@ func dbMiddleware(db *db.DB) echo.MiddlewareFunc {
 }
 
 func main() {
-	log.SetLevel(log.INFO)
+	log.SetLevel(log.DEBUG)
 
 	c := config.LoadConfig()
 

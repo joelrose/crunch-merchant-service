@@ -1,6 +1,9 @@
 package models
 
-import "time"
+import (
+	"database/sql"
+	"time"
+)
 
 type User struct {
 	Id           int       `db:"id"`
@@ -42,22 +45,22 @@ type OrderItem struct {
 }
 
 type Store struct {
-	Id                  int       `db:"id"`
-	Name                string    `db:"name"`
-	Description         string    `db:"description"`
-	Address             string    `db:"address"`
-	AveragePickupTime   int       `db:"average_pickup_time"`
-	AverageReview       float64   `db:"average_review"`
-	ReviewCount         int       `db:"review_count"`
-	GoogleMapsLink      string    `db:"google_maps_link"`
-	PhoneNumber         string    `db:"phone_number"`
-	StripeAccountId     string    `db:"stripe_account_id"`
-	StripeAccountStatus int       `db:"stripe_account_status"`
-	Fee                 float64   `db:"fee"`
-	IsOpen              bool      `db:"is_open"`
-	ImageUrl            string    `db:"image_url"`
-	MerchantId          int       `db:"merchant_id"`
-	CreatedAt           time.Time `db:"created_at"`
+	Id                  int            `db:"id"`
+	Name                string         `db:"name"`
+	Description         string         `db:"description"`
+	Address             string         `db:"address"`
+	AveragePickupTime   int            `db:"average_pickup_time"`
+	AverageReview       float64        `db:"average_review"`
+	ReviewCount         int            `db:"review_count"`
+	GoogleMapsLink      string         `db:"google_maps_link"`
+	PhoneNumber         string         `db:"phone_number"`
+	StripeAccountId     sql.NullString `db:"stripe_account_id"`
+	StripeAccountStatus sql.NullString `db:"stripe_account_status"`
+	Fee                 float64        `db:"fee"`
+	IsOpen              bool           `db:"is_open"`
+	ImageUrl            string         `db:"image_url"`
+	MerchantId          int            `db:"merchant_id"`
+	CreatedAt           time.Time      `db:"created_at"`
 }
 
 type StoreOpeningHours struct {
