@@ -7,21 +7,23 @@ import (
 
 type Config struct {
 	InternalAuthToken string
+	DatabaseUrl       string
 }
 
 func mustGetEnv(env string) string {
-	env, exists := os.LookupEnv(env)
+	val, exists := os.LookupEnv(env)
 
 	if !exists {
-		log.Fatalf("%v environment variable is not set", env)
+		log.Fatalf("%s environment variable is not set", env)
 	}
 
-	return env
+	return val
 }
 
-func LoadConfig() (Config) {
+func LoadConfig() Config {
 	config := Config{
 		InternalAuthToken: mustGetEnv("INTERNAL_AUTH_TOKEN"),
+		DatabaseUrl:       mustGetEnv("DATABASE_URL"),
 	}
 
 	return config

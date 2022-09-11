@@ -4,10 +4,14 @@ import (
 	"net/http"
 	"os"
 
+	_ "github.com/golang-migrate/migrate/v4/source/file"
+	"github.com/joelrose/crunch-merchant-service/api/users"
 	"github.com/joelrose/crunch-merchant-service/config"
+	"github.com/joelrose/crunch-merchant-service/db"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
+	_ "github.com/lib/pq"
 )
 
 const (
@@ -33,10 +37,6 @@ func setupRoutes(e *echo.Echo, internalAuthKey string) {
 		return c.String(http.StatusOK, "ok")
 	})
 
-	dashboard.GET("/status", func(c echo.Context) error {
-		return c.String(http.StatusOK, "ok")
-	})
-
 	// internal routes: api/internal
 
 	internal := apiGroup.Group("/internal")
@@ -50,6 +50,8 @@ func setupRoutes(e *echo.Echo, internalAuthKey string) {
 	internal.GET("/status", func(c echo.Context) error {
 		return c.String(http.StatusOK, "ok")
 	})
+
+	internal.GET("/users", users.GetUsers)
 }
 
 func getPemCert() []byte {
@@ -61,10 +63,25 @@ func getPemCert() []byte {
 	return pem
 }
 
+func dbMiddleware(db *db.DB) echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			c.Set("dbContextKey", db)
+			return next(c)
+		}
+	}
+}
+
 func main() {
+	c := config.LoadConfig()
+
+	log.SetLevel(log.INFO)
+
+	database := db.NewDatabase(c.DatabaseUrl)
+
 	e := echo.New()
 
-	c := config.LoadConfig()
+	e.Use(dbMiddleware(&db.DB{Sqlx: *database}))
 
 	setupRoutes(e, c.InternalAuthToken)
 
