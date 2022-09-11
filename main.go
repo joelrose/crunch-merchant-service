@@ -6,6 +6,9 @@ import (
 
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/joelrose/crunch-merchant-service/api/users"
+	"github.com/joelrose/crunch-merchant-service/api/whitelist"
+	"github.com/joelrose/crunch-merchant-service/auth_middleware"
+
 	"github.com/joelrose/crunch-merchant-service/config"
 	"github.com/joelrose/crunch-merchant-service/db"
 	"github.com/labstack/echo/v4"
@@ -14,76 +17,51 @@ import (
 	_ "github.com/lib/pq"
 )
 
-const (
-	certificateDirectory = "certificates/auth0.pem"
-)
-
-func setupRoutes(e *echo.Echo, internalAuthKey string) {
-	e.GET("/", func(c echo.Context) error {
+func setupRoutes(e *echo.Echo, config config.Config) {
+	okHandler := func(c echo.Context) error {
 		return c.String(http.StatusOK, "ok")
-	})
+	}
+
+	e.GET("/", okHandler)
 
 	apiGroup := e.Group("/api")
 
-	// dashboard routes api/dashboard
+	apiGroup.GET("/whitelist", whitelist.IsWhitelisted)
 
-	dashboard := apiGroup.Group("/dashboard")
+	dashboardGroup := apiGroup.Group("/dashboard", auth_middleware.Auth0Auth())
 
-	dashboard.Use(middleware.JWTWithConfig(middleware.JWTConfig{
-		SigningKey: getPemCert(),
-	}))
+	dashboardGroup.GET("/status", okHandler)
 
-	dashboard.GET("/status", func(c echo.Context) error {
-		return c.String(http.StatusOK, "ok")
-	})
+	usersGroup := apiGroup.Group("/users", auth_middleware.FirebaseAuth(config.FirebaseConfig))
 
-	// internal routes: api/internal
+	usersGroup.GET("/status", okHandler)
 
-	internal := apiGroup.Group("/internal")
-
-	internal.Use(middleware.KeyAuth(
-		func(auth string, c echo.Context) (bool, error) {
-			return auth == internalAuthKey, nil
-		},
-	))
-
-	internal.GET("/status", func(c echo.Context) error {
-		return c.String(http.StatusOK, "ok")
-	})
-
-	internal.GET("/users", users.GetUsers)
-}
-
-func getPemCert() []byte {
-	pem, err := os.ReadFile(certificateDirectory)
-	if err != nil {
-		log.Fatal("cannot read pem file")
-	}
-
-	return pem
+	usersGroup.GET("/", users.GetUser)
+	usersGroup.POST("/", users.CreateUser)
 }
 
 func dbMiddleware(db *db.DB) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			c.Set("dbContextKey", db)
+			c.Set("db", db)
 			return next(c)
 		}
 	}
 }
 
 func main() {
-	c := config.LoadConfig()
-
 	log.SetLevel(log.INFO)
+
+	c := config.LoadConfig()
 
 	database := db.NewDatabase(c.DatabaseUrl)
 
 	e := echo.New()
 
+	e.Use(middleware.Logger())
 	e.Use(dbMiddleware(&db.DB{Sqlx: *database}))
 
-	setupRoutes(e, c.InternalAuthToken)
+	setupRoutes(e, c)
 
 	port := os.Getenv("PORT")
 	if port == "" {

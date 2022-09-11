@@ -1,13 +1,15 @@
 package config
 
 import (
-	"log"
 	"os"
+
+	"github.com/joho/godotenv"
+	"github.com/labstack/gommon/log"
 )
 
 type Config struct {
-	InternalAuthToken string
-	DatabaseUrl       string
+	FirebaseConfig string
+	DatabaseUrl    string
 }
 
 func mustGetEnv(env string) string {
@@ -21,9 +23,16 @@ func mustGetEnv(env string) string {
 }
 
 func LoadConfig() Config {
+	// load .env file
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		log.Errorf("Error loading .env file")
+	}
+
 	config := Config{
-		InternalAuthToken: mustGetEnv("INTERNAL_AUTH_TOKEN"),
-		DatabaseUrl:       mustGetEnv("DATABASE_URL"),
+		FirebaseConfig: mustGetEnv("FIREBASE_CONFIG"),
+		DatabaseUrl:    mustGetEnv("DATABASE_URL"),
 	}
 
 	return config
