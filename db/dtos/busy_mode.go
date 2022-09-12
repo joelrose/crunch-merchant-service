@@ -1,4 +1,4 @@
-package deliverect
+package dtos
 
 type BusyModeRequest struct {
 	AccountId     string `json:"accountId"`

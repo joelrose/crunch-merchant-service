@@ -1,7 +1,7 @@
 package db
 
 import (
-	"github.com/joelrose/crunch-merchant-service/db/dtos/deliverect"
+	"github.com/joelrose/crunch-merchant-service/db/dtos"
 	"github.com/joelrose/crunch-merchant-service/db/models"
 )
 
@@ -27,7 +27,7 @@ func (db *DB) GetChannelByDeliverectLinkId(deliverectLinkId string) (models.Deli
 	return channel, nil
 }
 
-func (db *DB) CreateChannel(storeId int, locationId string, deliverectChannelLinkId string, status deliverect.ChannelStatus) error {
+func (db *DB) CreateChannel(storeId int, locationId string, deliverectChannelLinkId string, status dtos.ChannelStatus) error {
 	_, err := db.Sqlx.Exec(
 		"INSERT INTO deliverect_channels (store_id, location_id, deliverect_link_id, status) VALUES ($1, $2, $3, $4)",
 		storeId, locationId, deliverectChannelLinkId, status,
@@ -39,7 +39,7 @@ func (db *DB) CreateChannel(storeId int, locationId string, deliverectChannelLin
 	return nil
 }
 
-func (db *DB) UpdateChannelStatus(status deliverect.ChannelStatus, storeId int) error {
+func (db *DB) UpdateChannelStatus(status dtos.ChannelStatus, storeId int) error {
 	_, err := db.Sqlx.Exec(
 		"UPDATE deliverect_channels SET status = $1 WHERE store_id = $2",
 		status, storeId,

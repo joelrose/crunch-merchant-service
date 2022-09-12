@@ -6,32 +6,33 @@ import (
 	"strings"
 
 	"github.com/joelrose/crunch-merchant-service/db"
-	"github.com/joelrose/crunch-merchant-service/db/dtos/deliverect"
+	"github.com/joelrose/crunch-merchant-service/db/dtos"
 	"github.com/joelrose/crunch-merchant-service/db/models"
+	"github.com/joelrose/crunch-merchant-service/utils"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"golang.org/x/exp/maps"
 )
 
-func convertToTimestamp(time string) int {
+func convertTimestamp(time string) int {
 	splitTime := strings.Split(time, ":")
 
-	hours, hErr := strconv.Atoi(splitTime[0])
-	minutes, mErr := strconv.Atoi(splitTime[1])
+	hour, hErr := strconv.Atoi(splitTime[0])
+	minute, mErr := strconv.Atoi(splitTime[1])
 
 	if hErr != nil || mErr != nil {
 		log.Errorf("failed to convert time to timestamp: %v", time)
 		return 0
 	}
 
-	return (hours * 60) + minutes
+	return utils.ConvertToTimestamp(hour, minute)
 }
 
 func DeliverectMenuPush(c echo.Context) error {
 	db := c.Get("db").(*db.DB)
 
 	// Bind request body
-	d := deliverect.MenuPushRequest{}
+	d := dtos.MenuPushRequest{}
 
 	err := c.Bind(&d)
 	if err != nil {
@@ -57,7 +58,7 @@ func DeliverectMenuPush(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
-	products := map[string]deliverect.DeliverectMenuProduct{}
+	products := map[string]dtos.DeliverectMenuProduct{}
 
 	maps.Copy(products, menu.Products)
 	maps.Copy(products, menu.ModifierGroups)
@@ -71,8 +72,8 @@ func DeliverectMenuPush(c echo.Context) error {
 		openingHour := models.StoreOpeningHour{
 			StoreId:        channel.StoreId,
 			DayOfWeek:      openingHour.DayOfWeek,
-			StartTimestamp: convertToTimestamp(openingHour.StartTime),
-			EndTimestamp:   convertToTimestamp(openingHour.EndTime),
+			StartTimestamp: convertTimestamp(openingHour.StartTime),
+			EndTimestamp:   convertTimestamp(openingHour.EndTime),
 		}
 
 		err = db.CreateStoreOpeningHour(openingHour)
@@ -152,5 +153,5 @@ func DeliverectMenuPush(c echo.Context) error {
 		}
 	}
 
-	return c.JSON(http.StatusOK, d)
+	return c.NoContent(http.StatusOK)
 }

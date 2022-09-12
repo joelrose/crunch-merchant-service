@@ -1,4 +1,4 @@
-package deliverect
+package dtos
 
 import (
 	"time"
