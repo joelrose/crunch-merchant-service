@@ -72,12 +72,18 @@ func DeliverectChannelStatus(c echo.Context) error {
 		}
 	}
 
+	request := c.Request()
+
+	buildUrl := func(path string) string {
+		return "https://" + request.Host + "/api/channel/deliverect/" + path
+	}
+
 	response := dtos.ChannelStatusReponse{
-		StatusUpdateURL:   "",
-		MenuUpdateURL:     "",
-		SnoozeUnsnoozeURL: "",
-		BusyModeURL:       "",
-		UpdatePrepTimeURL: "",
+		StatusUpdateURL:   buildUrl("channel_status"),
+		MenuUpdateURL:     buildUrl("menu_push"),
+		SnoozeUnsnoozeURL: buildUrl("snooze_unsnooze"),
+		BusyModeURL:       buildUrl("busy_mode"),
+		UpdatePrepTimeURL: buildUrl("prep_time"),
 	}
 
 	return c.JSON(http.StatusOK, response)
