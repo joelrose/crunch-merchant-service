@@ -28,6 +28,7 @@ func setupRoutes(e *echo.Echo, config config.Config) {
 	apiGroup := e.Group("/api")
 
 	apiGroup.GET("/whitelist", whitelist.IsWhitelisted)
+	apiGroup.GET("/stores", stores.GetStores)
 
 	channelGroup := apiGroup.Group("/channel")
 

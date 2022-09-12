@@ -60,7 +60,6 @@ type Store struct {
 	IsOpen              bool           `db:"is_open"`
 	ImageUrl            string         `db:"image_url"`
 	MerchantId          int            `db:"merchant_id"`
-	CreatedAt           time.Time      `db:"created_at"`
 }
 
 type StoreOpeningHour struct {
