@@ -27,7 +27,7 @@ func LoadConfig() Config {
 	err := godotenv.Load(".env")
 
 	if err != nil {
-		log.Errorf("Error loading .env file")
+		log.Debugf("Could not load .env file")
 	}
 
 	config := Config{
