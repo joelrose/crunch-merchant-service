@@ -4,33 +4,33 @@ import (
 	"net/http"
 
 	"github.com/joelrose/crunch-merchant-service/db"
-	"github.com/joelrose/crunch-merchant-service/db/dtos/deliverect"
+	"github.com/joelrose/crunch-merchant-service/db/dtos"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 )
 
-func convertToEnum(status string) deliverect.ChannelStatus {
+func convertToEnum(status string) dtos.ChannelStatus {
 	switch status {
 	case "register":
-		return deliverect.Register
+		return dtos.Register
 	case "active":
-		return deliverect.Active
+		return dtos.Active
 	default:
-		return deliverect.Inactive
+		return dtos.Inactive
 	}
 }
 
 func DeliverectChannelStatus(c echo.Context) error {
-	db := c.Get("db").(*db.DB)
-
 	// Bind request body
-	channelStatusRequest := deliverect.ChannelStatusRequest{}
+	channelStatusRequest := dtos.ChannelStatusRequest{}
 
 	err := c.Bind(&channelStatusRequest)
 	if err != nil {
 		log.Errorf("failed to bind request body: %v", err)
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
+
+	db := c.Get("db").(*db.DB)
 
 	// Check if [ChannelLocationId=StoreId] exists
 	_, err = db.GetStore(channelStatusRequest.ChannelLocationId)
@@ -72,7 +72,7 @@ func DeliverectChannelStatus(c echo.Context) error {
 		}
 	}
 
-	response := deliverect.ChannelStatusReponse{
+	response := dtos.ChannelStatusReponse{
 		StatusUpdateURL:   "",
 		MenuUpdateURL:     "",
 		SnoozeUnsnoozeURL: "",

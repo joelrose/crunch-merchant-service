@@ -4,22 +4,22 @@ import (
 	"net/http"
 
 	"github.com/joelrose/crunch-merchant-service/db"
-	"github.com/joelrose/crunch-merchant-service/db/dtos/deliverect"
+	"github.com/joelrose/crunch-merchant-service/db/dtos"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 )
 
 func DeliverectBusyMode(c echo.Context) error {
-	db := c.Get("db").(*db.DB)
-
 	// Bind request body
-	busyModeRequest := deliverect.BusyModeRequest{}
+	busyModeRequest := dtos.BusyModeRequest{}
 
 	err := c.Bind(&busyModeRequest)
 	if err != nil {
 		log.Errorf("failed to bind request body: %v", err)
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
+
+	db := c.Get("db").(*db.DB)
 
 	channel, err := db.GetChannelByDeliverectLinkId(busyModeRequest.ChannelLinkId)
 	if err != nil {
@@ -34,7 +34,7 @@ func DeliverectBusyMode(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
-	return c.JSON(http.StatusOK, deliverect.BusyModeResponse{
+	return c.JSON(http.StatusOK, dtos.BusyModeResponse{
 		Status: busyModeRequest.Status,
 	})
 }

@@ -28,6 +28,7 @@ func setupRoutes(e *echo.Echo, config config.Config) {
 	apiGroup := e.Group("/api")
 
 	apiGroup.GET("/whitelist", whitelist.IsWhitelisted)
+	apiGroup.GET("/stores", stores.GetStores)
 
 	channelGroup := apiGroup.Group("/channel")
 
@@ -35,6 +36,7 @@ func setupRoutes(e *echo.Echo, config config.Config) {
 
 	deliverectGroup.POST("/channel_status", deliverect.DeliverectChannelStatus)
 	deliverectGroup.POST("/busy_mode", deliverect.DeliverectBusyMode)
+	deliverectGroup.POST("/menu_push", deliverect.DeliverectMenuPush)
 
 	dashboardGroup := apiGroup.Group("/dashboard", auth_middleware.Auth0Auth())
 
