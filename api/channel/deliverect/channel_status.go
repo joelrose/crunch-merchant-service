@@ -41,15 +41,17 @@ func DeliverectChannelStatus(c echo.Context) error {
 	}
 
 	// Check if channel exists
-	_, err = db.GetChannel(channelStatusRequest.ChannelLocationId, channelStatusRequest.LocationId)
+	_, err = db.GetChannelByStoreId(channelStatusRequest.ChannelLocationId)
 
 	channelStatus := convertToEnum(channelStatusRequest.Status)
 
 	if err != nil {
+		log.Debugf("channel does not exist, creating channel %v", err)
 		// Create new channel
 		err := db.CreateChannel(
 			channelStatusRequest.ChannelLocationId,
 			channelStatusRequest.LocationId,
+			channelStatusRequest.ChannelLinkId,
 			channelStatus,
 		)
 
@@ -62,7 +64,6 @@ func DeliverectChannelStatus(c echo.Context) error {
 		err := db.UpdateChannelStatus(
 			channelStatus,
 			channelStatusRequest.ChannelLocationId,
-			channelStatusRequest.LocationId,
 		)
 
 		if err != nil {

@@ -45,8 +45,9 @@ CREATE TABLE store_opening_hours (
 CREATE TABLE deliverect_channels (
     status int NOT NULL,
     store_id bigint NOT NULL,
-    deliverect_location_id TEXT NOT NULL,
-    PRIMARY KEY (store_id, deliverect_location_id),
+    deliverect_link_id TEXT NOT NULL,
+    location_id TEXT NOT NULL,
+    PRIMARY KEY (store_id, deliverect_link_id),
     FOREIGN KEY (store_id) REFERENCES stores (id) ON DELETE CASCADE
 );
 

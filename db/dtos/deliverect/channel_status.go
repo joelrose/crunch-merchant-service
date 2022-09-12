@@ -9,8 +9,8 @@ const (
 )
 
 type ChannelStatusRequest struct {
-	ChannelLinkId     string `db:"channel_link_id" json:"channelLinkId"` // UNUSED
-	ChannelLocationId int    `db:"channel_location_id" json:"channelLocationId"`
+	ChannelLinkId     string `db:"deliverect_link_id" json:"channelLinkId"`
+	ChannelLocationId int    `db:"deliverect_location_id" json:"channelLocationId"`
 	LocationId        string `db:"location_id" json:"locationId"`
 	Status            string `db:"status" json:"status"`
 }

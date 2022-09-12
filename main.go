@@ -34,6 +34,7 @@ func setupRoutes(e *echo.Echo, config config.Config) {
 	deliverectGroup := channelGroup.Group("/deliverect")
 
 	deliverectGroup.POST("/channel_status", deliverect.DeliverectChannelStatus)
+	deliverectGroup.POST("/busy_mode", deliverect.DeliverectBusyMode)
 
 	dashboardGroup := apiGroup.Group("/dashboard", auth_middleware.Auth0Auth())
 

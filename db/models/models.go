@@ -73,9 +73,10 @@ type StoreOpeningHours struct {
 }
 
 type DeliverectChannel struct {
-	StoreId              int    `db:"store_id"`
-	DeliverectLocationId string `db:"deliverect_location_id"`
-	Status               int    `db:"status"`
+	StoreId          int    `db:"store_id"`
+	DeliverectLinkId string `db:"deliverect_link_id"`
+	LocationId       string `db:"location_id"`
+	Status           int    `db:"status"`
 }
 
 type Menu struct {

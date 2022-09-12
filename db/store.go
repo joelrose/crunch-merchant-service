@@ -12,3 +12,16 @@ func (db *DB) GetStore(id int) (models.Store, error) {
 
 	return store, nil
 }
+
+func (db *DB) SetIsOpen(isOpen bool, id int) error {
+	_, err := db.Sqlx.Exec(
+		"UPDATE stores SET is_open = $1 WHERE id = $2",
+		isOpen, id,
+	)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
