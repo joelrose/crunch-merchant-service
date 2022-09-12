@@ -21,8 +21,6 @@ func convertToEnum(status string) dtos.ChannelStatus {
 }
 
 func DeliverectChannelStatus(c echo.Context) error {
-	db := c.Get("db").(*db.DB)
-
 	// Bind request body
 	channelStatusRequest := dtos.ChannelStatusRequest{}
 
@@ -31,6 +29,8 @@ func DeliverectChannelStatus(c echo.Context) error {
 		log.Errorf("failed to bind request body: %v", err)
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
+
+	db := c.Get("db").(*db.DB)
 
 	// Check if [ChannelLocationId=StoreId] exists
 	_, err = db.GetStore(channelStatusRequest.ChannelLocationId)

@@ -10,8 +10,6 @@ import (
 )
 
 func DeliverectBusyMode(c echo.Context) error {
-	db := c.Get("db").(*db.DB)
-
 	// Bind request body
 	busyModeRequest := dtos.BusyModeRequest{}
 
@@ -20,6 +18,8 @@ func DeliverectBusyMode(c echo.Context) error {
 		log.Errorf("failed to bind request body: %v", err)
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
+
+	db := c.Get("db").(*db.DB)
 
 	channel, err := db.GetChannelByDeliverectLinkId(busyModeRequest.ChannelLinkId)
 	if err != nil {

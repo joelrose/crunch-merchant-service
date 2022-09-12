@@ -13,18 +13,17 @@ import (
 func CreateUser(c echo.Context) error {
 	db := c.Get("db").(*db.DB)
 
-	var userRequest dtos.CreateUserRequest
-	err := c.Bind(&userRequest)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "user model is invalid")
-	}
-
 	token := c.Get("token").(*auth.Token)
 
-	_, err = db.GetUserByFirebaseId(token.UID)
+	_, err := db.GetUserByFirebaseId(token.UID)
 
 	if err == nil {
 		return echo.NewHTTPError(http.StatusConflict)
+	}
+
+	var userRequest dtos.CreateUserRequest
+	if c.Bind(&userRequest) != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "user model is invalid")
 	}
 
 	err = db.CreateUser(token.UID, userRequest)

@@ -29,22 +29,21 @@ func convertTimestamp(time string) int {
 }
 
 func DeliverectMenuPush(c echo.Context) error {
-	db := c.Get("db").(*db.DB)
-
 	// Bind request body
 	d := dtos.MenuPushRequest{}
 
 	err := c.Bind(&d)
 	if err != nil {
-		log.Errorf("failed to bind request body: %v", err)
+		log.Debugf("failed to bind request body: %v", err)
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
 
 	menu := d[0]
+	db := c.Get("db").(*db.DB)
 
 	channel, err := db.GetChannelByDeliverectLinkId(menu.ChannelLinkID)
 	if err != nil {
-		log.Errorf("failed to get channel: %v", err)
+		log.Debugf("failed to get channel: %v", err)
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
 
