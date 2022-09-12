@@ -6,6 +6,8 @@ import (
 
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/joelrose/crunch-merchant-service/api/channel/deliverect"
+	"github.com/joelrose/crunch-merchant-service/api/menus"
+	"github.com/joelrose/crunch-merchant-service/api/stores"
 	"github.com/joelrose/crunch-merchant-service/api/users"
 	"github.com/joelrose/crunch-merchant-service/api/whitelist"
 	"github.com/joelrose/crunch-merchant-service/auth_middleware"
@@ -29,6 +31,7 @@ func setupRoutes(e *echo.Echo, config config.Config) {
 
 	apiGroup.GET("/whitelist", whitelist.IsWhitelisted)
 	apiGroup.GET("/stores", stores.GetStores)
+	apiGroup.GET("/menus/:id", menus.GetMenu)
 
 	channelGroup := apiGroup.Group("/channel")
 
