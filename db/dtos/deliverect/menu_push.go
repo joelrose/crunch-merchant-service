@@ -49,7 +49,7 @@ type DeliverectStoreOpeningHour struct {
 	StartTime string `json:"startTime"`
 }
 
-type DeliverectMenu []struct {
+type MenuPushRequest []struct {
 	StoreOpeningHours []DeliverectStoreOpeningHour     `json:"availabilities"`
 	Bundles           map[string]DeliverectMenuProduct `json:"bundles"`
 	Categories        []DeliverectCategory             `json:"categories"`

@@ -88,36 +88,21 @@ type MenuCategory struct {
 }
 
 type MenuProduct struct {
-	Id          int            `db:"id"`
-	Name        string         `db:"name"`
-	Description string         `db:"description"`
-	Max         int            `db:"max"`
-	Min         int            `db:"min"`
-	Multiply    int            `db:"multiply"`
-	Plu         string         `db:"plu"`
-	Snoozed     bool           `db:"snoozed"`
-	Tax         int            `db:"tax"`
-	ProductType int            `db:"product_type"`
-	ImageURL    sql.NullString `db:"image_url"`
-	SortOrder   int            `db:"sort_order"`
-	Visible     bool           `db:"visible"`
-	Price       int            `db:"price"`
-	StoreId     int            `db:"store_id"`
-	CreatedAt   time.Time      `db:"created_at"`
-}
-
-type Product struct {
-	ID          string   `json:"_id"`
-	Name        string   `json:"name"`
-	Description string   `json:"description"`
-	Max         int      `json:"max"`
-	Min         int      `json:"min"`
-	Multiply    int      `json:"multiply"`
-	Plu         string   `json:"plu"`
-	SubProducts []string `json:"subProducts"`
-	TakeawayTax int      `json:"takeawayTax"`
-	ParentID    string   `json:"parentId"`
-	Snoozed     bool     `json:"snoozed"`
+	Id          int    `db:"id"`
+	Name        string `db:"name"`
+	Description string `db:"description"`
+	Price       int    `db:"price"`
+	Max         int    `db:"max"`
+	Min         int    `db:"min"`
+	Multiply    int    `db:"multiply"`
+	Plu         string `db:"plu"`
+	Snoozed     bool   `db:"snoozed"`
+	Tax         int    `db:"tax"`
+	ProductType int    `db:"product_type"`
+	ImageUrl    string `db:"image_url"`
+	SortOrder   int    `db:"sort_order"`
+	Visible     bool   `db:"visible"`
+	StoreId     int    `db:"store_id"`
 }
 
 type ProductProductRelation struct {

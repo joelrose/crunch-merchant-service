@@ -31,7 +31,7 @@ func DeliverectMenuPush(c echo.Context) error {
 	db := c.Get("db").(*db.DB)
 
 	// Bind request body
-	d := deliverect.DeliverectMenu{}
+	d := deliverect.MenuPushRequest{}
 
 	err := c.Bind(&d)
 	if err != nil {
@@ -85,7 +85,23 @@ func DeliverectMenuPush(c echo.Context) error {
 	// Save products
 	productIds := make(map[string]int)
 	for _, product := range products {
-		insertId, err := db.CreateProduct(channel.StoreId, product)
+		productModel := models.MenuProduct{
+			Name:        product.Name,
+			Description: product.Description,
+			Price:       product.Price,
+			Max:         product.Max,
+			Min:         product.Min,
+			Multiply:    product.Multiply,
+			Plu:         product.Plu,
+			Snoozed:     product.Snoozed,
+			Tax:         product.Tax,
+			ProductType: product.ProductType,
+			ImageUrl:    product.ImageURL,
+			SortOrder:   product.SortOrder,
+			Visible:     product.Visible,
+			StoreId:     channel.StoreId,
+		}
+		insertId, err := db.CreateProduct(productModel)
 
 		if err != nil {
 			log.Errorf("failed to save product: %v", err)

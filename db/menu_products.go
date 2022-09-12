@@ -1,8 +1,10 @@
 package db
 
-import "github.com/joelrose/crunch-merchant-service/db/dtos/deliverect"
+import (
+	"github.com/joelrose/crunch-merchant-service/db/models"
+)
 
-func (db *DB) CreateProduct(storeId int, product deliverect.DeliverectMenuProduct) (int, error) {
+func (db *DB) CreateProduct(product models.MenuProduct) (int, error) {
 	var lastInsertId int
 	err := db.Sqlx.Get(
 		&lastInsertId,
@@ -13,14 +15,14 @@ func (db *DB) CreateProduct(storeId int, product deliverect.DeliverectMenuProduc
 		product.Description,
 		product.Snoozed,
 		product.Tax,
-		product.ImageURL,
+		product.ImageUrl,
 		product.Max,
 		product.Min,
 		product.Multiply,
 		product.ProductType,
 		product.SortOrder,
 		product.Visible,
-		storeId,
+		product.StoreId,
 	)
 
 	return lastInsertId, err
