@@ -42,3 +42,17 @@ func (db *DB) CreateProductRelation(childProductId int, parentProductId int) err
 
 	return err
 }
+
+func (db *DB) GetProducts(storeId int) ([]models.MenuProduct, error) {
+	var products []models.MenuProduct
+	err := db.Sqlx.Select(&products, "SELECT * FROM menu_product WHERE store_id = $1", storeId)
+
+	return products, err
+}
+
+func (db *DB) GetProductChildren(parentProductId int) ([]string, error) {
+	var productIds []string
+	err := db.Sqlx.Select(&productIds, "SELECT child_product_id FROM product_product_relation WHERE parent_product_id = $1", parentProductId)
+
+	return productIds, err
+}
