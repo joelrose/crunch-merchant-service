@@ -10,6 +10,7 @@ require (
 	github.com/labstack/echo/v4 v4.9.0
 	github.com/labstack/gommon v0.3.1
 	github.com/lib/pq v1.10.7
+	github.com/stripe/stripe-go/v73 v73.8.0
 	golang.org/x/exp v0.0.0-20220909182711-5c715a9e8561
 	google.golang.org/api v0.95.0
 )

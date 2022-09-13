@@ -6,9 +6,13 @@ type CreateOrderRequest struct {
 }
 
 type OrderItem struct {
-	Plu      int         `json:"plu"`
-	Name     string      `json:"name"`
-	Price    int         `json:"price"`
-	Quantity int         `json:"quantity"`
-	Children []OrderItem `json:"children"`
+	Plu      string       `json:"plu"`
+	Name     string       `json:"name"`
+	Price    int          `json:"price"`
+	Quantity int          `json:"quantity"`
+	Children *[]OrderItem `json:"children"`
+}
+
+type CreateOrderResponse struct {
+	StripeClientSecret string `json:"stripeClientSecret"`
 }

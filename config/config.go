@@ -10,6 +10,7 @@ import (
 type Config struct {
 	FirebaseConfig string
 	DatabaseUrl    string
+	StripeKey      string
 }
 
 func mustGetEnv(env string) string {
@@ -33,6 +34,7 @@ func LoadConfig() Config {
 	config := Config{
 		FirebaseConfig: mustGetEnv("FIREBASE_CONFIG"),
 		DatabaseUrl:    mustGetEnv("DATABASE_URL"),
+		StripeKey:      mustGetEnv("STRIPE_KEY"),
 	}
 
 	return config

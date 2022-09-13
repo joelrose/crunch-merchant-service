@@ -21,7 +21,7 @@ func (db *DB) GetAvailableStore(id int) (models.Store, error) {
 	storeQuery := `
 	SELECT *
 	FROM stores s
-	WHERE store_id = $1 
+	WHERE s.id = $1 
 	  AND is_open = true
 	  AND EXISTS (
 			SELECT o.id
