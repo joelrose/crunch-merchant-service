@@ -1,10 +1,13 @@
 package deliverect
 
 import (
+	"context"
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
 
+	"github.com/go-redis/redis/v9"
 	"github.com/joelrose/crunch-merchant-service/db"
 	"github.com/joelrose/crunch-merchant-service/db/models"
 	"github.com/joelrose/crunch-merchant-service/dtos"
@@ -31,15 +34,15 @@ func convertTimestamp(time string) int {
 
 func DeliverectMenuPush(c echo.Context) error {
 	// Bind request body
-	d := dtos.MenuPushRequest{}
+	r := dtos.MenuPushRequest{}
 
-	err := c.Bind(&d)
+	err := c.Bind(&r)
 	if err != nil {
 		log.Debugf("failed to bind request body: %v", err)
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
 
-	menu := d[0]
+	menu := r[0]
 	db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
 
 	channel, err := db.GetChannelByDeliverectLinkId(menu.ChannelLinkID)
@@ -151,6 +154,14 @@ func DeliverectMenuPush(c echo.Context) error {
 				return echo.NewHTTPError(http.StatusInternalServerError)
 			}
 		}
+	}
+
+	rdb := c.Get(middleware.REDIS_CONTEXT_KEY).(*redis.Client)
+
+	ctx := context.Background()
+	cmd := rdb.Del(ctx, fmt.Sprint(channel.StoreId))
+	if cmd.Err() != nil {
+		log.Errorf("failed to delete redis cache: %v", cmd)
 	}
 
 	return c.NoContent(http.StatusOK)

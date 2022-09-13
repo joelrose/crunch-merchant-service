@@ -11,6 +11,7 @@ type Config struct {
 	FirebaseConfig string
 	DatabaseUrl    string
 	StripeKey      string
+	RedisUrl       string
 }
 
 func mustGetEnv(env string) string {
@@ -35,6 +36,7 @@ func LoadConfig() Config {
 		FirebaseConfig: mustGetEnv("FIREBASE_CONFIG"),
 		DatabaseUrl:    mustGetEnv("DATABASE_URL"),
 		StripeKey:      mustGetEnv("STRIPE_KEY"),
+		RedisUrl:       mustGetEnv("REDISCLOUD_URL"),
 	}
 
 	return config

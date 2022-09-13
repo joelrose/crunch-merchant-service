@@ -1,8 +1,12 @@
 package menus
 
 import (
+	"context"
+	"encoding/json"
+	"fmt"
 	"net/http"
 
+	"github.com/go-redis/redis/v9"
 	"github.com/joelrose/crunch-merchant-service/db"
 	"github.com/joelrose/crunch-merchant-service/dtos"
 	"github.com/joelrose/crunch-merchant-service/middleware"
@@ -10,7 +14,56 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
+func buildMenu(db *db.DB, storeId int) (*dtos.GetMenuResponse, error) {
+	categories, err := db.GetCategories(storeId)
+	if err != nil {
+		log.Errorf("failed to get categories: %v", err)
+		return nil, err
+	}
+
+	for ind, category := range categories {
+		childrenProductIds, err := db.GetCategoryChildren(category.Id)
+
+		if err != nil {
+			log.Errorf("failed to get category children: %v", err)
+			return nil, err
+		}
+
+		categories[ind].ProductChildren = childrenProductIds
+	}
+
+	products, err := db.GetProducts(storeId)
+	if err != nil {
+		log.Errorf("failed to get products: %v", err)
+		return nil, err
+	}
+
+	for ind, product := range products {
+		childrenProductIds, err := db.GetProductChildren(product.Id)
+
+		if err != nil {
+			log.Errorf("failed to get product children: %v", err)
+			return nil, err
+		}
+
+		products[ind].ProductChildren = childrenProductIds
+	}
+
+	openingHours, err := db.GetOpeningHours(storeId)
+	if err != nil {
+		log.Errorf("failed to get opening hours: %v", err)
+		return nil, err
+	}
+
+	return &dtos.GetMenuResponse{
+		Categories:   categories,
+		Products:     products,
+		OpeningHours: openingHours,
+	}, nil
+}
+
 func GetMenu(c echo.Context) error {
+	ctx := context.Background()
 	db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
 
 	r := dtos.GetMenuRequest{}
@@ -26,49 +79,31 @@ func GetMenu(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusNotFound)
 	}
 
-	categories, err := db.GetCategories(r.StoreId)
+	rdb := c.Get(middleware.REDIS_CONTEXT_KEY).(*redis.Client)
+
+	value, err := rdb.Get(ctx, fmt.Sprint(r.StoreId)).Result()
+	if err == nil {
+		log.Debug("serving cached menu")
+		return c.Blob(http.StatusOK, echo.MIMEApplicationJSONCharsetUTF8, []byte(value))
+	} else {
+		log.Debugf("rebuilding menu: %v", err)
+	}
+
+	menu, err := buildMenu(db, r.StoreId)
 	if err != nil {
-		log.Errorf("failed to get categories: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
-	for ind, category := range categories {
-		childrenProductIds, err := db.GetCategoryChildren(category.Id)
-
-		if err != nil {
-			log.Errorf("failed to get category children: %v", err)
-			return echo.NewHTTPError(http.StatusInternalServerError)
-		}
-
-		categories[ind].ProductChildren = childrenProductIds
-	}
-
-	products, err := db.GetProducts(r.StoreId)
+	json, err := json.Marshal(menu)
 	if err != nil {
-		log.Errorf("failed to get products: %v", err)
+		log.Errorf("failed to marshal menu: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
-	for ind, product := range products {
-		childrenProductIds, err := db.GetProductChildren(product.Id)
-
-		if err != nil {
-			log.Errorf("failed to get product children: %v", err)
-			return echo.NewHTTPError(http.StatusInternalServerError)
-		}
-
-		products[ind].ProductChildren = childrenProductIds
-	}
-
-	openingHours, err := db.GetOpeningHours(r.StoreId)
+	err = rdb.Set(ctx, fmt.Sprint(r.StoreId), json, 0).Err()
 	if err != nil {
-		log.Errorf("failed to get opening hours: %v", err)
-		return echo.NewHTTPError(http.StatusInternalServerError)
+		log.Errorf("failed to save menu to redis: %v", err)
 	}
 
-	return c.JSON(http.StatusOK, dtos.GetMenuResponse{
-		Categories:   categories,
-		Products:     products,
-		OpeningHours: openingHours,
-	})
+	return c.Blob(http.StatusOK, echo.MIMEApplicationJSONCharsetUTF8, []byte(json))
 }
