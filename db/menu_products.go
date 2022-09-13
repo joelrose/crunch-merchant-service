@@ -2,6 +2,7 @@ package db
 
 import (
 	"github.com/joelrose/crunch-merchant-service/db/models"
+	"github.com/joelrose/crunch-merchant-service/dtos"
 )
 
 func (db *DB) CreateProduct(product models.MenuProduct) (int, error) {
@@ -43,15 +44,19 @@ func (db *DB) CreateProductRelation(childProductId int, parentProductId int) err
 	return err
 }
 
-func (db *DB) GetProducts(storeId int) ([]models.MenuProduct, error) {
-	var products []models.MenuProduct
-	err := db.Sqlx.Select(&products, "SELECT * FROM menu_product WHERE store_id = $1", storeId)
+func (db *DB) GetProducts(storeId int) ([]dtos.GetMenuProduct, error) {
+	var products []dtos.GetMenuProduct
+	err := db.Sqlx.Select(
+		&products,
+		"SELECT id, name, description, price, max, min, multiply, plu, snoozed, tax, product_type, image_url, sort_order,visible FROM menu_product WHERE store_id = $1",
+		storeId,
+	)
 
 	return products, err
 }
 
-func (db *DB) GetProductChildren(parentProductId int) ([]string, error) {
-	var productIds []string
+func (db *DB) GetProductChildren(parentProductId int) ([]int, error) {
+	var productIds []int
 	err := db.Sqlx.Select(&productIds, "SELECT child_product_id FROM product_product_relation WHERE parent_product_id = $1", parentProductId)
 
 	return productIds, err

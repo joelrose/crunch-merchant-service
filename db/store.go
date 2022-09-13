@@ -1,8 +1,8 @@
 package db
 
 import (
-	"github.com/joelrose/crunch-merchant-service/db/dtos"
 	"github.com/joelrose/crunch-merchant-service/db/models"
+	"github.com/joelrose/crunch-merchant-service/dtos"
 )
 
 func (db *DB) GetStore(id int) (models.Store, error) {

@@ -1,6 +1,9 @@
 package db
 
-import "github.com/joelrose/crunch-merchant-service/db/models"
+import (
+	"github.com/joelrose/crunch-merchant-service/db/models"
+	"github.com/joelrose/crunch-merchant-service/dtos"
+)
 
 func (db *DB) CreateCategory(category models.MenuCategory) (int, error) {
 	var lastInsertId int
@@ -32,15 +35,15 @@ func (db *DB) CreateProductCategoryRelation(categoryId int, productId int) error
 	return err
 }
 
-func (db *DB) GetCategories(storeId int) ([]models.MenuCategory, error) {
-	var categories []models.MenuCategory
-	err := db.Sqlx.Select(&categories, "SELECT * FROM menu_categories WHERE store_id = $1", storeId)
+func (db *DB) GetCategories(storeId int) ([]dtos.GetMenuCategory, error) {
+	var categories []dtos.GetMenuCategory
+	err := db.Sqlx.Select(&categories, "SELECT id, name, description, image_url, sort_order FROM menu_categories WHERE store_id = $1", storeId)
 
 	return categories, err
 }
 
-func (db *DB) GetCategoryChildren(categoryId int) ([]string, error) {
-	var categoryRelations []string
+func (db *DB) GetCategoryChildren(categoryId int) ([]int, error) {
+	var categoryRelations []int
 	err := db.Sqlx.Select(&categoryRelations, "SELECT menu_product_id FROM category_product_relation WHERE menu_category_id = $1", categoryId)
 
 	return categoryRelations, err
