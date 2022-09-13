@@ -1,4 +1,4 @@
-package main
+package routes
 
 import (
 	"net/http"
@@ -14,7 +14,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func setupRoutes(e *echo.Echo, config config.Config) {
+func SetupRoutes(e *echo.Echo, config config.Config) {
 	okHandler := func(c echo.Context) error {
 		return c.String(http.StatusOK, "ok")
 	}

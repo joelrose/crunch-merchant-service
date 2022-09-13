@@ -7,6 +7,7 @@ import (
 	"github.com/joelrose/crunch-merchant-service/config"
 	"github.com/joelrose/crunch-merchant-service/db"
 	"github.com/joelrose/crunch-merchant-service/middleware"
+	"github.com/joelrose/crunch-merchant-service/routes"
 	"github.com/labstack/echo/v4"
 	defaultMiddleware "github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
@@ -28,7 +29,7 @@ func main() {
 	e.Use(defaultMiddleware.Logger())
 	e.Use(middleware.DatabaseContext(&db.DB{Sqlx: *database}))
 
-	setupRoutes(e, c)
+	routes.SetupRoutes(e, c)
 
 	port := os.Getenv("PORT")
 	if port == "" {
