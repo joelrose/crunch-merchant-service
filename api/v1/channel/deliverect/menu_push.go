@@ -8,6 +8,7 @@ import (
 	"github.com/joelrose/crunch-merchant-service/db"
 	"github.com/joelrose/crunch-merchant-service/db/models"
 	"github.com/joelrose/crunch-merchant-service/dtos"
+	"github.com/joelrose/crunch-merchant-service/middleware"
 	"github.com/joelrose/crunch-merchant-service/utils"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
@@ -39,7 +40,7 @@ func DeliverectMenuPush(c echo.Context) error {
 	}
 
 	menu := d[0]
-	db := c.Get("db").(*db.DB)
+	db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
 
 	channel, err := db.GetChannelByDeliverectLinkId(menu.ChannelLinkID)
 	if err != nil {

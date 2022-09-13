@@ -9,8 +9,8 @@ import (
 	"github.com/joelrose/crunch-merchant-service/api/v1/stores"
 	"github.com/joelrose/crunch-merchant-service/api/v1/users"
 	"github.com/joelrose/crunch-merchant-service/api/v1/whitelist"
-	"github.com/joelrose/crunch-merchant-service/auth_middleware"
 	"github.com/joelrose/crunch-merchant-service/config"
+	"github.com/joelrose/crunch-merchant-service/middleware"
 	"github.com/labstack/echo/v4"
 )
 
@@ -34,18 +34,18 @@ func setupRoutes(e *echo.Echo, config config.Config) {
 	deliverectGroup.POST("/busy_mode", deliverect.DeliverectBusyMode)
 	deliverectGroup.POST("/menu_push", deliverect.DeliverectMenuPush)
 
-	dashboardGroup := apiV1.Group("/dashboard", auth_middleware.Auth0Auth())
+	dashboardGroup := apiV1.Group("/dashboard", middleware.Auth0Auth())
 
 	dashboardGroup.GET("/status", okHandler)
 
-	usersGroup := apiV1.Group("/users", auth_middleware.FirebaseAuth(config.FirebaseConfig))
+	usersGroup := apiV1.Group("/users", middleware.FirebaseAuth(config.FirebaseConfig))
 
 	usersGroup.GET("/status", okHandler)
 
 	usersGroup.GET("/", users.GetUser)
 	usersGroup.POST("/", users.CreateUser)
 
-	ordersGroup := apiV1.Group("/orders", auth_middleware.FirebaseAuth(config.FirebaseConfig))
+	ordersGroup := apiV1.Group("/orders", middleware.FirebaseAuth(config.FirebaseConfig))
 
 	ordersGroup.POST("/", orders.CreateOrder)
 }

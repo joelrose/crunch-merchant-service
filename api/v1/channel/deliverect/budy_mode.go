@@ -5,6 +5,7 @@ import (
 
 	"github.com/joelrose/crunch-merchant-service/db"
 	"github.com/joelrose/crunch-merchant-service/dtos"
+	"github.com/joelrose/crunch-merchant-service/middleware"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 )
@@ -19,7 +20,7 @@ func DeliverectBusyMode(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
 
-	db := c.Get("db").(*db.DB)
+	db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
 
 	channel, err := db.GetChannelByDeliverectLinkId(busyModeRequest.ChannelLinkId)
 	if err != nil {

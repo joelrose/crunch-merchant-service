@@ -6,12 +6,13 @@ import (
 
 	"firebase.google.com/go/auth"
 	"github.com/joelrose/crunch-merchant-service/db"
+	"github.com/joelrose/crunch-merchant-service/middleware"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 )
 
 func GetUser(c echo.Context) error {
-	db := c.Get("db").(*db.DB)
+	db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
 
 	token := c.Get("token").(*auth.Token)
 

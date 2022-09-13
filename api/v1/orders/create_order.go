@@ -8,6 +8,7 @@ import (
 	"github.com/joelrose/crunch-merchant-service/db"
 	"github.com/joelrose/crunch-merchant-service/db/models"
 	"github.com/joelrose/crunch-merchant-service/dtos"
+	"github.com/joelrose/crunch-merchant-service/middleware"
 	"github.com/joelrose/crunch-merchant-service/utils"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
@@ -16,7 +17,7 @@ import (
 )
 
 func CreateOrder(c echo.Context) error {
-	db := c.Get("db").(*db.DB)
+	db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
 
 	token := c.Get("token").(*auth.Token)
 
