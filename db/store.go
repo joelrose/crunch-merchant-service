@@ -3,6 +3,7 @@ package db
 import (
 	"github.com/joelrose/crunch-merchant-service/db/models"
 	"github.com/joelrose/crunch-merchant-service/dtos"
+	"github.com/joelrose/crunch-merchant-service/utils"
 )
 
 func (db *DB) GetStore(id int) (models.Store, error) {
@@ -16,7 +17,34 @@ func (db *DB) GetStore(id int) (models.Store, error) {
 	return store, nil
 }
 
-func (db *DB) GetAvailableStores(dayOfWeek int, timestamp int) ([]dtos.GetStoresResponse, error) {
+func (db *DB) GetAvailableStore(id int) (models.Store, error) {
+	storeQuery := `
+	SELECT *
+	FROM stores s
+	WHERE store_id = $1 
+	  AND is_open = true
+	  AND EXISTS (
+			SELECT o.id
+			FROM store_opening_hours o
+			WHERE s.id = o.store_id
+			  AND o.day_of_week = $2
+			  AND o.start_timestamp <= $3
+			  AND o.end_timestamp >= $3
+		);`
+
+	weekday, timestamp := utils.GetDayAndTimestamp()
+
+	store := models.Store{}
+	err := db.Sqlx.Get(&store, storeQuery, id, weekday, timestamp)
+
+	if err != nil {
+		return models.Store{}, err
+	}
+
+	return store, nil
+}
+
+func (db *DB) GetAvailableStores() ([]dtos.GetStoresResponse, error) {
 	storeQuery := `
 	SELECT id, name, description, address, average_pickup_time, average_review, review_count, google_maps_link, phone_number, image_url
 	FROM stores s
@@ -30,8 +58,10 @@ func (db *DB) GetAvailableStores(dayOfWeek int, timestamp int) ([]dtos.GetStores
 			  AND o.end_timestamp >= $2
 		);`
 
+	weekday, timestamp := utils.GetDayAndTimestamp()
+
 	stores := []dtos.GetStoresResponse{}
-	err := db.Sqlx.Select(&stores, storeQuery, dayOfWeek, timestamp)
+	err := db.Sqlx.Select(&stores, storeQuery, weekday, timestamp)
 
 	if err != nil {
 		return []dtos.GetStoresResponse{}, err

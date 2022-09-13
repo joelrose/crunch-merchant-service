@@ -19,15 +19,19 @@ func GetMenu(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
 
-	// check if menu exists
+	_, err = db.GetAvailableStore(r.StoreId)
+	if err != nil {
+		log.Debugf("failed to get store: %v", err)
+		return echo.NewHTTPError(http.StatusNotFound)
+	}
 
 	categories, err := db.GetCategories(r.StoreId)
 	if err != nil {
-		log.Debugf("failed to get categories: %v", err)
+		log.Errorf("failed to get categories: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
-	for _, category := range categories {
+	for ind, category := range categories {
 		childrenProductIds, err := db.GetCategoryChildren(category.Id)
 
 		if err != nil {
@@ -35,16 +39,16 @@ func GetMenu(c echo.Context) error {
 			return echo.NewHTTPError(http.StatusInternalServerError)
 		}
 
-		log.Debugf("childrenProductIds: %v", childrenProductIds)
+		categories[ind].ProductChildren = childrenProductIds
 	}
 
 	products, err := db.GetProducts(r.StoreId)
 	if err != nil {
-		log.Debugf("failed to get products: %v", err)
+		log.Errorf("failed to get products: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
-	for _, product := range products {
+	for ind, product := range products {
 		childrenProductIds, err := db.GetProductChildren(product.Id)
 
 		if err != nil {
@@ -52,11 +56,18 @@ func GetMenu(c echo.Context) error {
 			return echo.NewHTTPError(http.StatusInternalServerError)
 		}
 
-		log.Debugf("childrenProductIds: %v", childrenProductIds)
+		products[ind].ProductChildren = childrenProductIds
+	}
+
+	openingHours, err := db.GetOpeningHours(r.StoreId)
+	if err != nil {
+		log.Errorf("failed to get opening hours: %v", err)
+		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
 	return c.JSON(http.StatusOK, dtos.GetMenuResponse{
-		Categories: categories,
-		Products:   products,
+		Categories:   categories,
+		Products:     products,
+		OpeningHours: openingHours,
 	})
 }

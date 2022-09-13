@@ -2,10 +2,8 @@ package stores
 
 import (
 	"net/http"
-	"time"
 
 	"github.com/joelrose/crunch-merchant-service/db"
-	"github.com/joelrose/crunch-merchant-service/utils"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 )
@@ -13,11 +11,7 @@ import (
 func GetStores(c echo.Context) error {
 	db := c.Get("db").(*db.DB)
 
-	time := time.Now()
-
-	timestamp := utils.ConvertToTimestamp(time.Hour(), time.Minute())
-
-	stores, err := db.GetAvailableStores(int(time.Weekday()), timestamp)
+	stores, err := db.GetAvailableStores()
 
 	if err != nil {
 		log.Errorf("failed to get stores: %v", err)
