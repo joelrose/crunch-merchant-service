@@ -3,38 +3,9 @@ package utils
 import (
 	"github.com/joelrose/crunch-merchant-service/db/models"
 	"github.com/joelrose/crunch-merchant-service/dtos"
-	"github.com/labstack/gommon/log"
-	"golang.org/x/exp/slices"
 )
 
-func ConvertOrderItemsToDto(orderItems []models.OrderItem) []dtos.OrderItem {
-	var parentOrders []dtos.OrderItem
-
-	for _, orderItem := range orderItems {
-		if !orderItem.ParentId.Valid {
-			parentOrders = append(parentOrders, ConvertOrderItemToDto(orderItem))
-		}
-	}
-
-	for _, orderItem := range orderItems {
-		if orderItem.ParentId.Valid {
-			ind := slices.IndexFunc(parentOrders, func(c dtos.OrderItem) bool {
-				return orderItem.ParentId.Int32 == int32(c.Id)
-			})
-
-			if ind != -1 {
-				parentOrders[ind].SubItems = append(parentOrders[ind].SubItems, ConvertOrderItemToDto(orderItem))
-			} else {
-				// TODO: allow complexer items
-				log.Errorf("... Parent not found for order item %v", orderItem)
-			}
-		}
-	}
-
-	return parentOrders
-}
-
-func ConvertOrderItemToDto(orderItem models.OrderItem) dtos.OrderItem {
+func convertOrderItemToDto(orderItem models.OrderItem) dtos.OrderItem {
 	return dtos.OrderItem{
 		Id:       orderItem.Id,
 		Plu:      orderItem.Plu,
@@ -43,4 +14,39 @@ func ConvertOrderItemToDto(orderItem models.OrderItem) dtos.OrderItem {
 		Quantity: orderItem.Quantity,
 		SubItems: []dtos.OrderItem{},
 	}
+}
+
+func convertHelper(parentMap map[int][]models.OrderItem, orderItems []models.OrderItem) []dtos.OrderItem {
+	var result []dtos.OrderItem
+	for ind, orderItem := range orderItems {
+		result = append(result, convertOrderItemToDto(orderItem))
+
+		if len(parentMap[orderItem.Id]) > 0 {
+			result[ind].SubItems = convertHelper(parentMap, parentMap[orderItem.Id])
+		}
+	}
+
+	return result
+}
+
+func ConvertOrderItemsToDto(orderItems []models.OrderItem) []dtos.OrderItem {
+	parentIdMap := make(map[int][]models.OrderItem)
+	for ind, orderItem := range orderItems {
+		if orderItem.ParentId.Valid {
+			parentIdMap[int(orderItem.ParentId.Int32)] = append(parentIdMap[int(orderItem.ParentId.Int32)], orderItems[ind])
+		}
+	}
+
+	result := []dtos.OrderItem{}
+	for ind, orderItem := range orderItems {
+		if !orderItem.ParentId.Valid {
+			result = append(result, convertOrderItemToDto(orderItem))
+
+			if len(parentIdMap[orderItem.Id]) > 0 {
+				result[ind].SubItems = convertHelper(parentIdMap, parentIdMap[orderItem.Id])
+			}
+		}
+	}
+
+	return result
 }
