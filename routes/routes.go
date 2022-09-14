@@ -8,6 +8,7 @@ import (
 	"github.com/joelrose/crunch-merchant-service/api/v1/orders"
 	"github.com/joelrose/crunch-merchant-service/api/v1/stores"
 	"github.com/joelrose/crunch-merchant-service/api/v1/users"
+	"github.com/joelrose/crunch-merchant-service/api/v1/webhook"
 	"github.com/joelrose/crunch-merchant-service/api/v1/whitelist"
 	"github.com/joelrose/crunch-merchant-service/config"
 	"github.com/joelrose/crunch-merchant-service/middleware"
@@ -26,6 +27,8 @@ func SetupRoutes(e *echo.Echo, config config.Config) {
 	apiV1.GET("/whitelist", whitelist.IsWhitelisted)
 	apiV1.GET("/stores", stores.GetStores)
 	apiV1.GET("/menus/:id", menus.GetMenu)
+
+	apiV1.POST("/webhook/stripe", webhook.HandleStripe)
 
 	channelGroup := apiV1.Group("/channel")
 	deliverectGroup := channelGroup.Group("/deliverect")

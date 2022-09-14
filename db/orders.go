@@ -21,6 +21,16 @@ func (db *DB) CreateOrder(order models.CreateOrder) (int, error) {
 	return lastInsertId, err
 }
 
+func (database *DB) GetOrderByStripeOrderId(stripeOrderId string) (models.Order, error) {
+	order := models.Order{}
+	err := database.Sqlx.Get(&order, "SELECT * FROM orders WHERE stripe_order_id = $1", stripeOrderId)
+
+	if err != nil {
+		return models.Order{}, err
+	}
+
+	return order, nil
+}
 
 func (database *DB) GetOrdersByUserId(userId int) ([]models.Order, error) {
 	orders := []models.Order{}
