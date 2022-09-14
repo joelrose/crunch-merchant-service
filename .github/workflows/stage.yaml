@@ -14,5 +14,5 @@ jobs:
         with:
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: crunch-merchant-service
+          heroku_app_name: crunch-backend-stage
           usedocker: true
