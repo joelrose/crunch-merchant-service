@@ -1,6 +1,7 @@
 package db
 
 import (
+	"github.com/google/uuid"
 	"github.com/joelrose/crunch-merchant-service/db/models"
 	"github.com/joelrose/crunch-merchant-service/dtos"
 )
@@ -14,13 +15,13 @@ func (db *DB) CreateStoreOpeningHour(openingHour models.StoreOpeningHour) error 
 	return err
 }
 
-func (db *DB) DeleteOpeningHours(storeId int) error {
+func (db *DB) DeleteOpeningHours(storeId uuid.UUID) error {
 	_, err := db.Sqlx.Exec("DELETE FROM store_opening_hours WHERE store_id = $1", storeId)
 
 	return err
 }
 
-func (db *DB) GetOpeningHours(storeId int) ([]dtos.GetMenuOpeningHour, error) {
+func (db *DB) GetOpeningHours(storeId uuid.UUID) ([]dtos.GetMenuOpeningHour, error) {
 	var openingHours []dtos.GetMenuOpeningHour
 	err := db.Sqlx.Select(&openingHours, "SELECT day_of_week, start_timestamp, end_timestamp FROM store_opening_hours WHERE store_id = $1", storeId)
 

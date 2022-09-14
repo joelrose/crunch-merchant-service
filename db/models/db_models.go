@@ -1,6 +1,10 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type CreateOrder struct {
 	Status              int       `db:"status"`
@@ -8,7 +12,7 @@ type CreateOrder struct {
 	Price               int       `db:"price"`
 	StripeOrderId       string    `db:"stripe_order_id"`
 	IsPaid              bool      `db:"is_paid"`
-	StoreId             int       `db:"store_id"`
+	StoreId             uuid.UUID `db:"store_id"`
 	UserId              int       `db:"user_id"`
 }
 

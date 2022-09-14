@@ -1,7 +1,9 @@
 package dtos
 
+import "github.com/google/uuid"
+
 type GetMenuRequest struct {
-	StoreId int `param:"id"`
+	StoreId uuid.UUID `param:"id"`
 }
 
 type GetMenuCategory struct {

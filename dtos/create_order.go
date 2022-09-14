@@ -1,7 +1,9 @@
 package dtos
 
+import "github.com/google/uuid"
+
 type CreateOrderRequest struct {
-	StoreId    int         `json:"storeId"`
+	StoreId    uuid.UUID   `json:"storeId"`
 	OrderItems []OrderItem `json:"orderItems"`
 }
 

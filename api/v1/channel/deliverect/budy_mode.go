@@ -10,7 +10,7 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
-func DeliverectBusyMode(c echo.Context) error {
+func BusyMode(c echo.Context) error {
 	// Bind request body
 	busyModeRequest := dtos.BusyModeRequest{}
 

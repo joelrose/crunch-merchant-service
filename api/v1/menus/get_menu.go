@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/go-redis/redis/v9"
+	"github.com/google/uuid"
 	"github.com/joelrose/crunch-merchant-service/db"
 	"github.com/joelrose/crunch-merchant-service/dtos"
 	"github.com/joelrose/crunch-merchant-service/middleware"
@@ -14,7 +15,7 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
-func buildMenu(db *db.DB, storeId int) (*dtos.GetMenuResponse, error) {
+func buildMenu(db *db.DB, storeId uuid.UUID) (*dtos.GetMenuResponse, error) {
 	categories, err := db.GetCategories(storeId)
 	if err != nil {
 		log.Errorf("failed to get categories: %v", err)

@@ -2,7 +2,6 @@ package deliverect
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/joelrose/crunch-merchant-service/db"
 	"github.com/joelrose/crunch-merchant-service/dtos"
@@ -18,11 +17,11 @@ func convertToEnum(status string) dtos.ChannelStatus {
 	case "active":
 		return dtos.Active
 	default:
-		return dtos.Inactive
+		return dtos.InActive
 	}
 }
 
-func DeliverectChannelStatus(c echo.Context) error {
+func ChannelStatus(c echo.Context) error {
 	// Bind request body
 	channelStatusRequest := dtos.ChannelStatusRequest{}
 
@@ -34,22 +33,15 @@ func DeliverectChannelStatus(c echo.Context) error {
 
 	db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
 
-	channelLocationId, err := strconv.Atoi(channelStatusRequest.ChannelLocationId)
-	if err != nil {
-		log.Errorf("failed to convert channel location id to int: %v", err)
-		return echo.NewHTTPError(http.StatusBadRequest)
-	}
-
 	// Check if [ChannelLocationId=StoreId] exists
-	_, err = db.GetStore(channelLocationId)
-
+	_, err = db.GetStore(channelStatusRequest.ChannelLocationId)
 	if err != nil {
 		log.Errorf("failed to get store: %v", err)
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
 
 	// Check if channel exists
-	_, err = db.GetChannelByStoreId(channelLocationId)
+	_, err = db.GetChannelByStoreId(channelStatusRequest.ChannelLocationId)
 
 	channelStatus := convertToEnum(channelStatusRequest.Status)
 
@@ -57,7 +49,7 @@ func DeliverectChannelStatus(c echo.Context) error {
 		log.Debugf("channel does not exist, creating channel %v", err)
 		// Create new channel
 		err := db.CreateChannel(
-			channelLocationId,
+			channelStatusRequest.ChannelLocationId,
 			channelStatusRequest.LocationId,
 			channelStatusRequest.ChannelLinkId,
 			channelStatus,
@@ -71,7 +63,7 @@ func DeliverectChannelStatus(c echo.Context) error {
 		// Update existing channel
 		err := db.UpdateChannelStatus(
 			channelStatus,
-			channelLocationId,
+			channelStatusRequest.ChannelLocationId,
 		)
 
 		if err != nil {
@@ -85,11 +77,11 @@ func DeliverectChannelStatus(c echo.Context) error {
 		return "https://" + requestHost + "/api/v1/channel/deliverect/" + path
 	}
 	response := dtos.ChannelStatusReponse{
-		StatusUpdateURL:   buildUrl("channel_status"),
-		MenuUpdateURL:     buildUrl("menu_push"),
-		SnoozeUnsnoozeURL: buildUrl("snooze_unsnooze"),
-		BusyModeURL:       buildUrl("busy_mode"),
-		UpdatePrepTimeURL: buildUrl("prep_time"),
+		MenuUpdateURL:        buildUrl("menu_push"),
+		SnoozeUnsnoozeURL:    buildUrl("snooze_unsnooze"),
+		BusyModeURL:          buildUrl("busy_mode"),
+		UpdatePrepTimeURL:    buildUrl("prep_time"),
+		OrderStatusUpdateURL: buildUrl("order_status"),
 	}
 
 	return c.JSON(http.StatusOK, response)

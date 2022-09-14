@@ -1,12 +1,13 @@
 package db
 
 import (
+	"github.com/google/uuid"
 	"github.com/joelrose/crunch-merchant-service/db/models"
 	"github.com/joelrose/crunch-merchant-service/dtos"
 	"github.com/joelrose/crunch-merchant-service/utils"
 )
 
-func (db *DB) GetStore(id int) (models.Store, error) {
+func (db *DB) GetStore(id uuid.UUID) (models.Store, error) {
 	store := models.Store{}
 	err := db.Sqlx.Get(&store, "SELECT * FROM stores WHERE id = $1", id)
 
@@ -17,7 +18,7 @@ func (db *DB) GetStore(id int) (models.Store, error) {
 	return store, nil
 }
 
-func (db *DB) GetAvailableStore(id int) (models.Store, error) {
+func (db *DB) GetAvailableStore(id uuid.UUID) (models.Store, error) {
 	storeQuery := `
 	SELECT *
 	FROM stores s
@@ -70,7 +71,7 @@ func (db *DB) GetAvailableStores() ([]dtos.GetStoresResponse, error) {
 	return stores, nil
 }
 
-func (db *DB) SetIsOpen(isOpen bool, id int) error {
+func (db *DB) SetIsOpen(isOpen bool, id uuid.UUID) error {
 	_, err := db.Sqlx.Exec(
 		"UPDATE stores SET is_open = $1 WHERE id = $2",
 		isOpen, id,

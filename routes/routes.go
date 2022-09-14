@@ -33,9 +33,13 @@ func SetupRoutes(e *echo.Echo, config config.Config) {
 	channelGroup := apiV1.Group("/channel")
 	deliverectGroup := channelGroup.Group("/deliverect")
 
-	deliverectGroup.POST("/channel_status", deliverect.DeliverectChannelStatus)
-	deliverectGroup.POST("/busy_mode", deliverect.DeliverectBusyMode)
-	deliverectGroup.POST("/menu_push", deliverect.DeliverectMenuPush)
+	deliverectGroup.POST("/channel_status", deliverect.ChannelStatus)
+
+	deliverectGroup.POST("/menu_push", deliverect.MenuPush)
+	deliverectGroup.POST("/snooze_unsnooze", deliverect.SnoozeUnsnooze)
+	deliverectGroup.POST("/busy_mode", deliverect.BusyMode)
+	deliverectGroup.POST("/prep_time", deliverect.PreparationTime)
+	deliverectGroup.POST("/order_status", deliverect.OrderStatus)
 
 	dashboardGroup := apiV1.Group("/dashboard", middleware.Auth0Auth())
 

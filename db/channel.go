@@ -1,11 +1,12 @@
 package db
 
 import (
+	"github.com/google/uuid"
 	"github.com/joelrose/crunch-merchant-service/db/models"
 	"github.com/joelrose/crunch-merchant-service/dtos"
 )
 
-func (db *DB) GetChannelByStoreId(storeId int) (models.DeliverectChannel, error) {
+func (db *DB) GetChannelByStoreId(storeId uuid.UUID) (models.DeliverectChannel, error) {
 	channel := models.DeliverectChannel{}
 	err := db.Sqlx.Get(&channel, "SELECT * FROM deliverect_channels WHERE store_id = $1", storeId)
 
@@ -27,7 +28,7 @@ func (db *DB) GetChannelByDeliverectLinkId(deliverectLinkId string) (models.Deli
 	return channel, nil
 }
 
-func (db *DB) CreateChannel(storeId int, locationId string, deliverectChannelLinkId string, status dtos.ChannelStatus) error {
+func (db *DB) CreateChannel(storeId uuid.UUID, locationId string, deliverectChannelLinkId string, status dtos.ChannelStatus) error {
 	_, err := db.Sqlx.Exec(
 		"INSERT INTO deliverect_channels (store_id, location_id, deliverect_link_id, status) VALUES ($1, $2, $3, $4)",
 		storeId, locationId, deliverectChannelLinkId, status,
@@ -39,7 +40,7 @@ func (db *DB) CreateChannel(storeId int, locationId string, deliverectChannelLin
 	return nil
 }
 
-func (db *DB) UpdateChannelStatus(status dtos.ChannelStatus, storeId int) error {
+func (db *DB) UpdateChannelStatus(status dtos.ChannelStatus, storeId uuid.UUID) error {
 	_, err := db.Sqlx.Exec(
 		"UPDATE deliverect_channels SET status = $1 WHERE store_id = $2",
 		status, storeId,

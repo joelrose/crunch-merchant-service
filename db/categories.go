@@ -1,6 +1,7 @@
 package db
 
 import (
+	"github.com/google/uuid"
 	"github.com/joelrose/crunch-merchant-service/db/models"
 	"github.com/joelrose/crunch-merchant-service/dtos"
 )
@@ -20,7 +21,7 @@ func (db *DB) CreateCategory(category models.MenuCategory) (int, error) {
 	return lastInsertId, err
 }
 
-func (db *DB) DeleteCategories(storeId int) error {
+func (db *DB) DeleteCategories(storeId uuid.UUID) error {
 	_, err := db.Sqlx.Exec("DELETE FROM menu_categories WHERE store_id = $1", storeId)
 
 	return err
@@ -35,7 +36,7 @@ func (db *DB) CreateProductCategoryRelation(categoryId int, productId int) error
 	return err
 }
 
-func (db *DB) GetCategories(storeId int) ([]dtos.GetMenuCategory, error) {
+func (db *DB) GetCategories(storeId uuid.UUID) ([]dtos.GetMenuCategory, error) {
 	var categories []dtos.GetMenuCategory
 	err := db.Sqlx.Select(&categories, "SELECT id, name, description, image_url, sort_order FROM menu_categories WHERE store_id = $1", storeId)
 

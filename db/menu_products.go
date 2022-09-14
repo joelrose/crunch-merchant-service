@@ -1,6 +1,8 @@
 package db
 
 import (
+	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
 	"github.com/joelrose/crunch-merchant-service/db/models"
 	"github.com/joelrose/crunch-merchant-service/dtos"
 )
@@ -29,7 +31,7 @@ func (db *DB) CreateProduct(product models.MenuProduct) (int, error) {
 	return lastInsertId, err
 }
 
-func (db *DB) DeleteProducts(storeId int) error {
+func (db *DB) DeleteProducts(storeId uuid.UUID) error {
 	_, err := db.Sqlx.Exec("DELETE FROM menu_product WHERE store_id = $1", storeId)
 
 	return err
@@ -44,7 +46,7 @@ func (db *DB) CreateProductRelation(childProductId int, parentProductId int) err
 	return err
 }
 
-func (db *DB) GetProducts(storeId int) ([]dtos.GetMenuProduct, error) {
+func (db *DB) GetProducts(storeId uuid.UUID) ([]dtos.GetMenuProduct, error) {
 	var products []dtos.GetMenuProduct
 	err := db.Sqlx.Select(
 		&products,
@@ -55,9 +57,28 @@ func (db *DB) GetProducts(storeId int) ([]dtos.GetMenuProduct, error) {
 	return products, err
 }
 
+func (db *DB) GetProductsByPlu(plu string, storeId uuid.UUID) ([]int, error) {
+	var productIds []int
+	err := db.Sqlx.Select(&productIds, "SELECT id FROM menu_product WHERE plu LIKE $1 AND store_id = $2", "%"+plu+"%", storeId)
+
+	return productIds, err
+}
+
 func (db *DB) GetProductChildren(parentProductId int) ([]int, error) {
 	var productIds []int
 	err := db.Sqlx.Select(&productIds, "SELECT child_product_id FROM product_product_relation WHERE parent_product_id = $1", parentProductId)
 
 	return productIds, err
+}
+
+func (db *DB) UpdateProductsSnooze(productIds []int, snooze bool) error {
+	query, args, err := sqlx.In("UPDATE menu_product SET snoozed = $1 WHERE id IN ($2)", snooze, productIds)
+	if err != nil {
+		return err
+	}
+
+	query = db.Sqlx.Rebind(query)
+	_, err = db.Sqlx.Exec(query, args...)
+
+	return err
 }

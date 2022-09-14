@@ -15,7 +15,7 @@ CREATE TABLE merchants (
 );
 
 CREATE TABLE stores (
-    id BIGSERIAL PRIMARY KEY,
+    id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
     name TEXT NOT NULL,
     description TEXT NOT NULL,
     address TEXT NOT NULL,
@@ -38,13 +38,13 @@ CREATE TABLE store_opening_hours (
     day_of_week int NOT NULL,
     start_timestamp int NOT NULL,
     end_timestamp int NOT NULL,
-    store_id bigint NOT NULL,
+    store_id uuid NOT NULL,
     FOREIGN KEY (store_id) REFERENCES stores (id) ON DELETE CASCADE
 );
 
 CREATE TABLE deliverect_channels (
     status int NOT NULL,
-    store_id bigint NOT NULL,
+    store_id uuid NOT NULL,
     deliverect_link_id TEXT NOT NULL,
     location_id TEXT NOT NULL,
     PRIMARY KEY (store_id, deliverect_link_id),
@@ -59,7 +59,7 @@ CREATE TABLE orders (
     stripe_order_id TEXT NOT NULL,
     is_paid BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    store_id bigint NOT NULL,
+    store_id uuid NOT NULL,
     user_id bigint NOT NULL,
     FOREIGN KEY (store_id) REFERENCES stores (id),
     FOREIGN KEY (user_id) REFERENCES users (id)
@@ -83,7 +83,7 @@ CREATE TABLE menu_categories (
     description TEXT NOT NULL,
     image_url TEXT NOT NULL,
     sort_order int NOT NULL,
-    store_id bigint NOT NULL,
+    store_id uuid NOT NULL,
     FOREIGN KEY (store_id) REFERENCES stores (id) ON DELETE CASCADE
 );
 
@@ -102,7 +102,7 @@ CREATE TABLE menu_product (
     product_type int,
     sort_order int DEFAULT 0,
     visible BOOLEAN NOT NULL DEFAULT TRUE,
-    store_id bigint,
+    store_id uuid NOT NULL,
     FOREIGN KEY (store_id) REFERENCES stores (id) ON DELETE CASCADE
 );
 

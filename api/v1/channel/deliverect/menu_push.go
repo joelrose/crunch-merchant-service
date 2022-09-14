@@ -32,10 +32,9 @@ func convertTimestamp(time string) int {
 	return utils.ConvertToTimestamp(hour, minute)
 }
 
-func DeliverectMenuPush(c echo.Context) error {
+func MenuPush(c echo.Context) error {
 	// Bind request body
 	r := dtos.MenuPushRequest{}
-
 	err := c.Bind(&r)
 	if err != nil {
 		log.Debugf("failed to bind request body: %v", err)

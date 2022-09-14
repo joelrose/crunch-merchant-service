@@ -3,6 +3,8 @@ package models
 import (
 	"database/sql"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type User struct {
@@ -29,7 +31,7 @@ type Order struct {
 	StripeOrderId       string    `db:"stripe_order_id"`
 	IsPaid              bool      `db:"is_paid"`
 	CreatedAt           time.Time `db:"created_at"`
-	StoreId             int       `db:"store_id"`
+	StoreId             uuid.UUID `db:"store_id"`
 	UserId              int       `db:"user_id"`
 }
 
@@ -44,7 +46,7 @@ type OrderItem struct {
 }
 
 type Store struct {
-	Id                  int            `db:"id"`
+	Id                  uuid.UUID      `db:"id"`
 	Name                string         `db:"name"`
 	Description         string         `db:"description"`
 	Address             string         `db:"address"`
@@ -62,45 +64,45 @@ type Store struct {
 }
 
 type StoreOpeningHour struct {
-	Id             int `db:"id"`
-	DayOfWeek      int `db:"day_of_week"`
-	StartTimestamp int `db:"start_timestamp"`
-	EndTimestamp   int `db:"end_timestamp"`
-	StoreId        int `db:"store_id"`
+	Id             int       `db:"id"`
+	DayOfWeek      int       `db:"day_of_week"`
+	StartTimestamp int       `db:"start_timestamp"`
+	EndTimestamp   int       `db:"end_timestamp"`
+	StoreId        uuid.UUID `db:"store_id"`
 }
 
 type DeliverectChannel struct {
-	StoreId          int    `db:"store_id"`
-	DeliverectLinkId string `db:"deliverect_link_id"`
-	LocationId       string `db:"location_id"`
-	Status           int    `db:"status"`
+	StoreId          uuid.UUID `db:"store_id"`
+	DeliverectLinkId string    `db:"deliverect_link_id"`
+	LocationId       string    `db:"location_id"`
+	Status           int       `db:"status"`
 }
 
 type MenuCategory struct {
-	Id          int    `db:"id"`
-	Name        string `db:"name"`
-	Description string `db:"description"`
-	ImageUrl    string `db:"image_url"`
-	SortOrder   int    `db:"sort_order"`
-	StoreId     int    `db:"store_id"`
+	Id          int       `db:"id"`
+	Name        string    `db:"name"`
+	Description string    `db:"description"`
+	ImageUrl    string    `db:"image_url"`
+	SortOrder   int       `db:"sort_order"`
+	StoreId     uuid.UUID `db:"store_id"`
 }
 
 type MenuProduct struct {
-	Id          int    `db:"id"`
-	Name        string `db:"name"`
-	Description string `db:"description"`
-	Price       int    `db:"price"`
-	Max         int    `db:"max"`
-	Min         int    `db:"min"`
-	Multiply    int    `db:"multiply"`
-	Plu         string `db:"plu"`
-	Snoozed     bool   `db:"snoozed"`
-	Tax         int    `db:"tax"`
-	ProductType int    `db:"product_type"`
-	ImageUrl    string `db:"image_url"`
-	SortOrder   int    `db:"sort_order"`
-	Visible     bool   `db:"visible"`
-	StoreId     int    `db:"store_id"`
+	Id          int       `db:"id"`
+	Name        string    `db:"name"`
+	Description string    `db:"description"`
+	Price       int       `db:"price"`
+	Max         int       `db:"max"`
+	Min         int       `db:"min"`
+	Multiply    int       `db:"multiply"`
+	Plu         string    `db:"plu"`
+	Snoozed     bool      `db:"snoozed"`
+	Tax         int       `db:"tax"`
+	ProductType int       `db:"product_type"`
+	ImageUrl    string    `db:"image_url"`
+	SortOrder   int       `db:"sort_order"`
+	Visible     bool      `db:"visible"`
+	StoreId     uuid.UUID `db:"store_id"`
 }
 
 type ProductProductRelation struct {
