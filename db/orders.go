@@ -21,6 +21,18 @@ func (db *DB) CreateOrder(order models.CreateOrder) (int, error) {
 	return lastInsertId, err
 }
 
+
+func (database *DB) GetOrdersByUserId(userId int) ([]models.Order, error) {
+	orders := []models.Order{}
+	err := database.Sqlx.Select(&orders, "SELECT * FROM orders WHERE user_id = $1", userId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return orders, nil
+}
+
 func (database *DB) MarkOrderAsPaid(orderId int) error {
 	_, err := database.Sqlx.Exec("UPDATE orders SET is_paid=true WHERE id = $1", orderId)
 	if err != nil {
