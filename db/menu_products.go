@@ -72,7 +72,7 @@ func (db *DB) GetProductChildren(parentProductId int) ([]int, error) {
 }
 
 func (db *DB) UpdateProductsSnooze(productIds []int, snooze bool) error {
-	query, args, err := sqlx.In("UPDATE menu_product SET snoozed = $1 WHERE id IN ($2)", snooze, productIds)
+	query, args, err := sqlx.In("UPDATE menu_product SET snoozed = ? WHERE id IN (?)", snooze, productIds)
 	if err != nil {
 		return err
 	}
