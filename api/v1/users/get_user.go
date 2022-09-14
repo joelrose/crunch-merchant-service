@@ -13,11 +13,9 @@ import (
 
 func GetUser(c echo.Context) error {
 	db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
-
 	token := c.Get("token").(*auth.Token)
-
+	
 	users, err := db.GetUserByFirebaseId(token.UID)
-
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return echo.NewHTTPError(http.StatusNotFound)
