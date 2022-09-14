@@ -1,8 +1,11 @@
 package deliverect
 
-import "github.com/joelrose/crunch-merchant-service/config"
+import (
+	"github.com/go-redis/redis/v9"
+	"github.com/joelrose/crunch-merchant-service/config"
+)
 
-type DeliverectService struct {
+type DeliverectServiceConfig struct {
 	BaseUrl       string
 	ClientId      string
 	ClientSecret  string
@@ -10,12 +13,20 @@ type DeliverectService struct {
 	ChannelName   string
 }
 
-func NewDeliverectService(config config.Config, channelLinkId string, channelName string) *DeliverectService {
+type DeliverectService struct {
+	Config      DeliverectServiceConfig
+	RedisClient *redis.Client
+}
+
+func NewDeliverectService(config config.Config, redisClient *redis.Client, channelLinkId string, channelName string) *DeliverectService {
 	return &DeliverectService{
-		BaseUrl:       config.Deliverect.BaseUrl,
-		ClientId:      config.Deliverect.ClientId,
-		ClientSecret:  config.Deliverect.ClientSecret,
-		ChannelLinkId: channelLinkId,
-		ChannelName:   channelName,
+		RedisClient: redisClient,
+		Config: DeliverectServiceConfig{
+			BaseUrl:       config.Deliverect.BaseUrl,
+			ClientId:      config.Deliverect.ClientId,
+			ClientSecret:  config.Deliverect.ClientSecret,
+			ChannelLinkId: channelLinkId,
+			ChannelName:   channelName,
+		},
 	}
 }

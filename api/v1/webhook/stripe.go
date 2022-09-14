@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"firebase.google.com/go/auth"
+	"github.com/go-redis/redis/v9"
 	"github.com/joelrose/crunch-merchant-service/config"
 	"github.com/joelrose/crunch-merchant-service/db"
 	"github.com/joelrose/crunch-merchant-service/middleware"
@@ -95,7 +96,8 @@ func HandleStripe(c echo.Context) error {
 		}
 
 		config := c.Get(middleware.CONFIG_CONTEXT_KEY).(*config.Config)
-		deliverectService := deliverect.NewDeliverectService(*config, channel.DeliverectLinkId, "crunch")
+		redisClient := c.Get(middleware.REDIS_CONTEXT_KEY).(*redis.Client)
+		deliverectService := deliverect.NewDeliverectService(*config, redisClient, channel.DeliverectLinkId, "crunch")
 
 		err = deliverectService.CreateOrder(createOrderRequest)
 		if err != nil {

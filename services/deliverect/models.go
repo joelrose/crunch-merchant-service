@@ -10,11 +10,10 @@ type CreateMachineMachineTokenRequest struct {
 }
 
 type CreateMachineMachineTokenResponse struct {
-	AccessToken  string `json:"access_token"`
-	RefreshToken string `json:"refresh_token"`
-	ExpiresIn    int    `json:"expires_in"`
-	TokenType    string `json:"token_type"`
-	Scope        string `json:"scope"`
+	AccessToken string `json:"access_token"`
+	ExpiresAt   int64  `json:"expires_at"`
+	TokenType   string `json:"token_type"`
+	Scope       string `json:"scope"`
 }
 
 type CustomerModel struct {
@@ -32,7 +31,7 @@ type CreateOrderRequest struct {
 	Items                 []dtos.OrderItem `json:"items"`
 	Payment               PaymentModel     `json:"payment"`
 	Customer              CustomerModel    `json:"customer"`
-	OrderType             int              `json:"order_type"` 
+	OrderType             int              `json:"order_type"`
 	OrderIsAlreadyPaid    bool             `json:"order_is_already_paid"`
 	DecimalDigits         int              `json:"decimal_digits"`
 }

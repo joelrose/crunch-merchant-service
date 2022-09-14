@@ -20,7 +20,7 @@ func (d DeliverectService) CreateOrder(order CreateOrderRequest) error {
 		Timeout: time.Duration(1) * time.Second,
 	}
 
-	orderUrl := d.BaseUrl + "/" + d.ChannelName + "/order/" + d.ChannelLinkId
+	orderUrl := d.Config.BaseUrl + "/" + d.Config.ChannelName + "/order/" + d.Config.ChannelLinkId
 
 	req, err := http.NewRequest("POST", orderUrl, bytes.NewBuffer(reqJson))
 	if err != nil {
@@ -28,7 +28,7 @@ func (d DeliverectService) CreateOrder(order CreateOrderRequest) error {
 		return err
 	}
 
-	token, err := d.getMachineToMachineToken()
+	token, err := d.getCachedMachineToMachineToken()
 	if err != nil {
 		log.Errorf("error getting machine to machine token: %v\n", err)
 		return err

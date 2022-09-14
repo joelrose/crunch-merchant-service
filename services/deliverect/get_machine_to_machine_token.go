@@ -2,6 +2,7 @@ package deliverect
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"io"
 	"net/http"
@@ -11,15 +12,39 @@ import (
 )
 
 const (
-	DeliverectGrantType = "client_credentials"
-	MachineTokenPath    = "/oauth/token"
+	DeliverectGrantType    = "client_credentials"
+	DeliverectMachineToken = "deliverect_machine_token"
+	MachineTokenPath       = "/oauth/token"
 )
+
+func (d DeliverectService) getCachedMachineToMachineToken() (*string, error) {
+	context := context.Background()
+	tokenJson, err := d.RedisClient.Get(context, DeliverectMachineToken).Result()
+	if err != nil {
+		log.Debug("requesting machine to machine token from deliverect")
+		return d.getMachineToMachineToken()
+	}
+
+	token := CreateMachineMachineTokenResponse{}
+	err = json.Unmarshal([]byte(tokenJson), &token)
+	if err != nil {
+		log.Errorf("failed to unmarshal token body: %v", err)
+		return nil, err
+	}
+
+	if token.ExpiresAt > time.Now().Unix() {
+		log.Debug("token expired: requesting new token from deliverect")
+		return d.getMachineToMachineToken()
+	}
+
+	return &token.AccessToken, nil
+}
 
 func (d DeliverectService) getMachineToMachineToken() (*string, error) {
 	request := CreateMachineMachineTokenRequest{
-		CliendId:     d.ClientId,
-		ClientSecret: d.ClientSecret,
-		Audience:     d.BaseUrl,
+		CliendId:     d.Config.ClientId,
+		ClientSecret: d.Config.ClientSecret,
+		Audience:     d.Config.BaseUrl,
 		GrantType:    DeliverectGrantType,
 	}
 
