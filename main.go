@@ -39,6 +39,7 @@ func main() {
 	e := echo.New()
 
 	e.Use(defaultMiddleware.Logger())
+	e.Use(middleware.ConfigContext(&c))
 	e.Use(middleware.DatabaseContext(&db.DB{Sqlx: *database}))
 	e.Use(middleware.RedisContext(redis))
 
