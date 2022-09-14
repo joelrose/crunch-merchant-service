@@ -16,6 +16,41 @@ import (
 	"github.com/stripe/stripe-go/v73/paymentintent"
 )
 
+func createOrderItem(dto dtos.OrderItem, parentId int, orderId int, db *db.DB) error {
+	orderItem := models.CreateOrderItem{
+		Plu:      dto.Plu,
+		Name:     dto.Name,
+		Price:    dto.Price,
+		Quantity: dto.Quantity,
+		OrderId:  orderId,
+		ParentId: parentId,
+	}
+
+	var newId int
+	var err error
+	if parentId == -1 {
+		newId, err = db.CreateOrderItemWithoutParent(orderItem)
+	} else {
+		newId, err = db.CreateOrderItemWithParent(orderItem)
+	}
+
+	if err != nil {
+		log.Errorf("failed to create order item: %v", err)
+		return err
+	}
+
+	if dto.SubItems != nil {
+		for _, subItem := range dto.SubItems {
+			err = createOrderItem(subItem, newId, orderId, db)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+}
+
 func CreateOrder(c echo.Context) error {
 	db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
 
@@ -88,20 +123,7 @@ func CreateOrder(c echo.Context) error {
 	}
 
 	for _, orderItem := range orderRequest.OrderItems {
-		// TODO: parent_id
-		orderItem := models.CreateOrderItem{
-			Plu:      orderItem.Plu,
-			Name:     orderItem.Name,
-			Price:    orderItem.Price,
-			Quantity: orderItem.Quantity,
-			OrderId:  orderDatabaseId,
-		}
-
-		_, err = db.CreateOrderItem(orderItem)
-		if err != nil {
-			log.Errorf("failed to create order item: %v", err)
-			return echo.NewHTTPError(http.StatusInternalServerError)
-		}
+		createOrderItem(orderItem, -1, orderDatabaseId, db)
 	}
 
 	response := dtos.CreateOrderResponse{
