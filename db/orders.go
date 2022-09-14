@@ -21,17 +21,11 @@ func (db *DB) CreateOrder(order models.CreateOrder) (int, error) {
 	return lastInsertId, err
 }
 
-func (db *DB) CreateOrderItem(orderItem models.CreateOrderItem) (int, error) {
-	var lastInsertId int
-	err := db.Sqlx.Get(
-		&lastInsertId,
-		"INSERT INTO order_items (plu, name, price, quantity, order_id) VALUES ($1, $2, $3, $4, $5) RETURNING id",
-		orderItem.Plu,
-		orderItem.Name,
-		orderItem.Price,
-		orderItem.Quantity,
-		orderItem.OrderId,
-	)
+func (database *DB) MarkOrderAsPaid(orderId int) error {
+	_, err := database.Sqlx.Exec("UPDATE orders SET is_paid=true WHERE id = $1", orderId)
+	if err != nil {
+		return err
+	}
 
-	return lastInsertId, err
+	return nil
 }

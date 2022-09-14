@@ -29,18 +29,18 @@ type Order struct {
 	StripeOrderId       string    `db:"stripe_order_id"`
 	IsPaid              bool      `db:"is_paid"`
 	CreatedAt           time.Time `db:"created_at"`
-	StoreId             int       `db:"merchant_id"`
+	StoreId             int       `db:"store_id"`
 	UserId              int       `db:"user_id"`
 }
 
 type OrderItem struct {
-	Id       int    `db:"id"`
-	Plu      string `db:"plu"`
-	Name     string `db:"name"`
-	Price    int    `db:"price"`
-	Quantity int    `db:"quantity"`
-	OrderId  int    `db:"order_id"`
-	ParentId int    `db:"parent_id"`
+	Id       int           `db:"id"`
+	Plu      string        `db:"plu"`
+	Name     string        `db:"name"`
+	Price    int           `db:"price"`
+	Quantity int           `db:"quantity"`
+	OrderId  int           `db:"order_id"`
+	ParentId sql.NullInt32 `db:"parent_id"`
 }
 
 type Store struct {
