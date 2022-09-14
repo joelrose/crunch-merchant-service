@@ -73,12 +73,10 @@ func DeliverectChannelStatus(c echo.Context) error {
 		}
 	}
 
-	request := c.Request()
-
+	requestHost := c.Request().Host
 	buildUrl := func(path string) string {
-		return "https://" + request.Host + "/api/channel/deliverect/" + path
+		return "https://" + requestHost + "/api/v1/channel/deliverect/" + path
 	}
-
 	response := dtos.ChannelStatusReponse{
 		StatusUpdateURL:   buildUrl("channel_status"),
 		MenuUpdateURL:     buildUrl("menu_push"),
