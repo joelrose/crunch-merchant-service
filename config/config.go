@@ -13,11 +13,16 @@ type Deliverect struct {
 	ClientSecret string
 }
 
+type Stripe struct {
+	SecretKey     string
+	WebhookSecret string
+}
+
 type Config struct {
 	FirebaseConfig string
 	DatabaseUrl    string
-	StripeKey      string
 	RedisUrl       string
+	Stripe         Stripe
 	Deliverect     Deliverect
 }
 
@@ -42,8 +47,11 @@ func LoadConfig() Config {
 	config := Config{
 		FirebaseConfig: mustGetEnv("FIREBASE_CONFIG"),
 		DatabaseUrl:    mustGetEnv("DATABASE_URL"),
-		StripeKey:      mustGetEnv("STRIPE_KEY"),
 		RedisUrl:       mustGetEnv("REDISCLOUD_URL"),
+		Stripe: Stripe{
+			SecretKey:     mustGetEnv("STRIPE_SECRET_KEY"),
+			WebhookSecret: mustGetEnv("STRIPE_WEBHOOK_SECRET"),
+		},
 		Deliverect: Deliverect{
 			BaseUrl:      mustGetEnv("DELIVERECT_BASE_URL"),
 			ClientId:     mustGetEnv("DELIVERECT_CLIENT_ID"),

@@ -30,7 +30,7 @@ func main() {
 
 	c := config.LoadConfig()
 
-	stripe.Key = c.StripeKey
+	stripe.Key = c.Stripe.SecretKey
 
 	database := db.NewDatabase(c.DatabaseUrl)
 

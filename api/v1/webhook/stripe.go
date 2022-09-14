@@ -27,9 +27,10 @@ func HandleStripe(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
+	config := c.Get(middleware.CONFIG_CONTEXT_KEY).(*config.Config)
 	stripeSignature := request.Header["Stripe-Signature"]
 
-	event, err := webhook.ConstructEvent(payload, stripeSignature[0], "")
+	event, err := webhook.ConstructEvent(payload, stripeSignature[0], config.Stripe.WebhookSecret)
 	if err != nil {
 		log.Errorf("Error verifying webhook signature: %v\n", err)
 		return echo.NewHTTPError(http.StatusBadRequest)
@@ -95,7 +96,6 @@ func HandleStripe(c echo.Context) error {
 			},
 		}
 
-		config := c.Get(middleware.CONFIG_CONTEXT_KEY).(*config.Config)
 		redisClient := c.Get(middleware.REDIS_CONTEXT_KEY).(*redis.Client)
 		deliverectService := deliverect.NewDeliverectService(*config, redisClient, channel.DeliverectLinkId, "crunch")
 
