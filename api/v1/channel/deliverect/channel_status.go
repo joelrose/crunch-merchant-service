@@ -2,6 +2,7 @@ package deliverect
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/joelrose/crunch-merchant-service/db"
 	"github.com/joelrose/crunch-merchant-service/dtos"
@@ -33,8 +34,14 @@ func DeliverectChannelStatus(c echo.Context) error {
 
 	db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
 
+	channelLocationId, err := strconv.Atoi(channelStatusRequest.ChannelLocationId)
+	if err != nil {
+		log.Errorf("failed to convert channel location id to int: %v", err)
+		return echo.NewHTTPError(http.StatusBadRequest)
+	}
+
 	// Check if [ChannelLocationId=StoreId] exists
-	_, err = db.GetStore(channelStatusRequest.ChannelLocationId)
+	_, err = db.GetStore(channelLocationId)
 
 	if err != nil {
 		log.Errorf("failed to get store: %v", err)
@@ -42,7 +49,7 @@ func DeliverectChannelStatus(c echo.Context) error {
 	}
 
 	// Check if channel exists
-	_, err = db.GetChannelByStoreId(channelStatusRequest.ChannelLocationId)
+	_, err = db.GetChannelByStoreId(channelLocationId)
 
 	channelStatus := convertToEnum(channelStatusRequest.Status)
 
@@ -50,7 +57,7 @@ func DeliverectChannelStatus(c echo.Context) error {
 		log.Debugf("channel does not exist, creating channel %v", err)
 		// Create new channel
 		err := db.CreateChannel(
-			channelStatusRequest.ChannelLocationId,
+			channelLocationId,
 			channelStatusRequest.LocationId,
 			channelStatusRequest.ChannelLinkId,
 			channelStatus,
@@ -64,7 +71,7 @@ func DeliverectChannelStatus(c echo.Context) error {
 		// Update existing channel
 		err := db.UpdateChannelStatus(
 			channelStatus,
-			channelStatusRequest.ChannelLocationId,
+			channelLocationId,
 		)
 
 		if err != nil {
