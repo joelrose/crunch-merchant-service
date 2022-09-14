@@ -13,8 +13,8 @@ import (
 
 func convertToString(intArray []int) []string {
 	var str []string
-	for ind, value := range intArray {
-		str[ind] = strconv.Itoa(value)
+	for _, value := range intArray {
+		str = append(str, strconv.Itoa(value))
 	}
 	return str
 }
