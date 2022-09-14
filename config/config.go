@@ -50,7 +50,7 @@ func LoadConfig() Config {
 		RedisUrl:       mustGetEnv("REDISCLOUD_URL"),
 		Stripe: Stripe{
 			SecretKey:     mustGetEnv("STRIPE_SECRET_KEY"),
-			WebhookSecret: mustGetEnv("STRIPE_WEBHOOK_SECRET"),
+			WebhookSecret: mustGetEnv("STRIPE_WEBHOOK_SIGNATURE"),
 		},
 		Deliverect: Deliverect{
 			BaseUrl:      mustGetEnv("DELIVERECT_BASE_URL"),
