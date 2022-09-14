@@ -1,6 +1,8 @@
 package utils
 
-import "github.com/joelrose/crunch-merchant-service/dtos"
+import (
+	"github.com/joelrose/crunch-merchant-service/dtos"
+)
 
 func CalculateOrderPrice(items []dtos.OrderItem) int {
 	if len(items) == 0 {
@@ -9,8 +11,8 @@ func CalculateOrderPrice(items []dtos.OrderItem) int {
 
 	var price int
 	for _, item := range items {
-		if item.Children != nil {
-			price += item.Quantity * (CalculateOrderPrice(*item.Children) + item.Price)
+		if item.SubItems != nil {
+			price += item.Quantity * (CalculateOrderPrice(item.SubItems) + item.Price)
 		} else {
 			price += item.Quantity * item.Price
 		}
