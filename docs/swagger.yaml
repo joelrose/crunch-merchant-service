@@ -54,9 +54,9 @@ definitions:
         type: string
       name:
         type: string
-      productChildren:
+      products:
         items:
-          type: integer
+          $ref: '#/definitions/GetStoreProduct'
         type: array
       sortOrder:
         type: integer
@@ -90,12 +90,12 @@ definitions:
         type: string
       price:
         type: integer
-      productChildren:
-        items:
-          type: integer
-        type: array
       productType:
         type: integer
+      products:
+        items:
+          $ref: '#/definitions/GetStoreProduct'
+        type: array
       snoozed:
         type: boolean
       sortOrder:
@@ -125,6 +125,8 @@ definitions:
         type: string
       imageUrl:
         type: string
+      isAvailable:
+        type: boolean
       name:
         type: string
       openingHours:
@@ -133,10 +135,6 @@ definitions:
         type: array
       phoneNumber:
         type: string
-      products:
-        items:
-          $ref: '#/definitions/GetStoreProduct'
-        type: array
       reviewCount:
         type: integer
     type: object

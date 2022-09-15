@@ -396,10 +396,10 @@
                 "name": {
                     "type": "string"
                 },
-                "productChildren": {
+                "products": {
                     "type": "array",
                     "items": {
-                        "type": "integer"
+                        "$ref": "#/definitions/GetStoreProduct"
                     }
                 },
                 "sortOrder": {
@@ -451,14 +451,14 @@
                 "price": {
                     "type": "integer"
                 },
-                "productChildren": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
-                },
                 "productType": {
                     "type": "integer"
+                },
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/GetStoreProduct"
+                    }
                 },
                 "snoozed": {
                     "type": "boolean"
@@ -504,6 +504,9 @@
                 "imageUrl": {
                     "type": "string"
                 },
+                "isAvailable": {
+                    "type": "boolean"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -515,12 +518,6 @@
                 },
                 "phoneNumber": {
                     "type": "string"
-                },
-                "products": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/GetStoreProduct"
-                    }
                 },
                 "reviewCount": {
                     "type": "integer"
