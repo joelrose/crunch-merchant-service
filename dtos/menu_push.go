@@ -11,6 +11,7 @@ type DeliverectMenuProduct struct {
 	Max         int       `db:"max" json:"max"`
 	Min         int       `db:"min" json:"min"`
 	Multiply    int       `db:"multiply" json:"multiply"`
+	MultiMax    int       `db:"multi_max" json:"multiMax"`
 	Plu         string    `db:"plu" json:"plu"`
 	Snoozed     bool      `db:"snoozed" json:"snoozed"`
 	Tax         int       `db:"tax" json:"takeawayTax"`

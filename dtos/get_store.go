@@ -23,6 +23,7 @@ type GetStoreProduct struct {
 	Max         int    `db:"max"`
 	Min         int    `db:"min"`
 	Multiply    int    `db:"multiply"`
+	MultiMax    int    `db:"multi_max"`
 	Plu         string `db:"plu"`
 	Snoozed     bool   `db:"snoozed"`
 	Tax         int    `db:"tax"`

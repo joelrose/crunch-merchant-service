@@ -11,7 +11,7 @@ func (db *DB) CreateProduct(product models.MenuProduct) (int, error) {
 	var lastInsertId int
 	err := db.Sqlx.Get(
 		&lastInsertId,
-		"INSERT INTO menu_product (name, plu, price, description, snoozed, tax, image_url, max, min, multiply, product_type, sort_order, visible, store_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING id",
+		"INSERT INTO menu_product (name, plu, price, description, snoozed, tax, image_url, max, min, multiply, multi_max, product_type, sort_order, visible, store_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING id",
 		product.Name,
 		product.Plu,
 		product.Price,
@@ -22,6 +22,7 @@ func (db *DB) CreateProduct(product models.MenuProduct) (int, error) {
 		product.Max,
 		product.Min,
 		product.Multiply,
+		product.MultiMax,
 		product.ProductType,
 		product.SortOrder,
 		product.Visible,
@@ -50,7 +51,7 @@ func (db *DB) GetProducts(storeId uuid.UUID) ([]dtos.GetStoreProduct, error) {
 	var products []dtos.GetStoreProduct
 	err := db.Sqlx.Select(
 		&products,
-		"SELECT id, name, description, price, max, min, multiply, plu, snoozed, tax, product_type, image_url, sort_order,visible FROM menu_product WHERE store_id = $1",
+		"SELECT id, name, description, price, max, min, multiply, multi_max, plu, snoozed, tax, product_type, image_url, sort_order,visible FROM menu_product WHERE store_id = $1",
 		storeId,
 	)
 

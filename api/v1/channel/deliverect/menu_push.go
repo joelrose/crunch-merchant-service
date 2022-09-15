@@ -95,6 +95,7 @@ func MenuPush(c echo.Context) error {
 			Max:         product.Max,
 			Min:         product.Min,
 			Multiply:    product.Multiply,
+			MultiMax:    product.MultiMax,
 			Plu:         product.Plu,
 			Snoozed:     product.Snoozed,
 			Tax:         product.Tax,
