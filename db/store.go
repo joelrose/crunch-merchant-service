@@ -18,13 +18,24 @@ func (db *DB) GetStore(id uuid.UUID) (models.Store, error) {
 	return store, nil
 }
 
+func (db *DB) GetOpenStores(id uuid.UUID) (models.Store, error) {
+	store := models.Store{}
+	err := db.Sqlx.Get(&store, "SELECT * FROM stores WHERE id = $1 AND is_open = true", id)
+
+	if err != nil {
+		return models.Store{}, err
+	}
+
+	return store, nil
+}
+
 func (db *DB) GetAvailableStore(id uuid.UUID) (models.Store, error) {
 	storeQuery := `
 	SELECT *
 	FROM stores s
 	WHERE s.id = $1 
 	  AND is_open = true
-	  AND EXISTS (
+	  AND EXISTS AS (
 			SELECT o.id
 			FROM store_opening_hours o
 			WHERE s.id = o.store_id

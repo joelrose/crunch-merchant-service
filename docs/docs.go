@@ -403,10 +403,10 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
-                "productChildren": {
+                "products": {
                     "type": "array",
                     "items": {
-                        "type": "integer"
+                        "$ref": "#/definitions/GetStoreProduct"
                     }
                 },
                 "sortOrder": {
@@ -458,14 +458,14 @@ const docTemplate = `{
                 "price": {
                     "type": "integer"
                 },
-                "productChildren": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
-                },
                 "productType": {
                     "type": "integer"
+                },
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/GetStoreProduct"
+                    }
                 },
                 "snoozed": {
                     "type": "boolean"
@@ -511,6 +511,9 @@ const docTemplate = `{
                 "imageUrl": {
                     "type": "string"
                 },
+                "isAvailable": {
+                    "type": "boolean"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -522,12 +525,6 @@ const docTemplate = `{
                 },
                 "phoneNumber": {
                     "type": "string"
-                },
-                "products": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/GetStoreProduct"
-                    }
                 },
                 "reviewCount": {
                     "type": "integer"

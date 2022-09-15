@@ -12,6 +12,7 @@ import (
 	"github.com/joelrose/crunch-merchant-service/db/models"
 	"github.com/joelrose/crunch-merchant-service/dtos"
 	"github.com/joelrose/crunch-merchant-service/middleware"
+	"github.com/joelrose/crunch-merchant-service/utils"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 )
@@ -24,11 +25,42 @@ type (
 	}
 )
 
+func convertHelperMenuCategory(db *db.DB, productMap map[int]dtos.GetStoreProduct, productId int) dtos.GetStoreProduct {
+	childrenIds, err := db.GetProductChildren(productId)
+	if err != nil {
+		log.Errorf("failed to get product children: %v", err)
+		return dtos.GetStoreProduct{}
+	}
+
+	product := productMap[productId]
+	result := []dtos.GetStoreProduct{}
+	for _, childId := range childrenIds {
+		result = append(result, convertHelperMenuCategory(db, productMap, childId))
+	}
+
+	if len(result) > 0 {
+		product.Products = result
+	}
+
+	return product
+}
+
 func buildMenu(db *db.DB, storeId uuid.UUID) (*MenuModel, error) {
 	categories, err := db.GetCategories(storeId)
 	if err != nil {
 		log.Errorf("failed to get categories: %v", err)
 		return nil, err
+	}
+
+	products, err := db.GetProducts(storeId)
+	if err != nil {
+		log.Errorf("failed to get products: %v", err)
+		return nil, err
+	}
+
+	productMap := make(map[int]dtos.GetStoreProduct)
+	for _, product := range products {
+		productMap[product.Id] = product
 	}
 
 	for ind, category := range categories {
@@ -39,24 +71,14 @@ func buildMenu(db *db.DB, storeId uuid.UUID) (*MenuModel, error) {
 			return nil, err
 		}
 
-		categories[ind].ProductChildren = childrenProductIds
-	}
-
-	products, err := db.GetProducts(storeId)
-	if err != nil {
-		log.Errorf("failed to get products: %v", err)
-		return nil, err
-	}
-
-	for ind, product := range products {
-		childrenProductIds, err := db.GetProductChildren(product.Id)
-
-		if err != nil {
-			log.Errorf("failed to get product children: %v", err)
-			return nil, err
+		children := []dtos.GetStoreProduct{}
+		for _, childrenProductId := range childrenProductIds {
+			children = append(children, convertHelperMenuCategory(db, productMap, childrenProductId))
 		}
 
-		products[ind].ProductChildren = childrenProductIds
+		if len(children) > 0 {
+			categories[ind].Products = children
+		}
 	}
 
 	openingHours, err := db.GetOpeningHours(storeId)
@@ -72,7 +94,7 @@ func buildMenu(db *db.DB, storeId uuid.UUID) (*MenuModel, error) {
 	}, nil
 }
 
-func buildStore(store models.Store, menu *MenuModel) dtos.GetStoreResponse {
+func buildStore(store models.Store, menu *MenuModel, isAvailable bool) dtos.GetStoreResponse {
 	return dtos.GetStoreResponse{
 		Id:                store.Id,
 		Name:              store.Name,
@@ -85,7 +107,7 @@ func buildStore(store models.Store, menu *MenuModel) dtos.GetStoreResponse {
 		PhoneNumber:       store.PhoneNumber,
 		ImageUrl:          store.ImageUrl,
 		Categories:        menu.Categories,
-		Products:          menu.Products,
+		IsAvailable:       isAvailable,
 		OpeningHours:      menu.OpeningHours,
 	}
 }
@@ -113,11 +135,19 @@ func GetStore(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
 
-	store, err := db.GetAvailableStore(r.StoreId)
+	store, err := db.GetOpenStores(r.StoreId)
 	if err != nil {
 		log.Debugf("failed to get store: %v", err)
 		return echo.NewHTTPError(http.StatusNotFound)
 	}
+
+	openingHours, err := db.GetOpeningHours(store.Id)
+	if err != nil {
+		log.Debugf("failed to get opening hours: %v", err)
+		return echo.NewHTTPError(http.StatusInternalServerError)
+	}
+
+	isAvailable := utils.IsStoreAvailable(openingHours)
 
 	rdb := c.Get(middleware.REDIS_CONTEXT_KEY).(*redis.Client)
 
@@ -131,7 +161,7 @@ func GetStore(c echo.Context) error {
 		}
 
 		log.Debug("serving cached menu")
-		return c.JSON(http.StatusOK, buildStore(store, &menu))
+		return c.JSON(http.StatusOK, buildStore(store, &menu, isAvailable))
 	} else {
 		log.Debugf("rebuilding menu: %v", err)
 	}
@@ -152,5 +182,5 @@ func GetStore(c echo.Context) error {
 		log.Errorf("failed to save menu to redis: %v", err)
 	}
 
-	return c.JSON(http.StatusOK, buildStore(store, menu))
+	return c.JSON(http.StatusOK, buildStore(store, menu, isAvailable))
 }

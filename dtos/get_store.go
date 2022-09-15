@@ -7,30 +7,30 @@ type GetStoreRequest struct {
 } //@name GetStoreRequest
 
 type GetStoreCategory struct {
-	Id              int    `db:"id"`
-	Name            string `db:"name"`
-	Description     string `db:"description"`
-	ImageUrl        string `db:"image_url"`
-	SortOrder       int    `db:"sort_order"`
-	ProductChildren []int
+	Id          int    `db:"id"`
+	Name        string `db:"name"`
+	Description string `db:"description"`
+	ImageUrl    string `db:"image_url"`
+	SortOrder   int    `db:"sort_order"`
+	Products    []GetStoreProduct
 } //@name GetStoreCategory
 
 type GetStoreProduct struct {
-	Id              int    `db:"id"`
-	Name            string `db:"name"`
-	Description     string `db:"description"`
-	Price           int    `db:"price"`
-	Max             int    `db:"max"`
-	Min             int    `db:"min"`
-	Multiply        int    `db:"multiply"`
-	Plu             string `db:"plu"`
-	Snoozed         bool   `db:"snoozed"`
-	Tax             int    `db:"tax"`
-	ProductType     int    `db:"product_type"`
-	ImageUrl        string `db:"image_url"`
-	SortOrder       int    `db:"sort_order"`
-	Visible         bool   `db:"visible"`
-	ProductChildren []int
+	Id          int    `db:"id"`
+	Name        string `db:"name"`
+	Description string `db:"description"`
+	Price       int    `db:"price"`
+	Max         int    `db:"max"`
+	Min         int    `db:"min"`
+	Multiply    int    `db:"multiply"`
+	Plu         string `db:"plu"`
+	Snoozed     bool   `db:"snoozed"`
+	Tax         int    `db:"tax"`
+	ProductType int    `db:"product_type"`
+	ImageUrl    string `db:"image_url"`
+	SortOrder   int    `db:"sort_order"`
+	Visible     bool   `db:"visible"`
+	Products    []GetStoreProduct
 } //@name GetStoreProduct
 
 type GetStoreOpeningHour struct {
@@ -51,6 +51,6 @@ type GetStoreResponse struct {
 	PhoneNumber       string    `db:"phone_number"`
 	ImageUrl          string    `db:"image_url"`
 	Categories        []GetStoreCategory
-	Products          []GetStoreProduct
+	IsAvailable       bool
 	OpeningHours      []GetStoreOpeningHour
 } //@name GetStoreResponse

@@ -38,7 +38,7 @@ func GetOrders(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
-	var response []dtos.GetOrdersResponse
+	response := []dtos.GetOrdersResponse{}
 
 	for _, order := range orders {
 		orderItems, err := db.GetOrderItems(order.Id)
