@@ -4,15 +4,17 @@ import (
 	"net/http"
 
 	"github.com/joelrose/crunch-merchant-service/api/v1/channel/deliverect"
-	"github.com/joelrose/crunch-merchant-service/api/v1/menus"
 	"github.com/joelrose/crunch-merchant-service/api/v1/orders"
+	"github.com/joelrose/crunch-merchant-service/api/v1/store"
 	"github.com/joelrose/crunch-merchant-service/api/v1/stores"
 	"github.com/joelrose/crunch-merchant-service/api/v1/users"
 	"github.com/joelrose/crunch-merchant-service/api/v1/webhook"
 	"github.com/joelrose/crunch-merchant-service/api/v1/whitelist"
 	"github.com/joelrose/crunch-merchant-service/config"
+	_ "github.com/joelrose/crunch-merchant-service/docs"
 	"github.com/joelrose/crunch-merchant-service/middleware"
 	"github.com/labstack/echo/v4"
+	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
 func SetupRoutes(e *echo.Echo, config config.Config) {
@@ -20,13 +22,15 @@ func SetupRoutes(e *echo.Echo, config config.Config) {
 		return c.String(http.StatusOK, "ok")
 	}
 
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
+
 	e.GET("/", okHandler)
 
 	apiV1 := e.Group("/api/v1")
 
-	apiV1.GET("/whitelist", whitelist.IsWhitelisted)
-	apiV1.GET("/stores", stores.GetStores)
-	apiV1.GET("/menus/:id", menus.GetMenu)
+	apiV1.POST("/whitelist", whitelist.IsWhitelisted)
+	apiV1.GET("/stores", stores.GetStoresOverview)
+	apiV1.GET("/store/:id", store.GetStore)
 
 	apiV1.POST("/webhook/stripe", webhook.HandleStripe)
 
@@ -49,8 +53,8 @@ func SetupRoutes(e *echo.Echo, config config.Config) {
 
 	usersGroup.GET("/status", okHandler)
 
-	usersGroup.GET("/", users.GetUser)
-	usersGroup.POST("/", users.CreateUser)
+	usersGroup.GET("", users.GetUser)
+	usersGroup.POST("", users.CreateUser)
 
 	ordersGroup := apiV1.Group("/orders", middleware.FirebaseAuth(config.FirebaseConfig))
 

@@ -14,7 +14,7 @@ type User struct {
 	Firstname    string    `db:"firstname"`
 	Lastname     string    `db:"lastname"`
 	CreatedAt    time.Time `db:"created_at"`
-}
+} //@name User
 
 type Merchant struct {
 	Id        int       `db:"id"`

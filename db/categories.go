@@ -36,8 +36,8 @@ func (db *DB) CreateProductCategoryRelation(categoryId int, productId int) error
 	return err
 }
 
-func (db *DB) GetCategories(storeId uuid.UUID) ([]dtos.GetMenuCategory, error) {
-	var categories []dtos.GetMenuCategory
+func (db *DB) GetCategories(storeId uuid.UUID) ([]dtos.GetStoreCategory, error) {
+	var categories []dtos.GetStoreCategory
 	err := db.Sqlx.Select(&categories, "SELECT id, name, description, image_url, sort_order FROM menu_categories WHERE store_id = $1", storeId)
 
 	return categories, err

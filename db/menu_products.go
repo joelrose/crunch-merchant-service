@@ -46,8 +46,8 @@ func (db *DB) CreateProductRelation(childProductId int, parentProductId int) err
 	return err
 }
 
-func (db *DB) GetProducts(storeId uuid.UUID) ([]dtos.GetMenuProduct, error) {
-	var products []dtos.GetMenuProduct
+func (db *DB) GetProducts(storeId uuid.UUID) ([]dtos.GetStoreProduct, error) {
+	var products []dtos.GetStoreProduct
 	err := db.Sqlx.Select(
 		&products,
 		"SELECT id, name, description, price, max, min, multiply, plu, snoozed, tax, product_type, image_url, sort_order,visible FROM menu_product WHERE store_id = $1",

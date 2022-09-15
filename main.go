@@ -25,6 +25,17 @@ func newRedis(redisUrl string) *redis.Client {
 	return redis.NewClient(opt)
 }
 
+// @title           Swagger Example API
+// @version         1.0
+// @description     This is a sample server celler server.
+// @BasePath  /api/v1
+// @host localhost:8080
+// @securityDefinitions.apikey FirebaseToken
+// @in header
+// @name Authorization
+// @securityDefinitions.apikey Auth0Token
+// @in header
+// @name Authorization
 func main() {
 	log.SetLevel(log.DEBUG)
 

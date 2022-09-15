@@ -9,7 +9,16 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
-func GetStores(c echo.Context) error {
+// GetStoresOverview godoc
+// @Summary      Get all open stores
+// @Tags         stores
+// @Accept       json
+// @Produce      json
+// @Security 	 FirebaseToken
+// @Success      200  {object}  []dtos.GetStoresOverviewResponse
+// @Failure      500  {object}  error
+// @Router       /stores [get]
+func GetStoresOverview(c echo.Context) error {
 	db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
 
 	stores, err := db.GetAvailableStores()

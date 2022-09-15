@@ -15,4 +15,4 @@ type GetOrdersResponse struct {
 	CreatedAt           time.Time   `json:"created_at"`
 	OrderItems          []OrderItem `json:"order_items"`
 	StoreId             uuid.UUID   `json:"merchant_id"`
-}
+} //@name GetOrdersResponse

@@ -45,8 +45,8 @@ func (db *DB) GetAvailableStore(id uuid.UUID) (models.Store, error) {
 	return store, nil
 }
 
-func (db *DB) GetAvailableStores() ([]dtos.GetStoresResponse, error) {
-	storeQuery := `
+func (db *DB) GetAvailableStores() ([]dtos.GetStoresOverviewResponse, error) {
+	storesQuery := `
 	SELECT id, name, description, address, average_pickup_time, average_review, review_count, google_maps_link, phone_number, image_url
 	FROM stores s
 	WHERE is_open = true
@@ -61,11 +61,11 @@ func (db *DB) GetAvailableStores() ([]dtos.GetStoresResponse, error) {
 
 	weekday, timestamp := utils.GetDayAndTimestamp()
 
-	stores := []dtos.GetStoresResponse{}
-	err := db.Sqlx.Select(&stores, storeQuery, weekday, timestamp)
+	stores := []dtos.GetStoresOverviewResponse{}
+	err := db.Sqlx.Select(&stores, storesQuery, weekday, timestamp)
 
 	if err != nil {
-		return []dtos.GetStoresResponse{}, err
+		return []dtos.GetStoresOverviewResponse{}, err
 	}
 
 	return stores, nil

@@ -1,0 +1,414 @@
+basePath: /api/v1
+definitions:
+  CreateOrderRequest:
+    properties:
+      orderItems:
+        items:
+          $ref: '#/definitions/OrderItem'
+        type: array
+      storeId:
+        type: string
+    type: object
+  CreateOrderResponse:
+    properties:
+      stripeClientSecret:
+        type: string
+    type: object
+  CreateUserRequest:
+    properties:
+      firstname:
+        type: string
+      language_code:
+        type: string
+      lastname:
+        type: string
+    type: object
+  GetOrdersResponse:
+    properties:
+      created_at:
+        type: string
+      estimated_pickup_time:
+        type: string
+      id:
+        type: integer
+      is_paid:
+        type: boolean
+      merchant_id:
+        type: string
+      order_items:
+        items:
+          $ref: '#/definitions/OrderItem'
+        type: array
+      price:
+        type: integer
+      status:
+        type: integer
+    type: object
+  GetStoreCategory:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      imageUrl:
+        type: string
+      name:
+        type: string
+      productChildren:
+        items:
+          type: integer
+        type: array
+      sortOrder:
+        type: integer
+    type: object
+  GetStoreOpeningHour:
+    properties:
+      dayOfWeek:
+        type: integer
+      endTimestamp:
+        type: integer
+      startTimestamp:
+        type: integer
+    type: object
+  GetStoreProduct:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      imageUrl:
+        type: string
+      max:
+        type: integer
+      min:
+        type: integer
+      multiply:
+        type: integer
+      name:
+        type: string
+      plu:
+        type: string
+      price:
+        type: integer
+      productChildren:
+        items:
+          type: integer
+        type: array
+      productType:
+        type: integer
+      snoozed:
+        type: boolean
+      sortOrder:
+        type: integer
+      tax:
+        type: integer
+      visible:
+        type: boolean
+    type: object
+  GetStoreResponse:
+    properties:
+      address:
+        type: string
+      averagePickupTime:
+        type: integer
+      averageReview:
+        type: number
+      categories:
+        items:
+          $ref: '#/definitions/GetStoreCategory'
+        type: array
+      description:
+        type: string
+      googleMapsLink:
+        type: string
+      id:
+        type: string
+      imageUrl:
+        type: string
+      name:
+        type: string
+      openingHours:
+        items:
+          $ref: '#/definitions/GetStoreOpeningHour'
+        type: array
+      phoneNumber:
+        type: string
+      products:
+        items:
+          $ref: '#/definitions/GetStoreProduct'
+        type: array
+      reviewCount:
+        type: integer
+    type: object
+  GetStoresOverviewResponse:
+    properties:
+      address:
+        type: string
+      averagePickupTime:
+        type: integer
+      averageReview:
+        type: number
+      description:
+        type: string
+      googleMapsLink:
+        type: string
+      id:
+        type: integer
+      imageUrl:
+        type: string
+      name:
+        type: string
+      phoneNumber:
+        type: string
+      reviewCount:
+        type: integer
+    type: object
+  OrderItem:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      plu:
+        type: string
+      price:
+        type: integer
+      quantity:
+        type: integer
+      subItems:
+        items:
+          $ref: '#/definitions/OrderItem'
+        type: array
+    type: object
+  User:
+    properties:
+      createdAt:
+        type: string
+      firebaseId:
+        type: string
+      firstname:
+        type: string
+      id:
+        type: integer
+      languageCode:
+        type: string
+      lastname:
+        type: string
+    type: object
+  WhitelistRequest:
+    properties:
+      identifier:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a sample server celler server.
+  title: Swagger Example API
+  version: "1.0"
+paths:
+  /orders:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/GetOrdersResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema: {}
+        "500":
+          description: Internal Server Error
+          schema: {}
+      security:
+      - FirebaseToken: []
+      summary: Get all orders from a user
+      tags:
+      - orders
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/CreateOrderRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/CreateOrderResponse'
+        "400":
+          description: Bad Request
+          schema: {}
+        "401":
+          description: Unauthorized
+          schema: {}
+        "409":
+          description: Conflict
+          schema: {}
+        "500":
+          description: Internal Server Error
+          schema: {}
+      security:
+      - FirebaseToken: []
+      summary: Create Order for a store
+      tags:
+      - orders
+  /store/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Id of the store
+        in: path
+        name: storeId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GetStoreResponse'
+        "400":
+          description: Bad Request
+          schema: {}
+        "404":
+          description: Not Found
+          schema: {}
+        "500":
+          description: Internal Server Error
+          schema: {}
+      security:
+      - FirebaseToken: []
+      summary: Get menu for a given store
+      tags:
+      - store
+  /stores:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/GetStoresOverviewResponse'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema: {}
+      security:
+      - FirebaseToken: []
+      summary: Get all open stores
+      tags:
+      - stores
+  /users:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        "404":
+          description: Not Found
+          schema: {}
+        "500":
+          description: Internal Server Error
+          schema: {}
+      security:
+      - FirebaseToken: []
+      summary: Get User associated with the given Firebase Token
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+          schema: {}
+        "401":
+          description: Unauthorized
+          schema: {}
+        "409":
+          description: Conflict
+          schema: {}
+        "500":
+          description: Internal Server Error
+          schema: {}
+      security:
+      - FirebaseToken: []
+      summary: Create User associated with the given Firebase Token
+      tags:
+      - users
+  /whitelist:
+    post:
+      consumes:
+      - application/json
+      description: get string by ID
+      parameters:
+      - description: body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/WhitelistRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: boolean
+        "400":
+          description: Bad Request
+          schema: {}
+        "404":
+          description: Not Found
+          schema: {}
+        "500":
+          description: Internal Server Error
+          schema: {}
+      summary: Check if identifier is whitelisted
+      tags:
+      - whitelist
+securityDefinitions:
+  Auth0Token:
+    in: header
+    name: Authorization
+    type: apiKey
+  FirebaseToken:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

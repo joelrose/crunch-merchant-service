@@ -21,8 +21,8 @@ func (db *DB) DeleteOpeningHours(storeId uuid.UUID) error {
 	return err
 }
 
-func (db *DB) GetOpeningHours(storeId uuid.UUID) ([]dtos.GetMenuOpeningHour, error) {
-	var openingHours []dtos.GetMenuOpeningHour
+func (db *DB) GetOpeningHours(storeId uuid.UUID) ([]dtos.GetStoreOpeningHour, error) {
+	var openingHours []dtos.GetStoreOpeningHour
 	err := db.Sqlx.Select(&openingHours, "SELECT day_of_week, start_timestamp, end_timestamp FROM store_opening_hours WHERE store_id = $1", storeId)
 
 	return openingHours, err

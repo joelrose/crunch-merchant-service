@@ -16,41 +16,19 @@ import (
 	"github.com/stripe/stripe-go/v73/paymentintent"
 )
 
-func createOrderItem(dto dtos.OrderItem, parentId int, orderId int, db *db.DB) error {
-	orderItem := models.CreateOrderItem{
-		Plu:      dto.Plu,
-		Name:     dto.Name,
-		Price:    dto.Price,
-		Quantity: dto.Quantity,
-		OrderId:  orderId,
-		ParentId: parentId,
-	}
-
-	var newId int
-	var err error
-	if parentId == -1 {
-		newId, err = db.CreateOrderItemWithoutParent(orderItem)
-	} else {
-		newId, err = db.CreateOrderItemWithParent(orderItem)
-	}
-
-	if err != nil {
-		log.Errorf("failed to create order item: %v", err)
-		return err
-	}
-
-	if dto.SubItems != nil {
-		for _, subItem := range dto.SubItems {
-			err = createOrderItem(subItem, newId, orderId, db)
-			if err != nil {
-				return err
-			}
-		}
-	}
-
-	return nil
-}
-
+// Order godoc
+// @Summary      Create Order for a store
+// @Tags         orders
+// @Accept       json
+// @Produce      json
+// @Security 	 FirebaseToken
+// @Param request body dtos.CreateOrderRequest true "body"
+// @Success      201  {object} dtos.CreateOrderResponse
+// @Failure      400  {object}  error
+// @Failure      401  {object}  error
+// @Failure      409  {object}  error
+// @Failure      500  {object}  error
+// @Router       /orders [post]
 func CreateOrder(c echo.Context) error {
 	db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
 
@@ -132,3 +110,40 @@ func CreateOrder(c echo.Context) error {
 
 	return c.JSON(http.StatusCreated, response)
 }
+
+func createOrderItem(dto dtos.OrderItem, parentId int, orderId int, db *db.DB) error {
+	orderItem := models.CreateOrderItem{
+		Plu:      dto.Plu,
+		Name:     dto.Name,
+		Price:    dto.Price,
+		Quantity: dto.Quantity,
+		OrderId:  orderId,
+		ParentId: parentId,
+	}
+
+	var newId int
+	var err error
+	if parentId == -1 {
+		newId, err = db.CreateOrderItemWithoutParent(orderItem)
+	} else {
+		newId, err = db.CreateOrderItemWithParent(orderItem)
+	}
+
+	if err != nil {
+		log.Errorf("failed to create order item: %v", err)
+		return err
+	}
+
+	if dto.SubItems != nil {
+		for _, subItem := range dto.SubItems {
+			err = createOrderItem(subItem, newId, orderId, db)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+}
+
+// Creat

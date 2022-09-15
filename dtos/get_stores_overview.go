@@ -1,6 +1,6 @@
 package dtos
 
-type GetStoresResponse struct {
+type GetStoresOverviewResponse struct {
 	Id                int     `db:"id"`
 	Name              string  `db:"name"`
 	Description       string  `db:"description"`
@@ -11,4 +11,4 @@ type GetStoresResponse struct {
 	GoogleMapsLink    string  `db:"google_maps_link"`
 	PhoneNumber       string  `db:"phone_number"`
 	ImageUrl          string  `db:"image_url"`
-}
+} //@name GetStoresOverviewResponse

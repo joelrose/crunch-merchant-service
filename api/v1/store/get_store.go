@@ -1,4 +1,4 @@
-package menus
+package store
 
 import (
 	"context"
@@ -9,13 +9,22 @@ import (
 	"github.com/go-redis/redis/v9"
 	"github.com/google/uuid"
 	"github.com/joelrose/crunch-merchant-service/db"
+	"github.com/joelrose/crunch-merchant-service/db/models"
 	"github.com/joelrose/crunch-merchant-service/dtos"
 	"github.com/joelrose/crunch-merchant-service/middleware"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 )
 
-func buildMenu(db *db.DB, storeId uuid.UUID) (*dtos.GetMenuResponse, error) {
+type (
+	MenuModel struct {
+		Categories   []dtos.GetStoreCategory
+		Products     []dtos.GetStoreProduct
+		OpeningHours []dtos.GetStoreOpeningHour
+	}
+)
+
+func buildMenu(db *db.DB, storeId uuid.UUID) (*MenuModel, error) {
 	categories, err := db.GetCategories(storeId)
 	if err != nil {
 		log.Errorf("failed to get categories: %v", err)
@@ -56,25 +65,55 @@ func buildMenu(db *db.DB, storeId uuid.UUID) (*dtos.GetMenuResponse, error) {
 		return nil, err
 	}
 
-	return &dtos.GetMenuResponse{
+	return &MenuModel{
 		Categories:   categories,
 		Products:     products,
 		OpeningHours: openingHours,
 	}, nil
 }
 
-func GetMenu(c echo.Context) error {
+func buildStore(store models.Store, menu *MenuModel) dtos.GetStoreResponse {
+	return dtos.GetStoreResponse{
+		Id:                store.Id,
+		Name:              store.Name,
+		Description:       store.Description,
+		Address:           store.Address,
+		AveragePickupTime: store.AveragePickupTime,
+		AverageReview:     store.AverageReview,
+		ReviewCount:       store.ReviewCount,
+		GoogleMapsLink:    store.GoogleMapsLink,
+		PhoneNumber:       store.PhoneNumber,
+		ImageUrl:          store.ImageUrl,
+		Categories:        menu.Categories,
+		Products:          menu.Products,
+		OpeningHours:      menu.OpeningHours,
+	}
+}
+
+// GetStore godoc
+// @Summary      Get menu for a given store
+// @Tags         store
+// @Accept       json
+// @Produce      json
+// @Security 	 FirebaseToken
+// @Param storeId path string true "Id of the store"
+// @Success      200  {object}  dtos.GetStoreResponse
+// @Success      400  {object} 	error
+// @Success      404  {object} 	error
+// @Failure      500  {object}  error
+// @Router       /store/{id} [get]
+func GetStore(c echo.Context) error {
 	ctx := context.Background()
 	db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
 
-	r := dtos.GetMenuRequest{}
+	r := dtos.GetStoreRequest{}
 	err := c.Bind(&r)
 	if err != nil {
 		log.Debug("failed to bind request body: %v", err)
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
 
-	_, err = db.GetAvailableStore(r.StoreId)
+	store, err := db.GetAvailableStore(r.StoreId)
 	if err != nil {
 		log.Debugf("failed to get store: %v", err)
 		return echo.NewHTTPError(http.StatusNotFound)
@@ -84,8 +123,15 @@ func GetMenu(c echo.Context) error {
 
 	value, err := rdb.Get(ctx, fmt.Sprint(r.StoreId)).Result()
 	if err == nil {
+		var menu MenuModel
+		err := json.Unmarshal([]byte(value), &menu)
+		if err != nil {
+			log.Errorf("failed to marshal menu model: %v", err)
+			return echo.NewHTTPError(http.StatusInternalServerError)
+		}
+
 		log.Debug("serving cached menu")
-		return c.Blob(http.StatusOK, echo.MIMEApplicationJSONCharsetUTF8, []byte(value))
+		return c.JSON(http.StatusOK, buildStore(store, &menu))
 	} else {
 		log.Debugf("rebuilding menu: %v", err)
 	}
@@ -106,5 +152,5 @@ func GetMenu(c echo.Context) error {
 		log.Errorf("failed to save menu to redis: %v", err)
 	}
 
-	return c.Blob(http.StatusOK, echo.MIMEApplicationJSONCharsetUTF8, []byte(json))
+	return c.JSON(http.StatusOK, buildStore(store, menu))
 }

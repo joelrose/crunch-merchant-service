@@ -2,20 +2,20 @@ package dtos
 
 import "github.com/google/uuid"
 
-type GetMenuRequest struct {
+type GetStoreRequest struct {
 	StoreId uuid.UUID `param:"id"`
-}
+} //@name GetStoreRequest
 
-type GetMenuCategory struct {
+type GetStoreCategory struct {
 	Id              int    `db:"id"`
 	Name            string `db:"name"`
 	Description     string `db:"description"`
 	ImageUrl        string `db:"image_url"`
 	SortOrder       int    `db:"sort_order"`
 	ProductChildren []int
-}
+} //@name GetStoreCategory
 
-type GetMenuProduct struct {
+type GetStoreProduct struct {
 	Id              int    `db:"id"`
 	Name            string `db:"name"`
 	Description     string `db:"description"`
@@ -31,16 +31,26 @@ type GetMenuProduct struct {
 	SortOrder       int    `db:"sort_order"`
 	Visible         bool   `db:"visible"`
 	ProductChildren []int
-}
+} //@name GetStoreProduct
 
-type GetMenuOpeningHour struct {
+type GetStoreOpeningHour struct {
 	DayOfWeek      int `db:"day_of_week"`
 	StartTimestamp int `db:"start_timestamp"`
 	EndTimestamp   int `db:"end_timestamp"`
-}
+} //@name GetStoreOpeningHour
 
-type GetMenuResponse struct {
-	Categories   []GetMenuCategory
-	Products     []GetMenuProduct
-	OpeningHours []GetMenuOpeningHour
-}
+type GetStoreResponse struct {
+	Id                uuid.UUID `db:"id"`
+	Name              string    `db:"name"`
+	Description       string    `db:"description"`
+	Address           string    `db:"address"`
+	AveragePickupTime int       `db:"average_pickup_time"`
+	AverageReview     float64   `db:"average_review"`
+	ReviewCount       int       `db:"review_count"`
+	GoogleMapsLink    string    `db:"google_maps_link"`
+	PhoneNumber       string    `db:"phone_number"`
+	ImageUrl          string    `db:"image_url"`
+	Categories        []GetStoreCategory
+	Products          []GetStoreProduct
+	OpeningHours      []GetStoreOpeningHour
+} //@name GetStoreResponse

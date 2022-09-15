@@ -11,6 +11,19 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
+// CreateUser godoc
+// @Summary      Create User associated with the given Firebase Token
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Security 	 FirebaseToken
+// @Param 		 request body dtos.CreateUserRequest true "body"
+// @Success      201
+// @Failure      400  {object}  error
+// @Failure      401  {object}  error
+// @Failure      409  {object}  error
+// @Failure      500  {object}  error
+// @Router       /users [post]
 func CreateUser(c echo.Context) error {
 	db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
 

@@ -12,6 +12,16 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
+// GetOrders godoc
+// @Summary      Get all orders from a user
+// @Tags         orders
+// @Accept       json
+// @Produce      json
+// @Security 	 FirebaseToken
+// @Success      200  {object}  []dtos.GetOrdersResponse
+// @Success      400  {object} 	error
+// @Failure      500  {object}  error
+// @Router       /orders [get]
 func GetOrders(c echo.Context) error {
 	db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
 
@@ -25,7 +35,7 @@ func GetOrders(c echo.Context) error {
 	orders, err := db.GetOrdersByUserId(user.Id)
 	if err != nil {
 		log.Errorf("failed to get orders: %v", err)
-		return echo.NewHTTPError(http.StatusBadRequest)
+		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
 	var response []dtos.GetOrdersResponse
@@ -35,7 +45,7 @@ func GetOrders(c echo.Context) error {
 
 		if err != nil {
 			log.Errorf("failed to get order items: %v", err)
-			return echo.NewHTTPError(http.StatusBadRequest)
+			return echo.NewHTTPError(http.StatusInternalServerError)
 		}
 
 		response = append(response, dtos.GetOrdersResponse{
