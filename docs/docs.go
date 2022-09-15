@@ -446,6 +446,9 @@ const docTemplate = `{
                 "min": {
                     "type": "integer"
                 },
+                "multiMax": {
+                    "type": "integer"
+                },
                 "multiply": {
                     "type": "integer"
                 },

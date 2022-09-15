@@ -82,6 +82,8 @@ definitions:
         type: integer
       min:
         type: integer
+      multiMax:
+        type: integer
       multiply:
         type: integer
       name:
