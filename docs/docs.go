@@ -553,7 +553,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "imageUrl": {
                     "type": "string"
