@@ -118,7 +118,7 @@ func buildStore(store models.Store, menu *MenuModel, isAvailable bool) dtos.GetS
 // @Accept       json
 // @Produce      json
 // @Security 	 FirebaseToken
-// @Param storeId path string true "Id of the store"
+// @Param id path string true "Id of the store"
 // @Success      200  {object}  dtos.GetStoreResponse
 // @Success      400  {object} 	error
 // @Success      404  {object} 	error
@@ -131,7 +131,7 @@ func GetStore(c echo.Context) error {
 	r := dtos.GetStoreRequest{}
 	err := c.Bind(&r)
 	if err != nil {
-		log.Debug("failed to bind request body: %v", err)
+		log.Debugf("failed to bind request body: %v", err)
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
 

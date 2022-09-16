@@ -127,7 +127,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Id of the store",
-                        "name": "storeId",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     }

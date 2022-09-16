@@ -35,7 +35,7 @@ func (db *DB) GetAvailableStore(id uuid.UUID) (models.Store, error) {
 	FROM stores s
 	WHERE s.id = $1 
 	  AND is_open = true
-	  AND EXISTS AS (
+	  AND EXISTS (
 			SELECT o.id
 			FROM store_opening_hours o
 			WHERE s.id = o.store_id

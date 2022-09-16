@@ -8,12 +8,12 @@ import (
 )
 
 type User struct {
-	Id           int       `db:"id"`
-	FirebaseId   string    `db:"firebase_id"`
-	LanguageCode string    `db:"language_code"`
-	Firstname    string    `db:"firstname"`
-	Lastname     string    `db:"lastname"`
-	CreatedAt    time.Time `db:"created_at"`
+	Id           int       `db:"id" json:"id"`
+	FirebaseId   string    `db:"firebase_id" json:"firebaseId"`
+	LanguageCode string    `db:"language_code" json:"languageCode"`
+	Firstname    string    `db:"firstname" json:"firstname"`
+	Lastname     string    `db:"lastname" json:"lastname"`
+	CreatedAt    time.Time `db:"created_at" json:"createdAt"`
 } //@name User
 
 type Merchant struct {

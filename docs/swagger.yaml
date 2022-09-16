@@ -272,7 +272,7 @@ paths:
       parameters:
       - description: Id of the store
         in: path
-        name: storeId
+        name: id
         required: true
         type: string
       produces:
