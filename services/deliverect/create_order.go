@@ -7,6 +7,8 @@ import (
 	"io"
 	"net/http"
 	"time"
+
+	"github.com/labstack/gommon/log"
 )
 
 func (d DeliverectService) CreateOrder(order CreateOrderRequest) error {
@@ -20,6 +22,8 @@ func (d DeliverectService) CreateOrder(order CreateOrderRequest) error {
 	}
 
 	orderUrl := d.Config.BaseUrl + "/" + d.Config.ChannelName + "/order/" + d.Config.ChannelLinkId
+
+	log.Debugf("creating order with deliverect api: %v", orderUrl)
 
 	req, err := http.NewRequest("POST", orderUrl, bytes.NewBuffer(reqJson))
 	if err != nil {

@@ -58,7 +58,11 @@ func (d DeliverectService) getMachineToMachineToken() (*string, error) {
 		Timeout: time.Duration(2) * time.Second,
 	}
 
-	req, _ := http.NewRequest("POST", d.Config.BaseUrl+MachineTokenPath, bytes.NewBuffer(requestJson))
+	url := d.Config.BaseUrl + MachineTokenPath
+
+	log.Debugf("requesting machine to machine token from deliverect api: %v", url)
+
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(requestJson))
 
 	req.Header.Add("accept", "application/json")
 	req.Header.Add("content-type", "application/json")
