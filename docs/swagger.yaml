@@ -25,17 +25,17 @@ definitions:
     type: object
   GetOrdersResponse:
     properties:
-      created_at:
+      createdAt:
         type: string
-      estimated_pickup_time:
+      estimatedPickupTime:
+        type: string
+      googleMapsLink:
         type: string
       id:
         type: integer
-      is_paid:
+      isPaid:
         type: boolean
-      merchant_id:
-        type: string
-      order_items:
+      orderItems:
         items:
           $ref: '#/definitions/OrderItem'
         type: array
@@ -43,6 +43,16 @@ definitions:
         type: integer
       status:
         type: integer
+      storeAddress:
+        type: string
+      storeDescription:
+        type: string
+      storeImageUrl:
+        type: string
+      storeName:
+        type: string
+      storePhoneNumber:
+        type: string
     type: object
   GetStoreCategory:
     properties:

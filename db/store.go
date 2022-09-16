@@ -18,7 +18,7 @@ func (db *DB) GetStore(id uuid.UUID) (models.Store, error) {
 	return store, nil
 }
 
-func (db *DB) GetOpenStores(id uuid.UUID) (models.Store, error) {
+func (db *DB) GetOpenStore(id uuid.UUID) (models.Store, error) {
 	store := models.Store{}
 	err := db.Sqlx.Get(&store, "SELECT * FROM stores WHERE id = $1 AND is_open = true", id)
 

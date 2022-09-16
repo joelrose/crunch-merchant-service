@@ -2,6 +2,7 @@ package db
 
 import (
 	"github.com/joelrose/crunch-merchant-service/db/models"
+	"github.com/joelrose/crunch-merchant-service/dtos"
 )
 
 func (db *DB) CreateOrder(order models.CreateOrder) (int, error) {
@@ -32,9 +33,15 @@ func (database *DB) GetOrderByStripeOrderId(stripeOrderId string) (models.Order,
 	return order, nil
 }
 
-func (database *DB) GetOrdersByUserId(userId int) ([]models.Order, error) {
-	orders := []models.Order{}
-	err := database.Sqlx.Select(&orders, "SELECT * FROM orders WHERE user_id = $1", userId)
+func (database *DB) GetOrdersByUserId(userId int) ([]dtos.GetOrdersResponse, error) {
+	query := `
+		SELECT o.id, status, price, is_paid, estimated_pickup_time, created_at, name, description, image_url, address, phone_number, google_maps_link
+		FROM orders o
+		LEFT JOIN stores m on o.store_id = m.id
+		WHERE user_id = $1
+	`
+	orders := []dtos.GetOrdersResponse{}
+	err := database.Sqlx.Select(&orders, query, userId)
 
 	if err != nil {
 		return nil, err

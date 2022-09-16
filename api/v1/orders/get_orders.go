@@ -5,7 +5,6 @@ import (
 
 	"firebase.google.com/go/auth"
 	"github.com/joelrose/crunch-merchant-service/db"
-	"github.com/joelrose/crunch-merchant-service/dtos"
 	"github.com/joelrose/crunch-merchant-service/middleware"
 	"github.com/joelrose/crunch-merchant-service/utils"
 	"github.com/labstack/echo/v4"
@@ -38,9 +37,7 @@ func GetOrders(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
-	response := []dtos.GetOrdersResponse{}
-
-	for _, order := range orders {
+	for ind, order := range orders {
 		orderItems, err := db.GetOrderItems(order.Id)
 
 		if err != nil {
@@ -48,17 +45,8 @@ func GetOrders(c echo.Context) error {
 			return echo.NewHTTPError(http.StatusInternalServerError)
 		}
 
-		response = append(response, dtos.GetOrdersResponse{
-			Id:                  order.Id,
-			Status:              order.Status,
-			Price:               order.Price,
-			IsPaid:              order.IsPaid,
-			EstimatedPickupTime: order.EstimatedPickupTime,
-			CreatedAt:           order.CreatedAt,
-			StoreId:             order.StoreId,
-			OrderItems:          utils.ConvertOrderItemsToDto(orderItems),
-		})
+		orders[ind].OrderItems = utils.ConvertOrderItemsToDto(orderItems)
 	}
 
-	return c.JSON(http.StatusOK, response)
+	return c.JSON(http.StatusOK, orders)
 }

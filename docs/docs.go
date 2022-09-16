@@ -359,22 +359,22 @@ const docTemplate = `{
         "GetOrdersResponse": {
             "type": "object",
             "properties": {
-                "created_at": {
+                "createdAt": {
                     "type": "string"
                 },
-                "estimated_pickup_time": {
+                "estimatedPickupTime": {
+                    "type": "string"
+                },
+                "googleMapsLink": {
                     "type": "string"
                 },
                 "id": {
                     "type": "integer"
                 },
-                "is_paid": {
+                "isPaid": {
                     "type": "boolean"
                 },
-                "merchant_id": {
-                    "type": "string"
-                },
-                "order_items": {
+                "orderItems": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/OrderItem"
@@ -385,6 +385,21 @@ const docTemplate = `{
                 },
                 "status": {
                     "type": "integer"
+                },
+                "storeAddress": {
+                    "type": "string"
+                },
+                "storeDescription": {
+                    "type": "string"
+                },
+                "storeImageUrl": {
+                    "type": "string"
+                },
+                "storeName": {
+                    "type": "string"
+                },
+                "storePhoneNumber": {
+                    "type": "string"
                 }
             }
         },

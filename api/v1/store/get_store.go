@@ -135,7 +135,7 @@ func GetStore(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
 
-	store, err := db.GetOpenStores(r.StoreId)
+	store, err := db.GetOpenStore(r.StoreId)
 	if err != nil {
 		log.Debugf("failed to get store: %v", err)
 		return echo.NewHTTPError(http.StatusNotFound)
