@@ -36,7 +36,7 @@ func HandleStripe(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
 
-	if event.Type == "payment_intent.succeeded" {
+	if event.Type == "charge.succeeded" {
 		var charge stripe.Charge
 		err = json.Unmarshal(event.Data.Raw, &charge)
 		if err != nil {
