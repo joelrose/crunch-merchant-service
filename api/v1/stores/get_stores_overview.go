@@ -22,7 +22,6 @@ func GetStoresOverview(c echo.Context) error {
 	db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
 
 	stores, err := db.GetAvailableStores()
-
 	if err != nil {
 		log.Errorf("failed to get stores: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError)

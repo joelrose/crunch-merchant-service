@@ -58,6 +58,6 @@ func SetupRoutes(e *echo.Echo, config config.Config) {
 
 	ordersGroup := apiV1.Group("/orders", middleware.FirebaseAuth(config.FirebaseConfig))
 
-	ordersGroup.POST("/", orders.CreateOrder)
-	ordersGroup.GET("/", orders.GetOrders)
+	ordersGroup.POST("", orders.CreateOrder)
+	ordersGroup.GET("", orders.GetOrders)
 }
