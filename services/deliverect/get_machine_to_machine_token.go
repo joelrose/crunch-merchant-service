@@ -32,11 +32,6 @@ func (d DeliverectService) getCachedMachineToMachineToken() (*string, error) {
 		return nil, err
 	}
 
-	if token.ExpiresAt > time.Now().Unix() {
-		log.Debug("token expired: requesting new token from deliverect")
-		return d.getMachineToMachineToken()
-	}
-
 	return &token.AccessToken, nil
 }
 
@@ -87,6 +82,9 @@ func (d DeliverectService) getMachineToMachineToken() (*string, error) {
 		log.Errorf("failed to unmarshal response body: %v", err)
 		return nil, err
 	}
+
+	expiresIn := token.ExpiresAt - time.Now().Unix()
+	d.RedisClient.Set(context.Background(), DeliverectMachineToken, string(body), time.Duration(expiresIn)*time.Second)
 
 	return &token.AccessToken, nil
 }

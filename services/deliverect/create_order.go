@@ -23,8 +23,6 @@ func (d DeliverectService) CreateOrder(order CreateOrderRequest) error {
 
 	orderUrl := d.Config.BaseUrl + "/" + d.Config.ChannelName + "/order/" + d.Config.ChannelLinkId
 
-	log.Debugf("creating order with deliverect api: %v", orderUrl)
-
 	req, err := http.NewRequest("POST", orderUrl, bytes.NewBuffer(reqJson))
 	if err != nil {
 		return fmt.Errorf("error creating request: %v", err)
@@ -38,6 +36,8 @@ func (d DeliverectService) CreateOrder(order CreateOrderRequest) error {
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Bearer "+*token)
+
+	log.Debugf("creating order with deliverect api: %v", orderUrl)
 
 	resp, err := client.Do(req)
 	if err != nil {
