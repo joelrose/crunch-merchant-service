@@ -3,17 +3,16 @@ package deliverect
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
+	"io"
 	"net/http"
 	"time"
-
-	"github.com/labstack/gommon/log"
 )
 
 func (d DeliverectService) CreateOrder(order CreateOrderRequest) error {
 	reqJson, err := json.Marshal(order)
 	if err != nil {
-		log.Errorf("Error marshalling request: %v\n", err)
-		return err
+		return fmt.Errorf("error marshalling request: %v", err)
 	}
 
 	client := http.Client{
@@ -24,14 +23,12 @@ func (d DeliverectService) CreateOrder(order CreateOrderRequest) error {
 
 	req, err := http.NewRequest("POST", orderUrl, bytes.NewBuffer(reqJson))
 	if err != nil {
-		log.Errorf("error creating request: %v\n", err)
-		return err
+		return fmt.Errorf("error creating request: %v", err)
 	}
 
 	token, err := d.getCachedMachineToMachineToken()
 	if err != nil {
-		log.Errorf("error getting machine to machine token: %v\n", err)
-		return err
+		return fmt.Errorf("error getting machine to machine token: %v", err)
 	}
 
 	req.Header.Add("Accept", "application/json")
@@ -40,13 +37,16 @@ func (d DeliverectService) CreateOrder(order CreateOrderRequest) error {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Errorf("failed to send request: %v", err)
-		return err
+		return fmt.Errorf("failed to send request: %v", err)
 	}
 
 	if resp.StatusCode != http.StatusCreated {
-		log.Errorf("failed to create order, status code: %v", resp.StatusCode)
-		return err
+		payload, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return fmt.Errorf("failed to read request body: %v", err)
+		}
+
+		return fmt.Errorf("failed to create order, status code: %v, error: %v", resp.StatusCode, string(payload))
 	}
 
 	return nil

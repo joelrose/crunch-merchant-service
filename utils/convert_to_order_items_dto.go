@@ -38,13 +38,15 @@ func ConvertOrderItemsToDto(orderItems []models.OrderItem) []dtos.OrderItem {
 	}
 
 	result := []dtos.OrderItem{}
-	for ind, orderItem := range orderItems {
+	for _, orderItem := range orderItems {
 		if !orderItem.ParentId.Valid {
-			result = append(result, convertOrderItemToDto(orderItem))
+			res := convertOrderItemToDto(orderItem)
 
 			if len(parentIdMap[orderItem.Id]) > 0 {
-				result[ind].SubItems = convertHelper(parentIdMap, parentIdMap[orderItem.Id])
+				res.SubItems = convertHelper(parentIdMap, parentIdMap[orderItem.Id])
 			}
+
+			result = append(result, res)
 		}
 	}
 

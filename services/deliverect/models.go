@@ -26,12 +26,12 @@ type PaymentModel struct {
 }
 
 type CreateOrderRequest struct {
-	ChannelOrderId        string           `json:"channel_order_id"`
-	ChannelOrderDisplayId string           `json:"channel_order_display_id"`
+	ChannelOrderId        string           `json:"channelOrderId"`
+	ChannelOrderDisplayId string           `json:"channelOrderDisplayId"`
 	Items                 []dtos.OrderItem `json:"items"`
 	Payment               PaymentModel     `json:"payment"`
 	Customer              CustomerModel    `json:"customer"`
-	OrderType             int              `json:"order_type"`
-	OrderIsAlreadyPaid    bool             `json:"order_is_already_paid"`
-	DecimalDigits         int              `json:"decimal_digits"`
+	OrderType             int              `json:"orderType"`
+	OrderIsAlreadyPaid    bool             `json:"orderIsAlreadyPaid"`
+	DecimalDigits         int              `json:"decimalDigits"`
 }

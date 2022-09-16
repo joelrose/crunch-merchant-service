@@ -55,10 +55,15 @@ func (d DeliverectService) getMachineToMachineToken() (*string, error) {
 	}
 
 	client := http.Client{
-		Timeout: time.Duration(1) * time.Second,
+		Timeout: time.Duration(2) * time.Second,
 	}
 
-	resp, err := client.Post(d.Config.BaseUrl + MachineTokenPath, "application/json", bytes.NewBuffer(requestJson))
+	req, _ := http.NewRequest("POST", d.Config.BaseUrl+MachineTokenPath, bytes.NewBuffer(requestJson))
+
+	req.Header.Add("accept", "application/json")
+	req.Header.Add("content-type", "application/json")
+
+	resp, err := client.Do(req)
 	if err != nil {
 		log.Errorf("failed to send request: %v", err)
 		return nil, err
