@@ -6,7 +6,6 @@ import (
 	"io"
 	"net/http"
 
-	"firebase.google.com/go/auth"
 	"github.com/go-redis/redis/v9"
 	"github.com/joelrose/crunch-merchant-service/config"
 	"github.com/joelrose/crunch-merchant-service/db"
@@ -45,13 +44,6 @@ func HandleStripe(c echo.Context) error {
 		}
 
 		db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
-		token := c.Get("token").(*auth.Token)
-
-		users, err := db.GetUserByFirebaseId(token.UID)
-		if err != nil {
-			log.Errorf("failed to get user: %v", err)
-			return echo.NewHTTPError(http.StatusInternalServerError)
-		}
 
 		order, err := db.GetOrderByStripeOrderId(charge.PaymentIntent.ID)
 		if err != nil {
@@ -74,6 +66,12 @@ func HandleStripe(c echo.Context) error {
 		orderItems, err := db.GetOrderItems(order.Id)
 		if err != nil {
 			log.Errorf("Error getting order items from database: %v\n", err)
+			return echo.NewHTTPError(http.StatusInternalServerError)
+		}
+
+		users, err := db.GetUserByUserId(order.UserId)
+		if err != nil {
+			log.Errorf("failed to get user: %v", err)
 			return echo.NewHTTPError(http.StatusInternalServerError)
 		}
 

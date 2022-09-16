@@ -28,6 +28,17 @@ func (database *DB) GetUserByFirebaseId(firebaseId string) (models.User, error) 
 	return user, nil
 }
 
+func (database *DB) GetUserByUserId(userId int) (models.User, error) {
+	user := models.User{}
+	err := database.Sqlx.Select(&user, "SELECT * FROM users WHERE id = $1", userId)
+
+	if err != nil {
+		return models.User{}, err
+	}
+
+	return user, nil
+}
+
 func (database *DB) CreateUser(firebaseId string, user dtos.CreateUserRequest) error {
 	_, err := database.Sqlx.Exec(
 		"INSERT INTO users (firebase_id, language_code, firstname, lastname) VALUES ($1, $2, $3, $4)",
