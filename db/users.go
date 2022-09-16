@@ -30,7 +30,7 @@ func (database *DB) GetUserByFirebaseId(firebaseId string) (models.User, error) 
 
 func (database *DB) GetUserByUserId(userId int) (models.User, error) {
 	user := models.User{}
-	err := database.Sqlx.Select(&user, "SELECT * FROM users WHERE id = $1", userId)
+	err := database.Sqlx.Get(&user, "SELECT * FROM users WHERE id = $1", userId)
 
 	if err != nil {
 		return models.User{}, err
