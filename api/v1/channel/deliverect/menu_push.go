@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"strconv"
 	"strings"
 
 	"github.com/go-redis/redis/v9"
@@ -17,20 +16,6 @@ import (
 	"github.com/labstack/gommon/log"
 	"golang.org/x/exp/maps"
 )
-
-func convertTimestamp(time string) int {
-	splitTime := strings.Split(time, ":")
-
-	hour, hErr := strconv.Atoi(splitTime[0])
-	minute, mErr := strconv.Atoi(splitTime[1])
-
-	if hErr != nil || mErr != nil {
-		log.Errorf("failed to convert time to timestamp: %v", time)
-		return 0
-	}
-
-	return utils.ConvertToTimestamp(hour, minute)
-}
 
 func MenuPush(c echo.Context) error {
 	// Bind request body
@@ -73,9 +58,9 @@ func MenuPush(c echo.Context) error {
 
 		openingHour := models.StoreOpeningHour{
 			StoreId:        channel.StoreId,
-			DayOfWeek:      openingHour.DayOfWeek,
-			StartTimestamp: convertTimestamp(openingHour.StartTime),
-			EndTimestamp:   convertTimestamp(openingHour.EndTime),
+			DayOfWeek:      utils.ParseDeliverectDayOfWeek(openingHour.DayOfWeek),
+			StartTimestamp: utils.ParseTimestamp(openingHour.StartTime),
+			EndTimestamp:   utils.ParseTimestamp(openingHour.EndTime),
 		}
 
 		err = db.CreateStoreOpeningHour(openingHour)

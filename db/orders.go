@@ -62,10 +62,10 @@ func (database *DB) GetOrderById(orderId int) (models.Order, error) {
 	return order, nil
 }
 
-func (db *DB) UpdateOrderStatus(orderId int, orderStatus int) error {
+func (db *DB) UpdateOrderStatus(orderId int, orderStatus models.OrderStatus) error {
 	_, err := db.Sqlx.Exec(
 		"UPDATE orders SET status = $1 WHERE id = $2",
-		orderId, orderStatus,
+		orderId, int(orderStatus),
 	)
 
 	if err != nil {

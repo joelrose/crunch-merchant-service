@@ -1,8 +1,9 @@
 package deliverect
 
-// Payment Model Type
+type PaymentType int
+
 const (
-	CREDIT_CARD_ONLINE = iota
+	CREDIT_CARD_ONLINE PaymentType = iota
 	CASH
 	ON_DELIVERY
 	ONLINE
@@ -14,10 +15,19 @@ const (
 	OTHER
 )
 
-// Order Type
+type OrderType int
+
 const (
-	PICKUP = iota + 1
+	PICKUP OrderType = iota + 1
 	DELIVERY
 	EAT_IN
 	CURBSIDE
+)
+
+type AccountType int
+
+const (
+	PARTNER AccountType = iota + 1
+	CHAIN
+	CUSTOMER
 )

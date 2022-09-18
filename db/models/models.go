@@ -23,16 +23,38 @@ type Merchant struct {
 	CreatedAt time.Time `db:"created_at"`
 }
 
+type OrderStatus int
+
+const (
+	Parsed OrderStatus = iota + 1
+	Received
+	New               = 10
+	Accepted          = 20
+	Duplicate         = 30
+	Printed           = 40
+	Preparing         = 50
+	Prepared          = 60
+	ReadyForPickup    = 70
+	InDelivery        = 80
+	Finalized         = 90
+	AutoFinalized     = 95
+	Cancel            = 100
+	Canceled          = 110
+	Failed            = 120
+	PosReceivedFailed = 121
+	ParseFailed       = 124
+)
+
 type Order struct {
-	Id                  int       `db:"id"`
-	Status              int       `db:"status"`
-	EstimatedPickupTime time.Time `db:"estimated_pickup_time"`
-	Price               int       `db:"price"`
-	StripeOrderId       string    `db:"stripe_order_id"`
-	IsPaid              bool      `db:"is_paid"`
-	CreatedAt           time.Time `db:"created_at"`
-	StoreId             uuid.UUID `db:"store_id"`
-	UserId              int       `db:"user_id"`
+	Id                  int         `db:"id"`
+	Status              OrderStatus `db:"status"`
+	EstimatedPickupTime time.Time   `db:"estimated_pickup_time"`
+	Price               int         `db:"price"`
+	StripeOrderId       string      `db:"stripe_order_id"`
+	IsPaid              bool        `db:"is_paid"`
+	CreatedAt           time.Time   `db:"created_at"`
+	StoreId             uuid.UUID   `db:"store_id"`
+	UserId              int         `db:"user_id"`
 }
 
 type OrderItem struct {
@@ -64,11 +86,11 @@ type Store struct {
 }
 
 type StoreOpeningHour struct {
-	Id             int       `db:"id"`
-	DayOfWeek      int       `db:"day_of_week"`
-	StartTimestamp int       `db:"start_timestamp"`
-	EndTimestamp   int       `db:"end_timestamp"`
-	StoreId        uuid.UUID `db:"store_id"`
+	Id             int          `db:"id"`
+	DayOfWeek      time.Weekday `db:"day_of_week"`
+	StartTimestamp int          `db:"start_timestamp"`
+	EndTimestamp   int          `db:"end_timestamp"`
+	StoreId        uuid.UUID    `db:"store_id"`
 }
 
 type DeliverectChannel struct {

@@ -81,12 +81,12 @@ func HandleStripe(c echo.Context) error {
 			ChannelOrderId:        fmt.Sprint(order.Id),
 			ChannelOrderDisplayId: users.Firstname + "#" + fmt.Sprint(order.Id),
 			Items:                 orderItemsDto,
-			OrderType:             deliverect.PICKUP,
+			OrderType:             int(deliverect.PICKUP),
 			OrderIsAlreadyPaid:    true,
 			DecimalDigits:         2,
 			Payment: deliverect.PaymentModel{
 				Amount: amount,
-				Type:   deliverect.CREDIT_CARD_ONLINE,
+				Type:   int(deliverect.CREDIT_CARD_ONLINE),
 			},
 			Customer: deliverect.CustomerModel{
 				Name: users.Firstname,
