@@ -29,10 +29,14 @@ Create a migration:
 
 ## Authentication
 
-### Dashboard: Auth0
+### Merchant Dashboard: Auth0
 
-We use Auth0 for authentication and authorization in the crunch dashboard. Protected routes have to use the middleware auth_middleware.Auth0Auth. 
+We use Auth0 for authentication and authorization in the crunch dashboard. Protected routes have to use the middleware Auth0Auth. 
 
 ### Consumer App: Firebase
 
-We use Firebase for the authentication in the crunch app. Protected routes have to use the middleware auth_middleware.FirebaseAuth. 
+We use Firebase for the authentication in the crunch app. Protected routes have to use the middleware FirebaseAuth. 
+
+## Redis
+
+Redis is used to cache the store menus.

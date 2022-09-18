@@ -217,6 +217,30 @@ info:
   title: Swagger Example API
   version: "1.0"
 paths:
+  /dashboard/orders:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/GetOrdersResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema: {}
+        "500":
+          description: Internal Server Error
+          schema: {}
+      security:
+      - Auth0Token: []
+      summary: Get all orders from a store
+      tags:
+      - dashboard
   /orders:
     get:
       consumes:

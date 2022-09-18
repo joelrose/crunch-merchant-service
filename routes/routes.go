@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/joelrose/crunch-merchant-service/api/v1/channel/deliverect"
+	"github.com/joelrose/crunch-merchant-service/api/v1/dashboard"
 	"github.com/joelrose/crunch-merchant-service/api/v1/orders"
 	"github.com/joelrose/crunch-merchant-service/api/v1/store"
 	"github.com/joelrose/crunch-merchant-service/api/v1/stores"
@@ -14,6 +15,8 @@ import (
 	_ "github.com/joelrose/crunch-merchant-service/docs"
 	"github.com/joelrose/crunch-merchant-service/middleware"
 	"github.com/labstack/echo/v4"
+	defaultMiddleware "github.com/labstack/echo/v4/middleware"
+
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
@@ -45,9 +48,20 @@ func SetupRoutes(e *echo.Echo, config config.Config) {
 	deliverectGroup.POST("/prep_time", deliverect.PreparationTime)
 	deliverectGroup.POST("/order_status", deliverect.OrderStatus)
 
-	dashboardGroup := apiV1.Group("/dashboard", middleware.Auth0Auth())
+	dashboardGroup := apiV1.Group("/dashboard")
+	dashboardGroup.Use(defaultMiddleware.CORSWithConfig(defaultMiddleware.CORSConfig{
+		Skipper:      defaultMiddleware.DefaultSkipper,
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{http.MethodGet, http.MethodHead, http.MethodPut, http.MethodPatch, http.MethodPost, http.MethodDelete},
+	}))
+
+	validator := middleware.NewValidator(config.Auth0.Audience, config.Auth0.Authority)
+
+	dashboardGroup.Use(validator.Middleware())
 
 	dashboardGroup.GET("/status", okHandler)
+
+	dashboardGroup.GET("/orders", dashboard.GetOrders)
 
 	usersGroup := apiV1.Group("/users", middleware.FirebaseAuth(config.FirebaseConfig))
 

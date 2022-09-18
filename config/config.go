@@ -18,12 +18,18 @@ type Stripe struct {
 	WebhookSecret string
 }
 
+type Auth0 struct {
+	Authority string
+	Audience  string
+}
+
 type Config struct {
 	FirebaseConfig string
 	DatabaseUrl    string
 	RedisUrl       string
 	Stripe         Stripe
 	Deliverect     Deliverect
+	Auth0          Auth0
 }
 
 func mustGetEnv(env string) string {
@@ -56,6 +62,10 @@ func LoadConfig() Config {
 			BaseUrl:      mustGetEnv("DELIVERECT_BASE_URL"),
 			ClientId:     mustGetEnv("DELIVERECT_CLIENT_ID"),
 			ClientSecret: mustGetEnv("DELIVERECT_CLIENT_SECRET"),
+		},
+		Auth0: Auth0{
+			Authority: mustGetEnv("AUTH0_AUTHORITY"),
+			Audience:  mustGetEnv("AUTH0_AUDIENCE"),
 		},
 	}
 
