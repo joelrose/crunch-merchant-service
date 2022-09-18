@@ -46,7 +46,7 @@ type GetStoreResponse struct {
 	Description       string                `db:"description" json:"description"`
 	Address           string                `db:"address" json:"address"`
 	AveragePickupTime int                   `db:"average_pickup_time" json:"averagePickupTime"`
-	AverageReview     float64               `db:"average_review" json:"averageReview"`
+	AverageReview     float32               `db:"average_review" json:"averageReview"`
 	ReviewCount       int                   `db:"review_count" json:"reviewCount"`
 	GoogleMapsLink    string                `db:"google_maps_link" json:"googleMapsLink"`
 	PhoneNumber       string                `db:"phone_number" json:"phoneNumber"`

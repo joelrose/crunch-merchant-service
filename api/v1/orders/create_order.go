@@ -66,7 +66,7 @@ func CreateOrder(c echo.Context) error {
 	}
 
 	price := utils.CalculateOrderPrice(orderRequest.OrderItems)
-	_ = float64(price) * store.Fee
+	_ = float32(price) * store.Fee
 
 	params := &stripe.PaymentIntentParams{
 		Amount:   stripe.Int64(int64(price)),
@@ -92,6 +92,7 @@ func CreateOrder(c echo.Context) error {
 		IsPaid:              false,
 		StoreId:             orderRequest.StoreId,
 		UserId:              user.Id,
+		Fee:                 store.Fee,
 	}
 
 	orderDatabaseId, err := db.CreateOrder(order)

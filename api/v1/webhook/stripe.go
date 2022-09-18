@@ -77,7 +77,6 @@ func HandleStripe(c echo.Context) error {
 
 		orderItemsDto := utils.ConvertOrderItemsToDto(orderItems)
 		amount := utils.CalculateOrderPrice(orderItemsDto)
-		// TODO: this should be the firstname
 		createOrderRequest := deliverect.CreateOrderRequest{
 			ChannelOrderId:        fmt.Sprint(order.Id),
 			ChannelOrderDisplayId: users.Firstname + "#" + fmt.Sprint(order.Id),

@@ -9,7 +9,7 @@ func (db *DB) CreateOrder(order models.CreateOrder) (int, error) {
 	var lastInsertId int
 	err := db.Sqlx.Get(
 		&lastInsertId,
-		"INSERT INTO orders (status, estimated_pickup_time, price, stripe_order_id, is_paid, store_id, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id",
+		"INSERT INTO orders (status, estimated_pickup_time, price, stripe_order_id, is_paid, store_id, user_id, fee) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id",
 		order.Status,
 		order.EstimatedPickupTime,
 		order.Price,
@@ -17,6 +17,7 @@ func (db *DB) CreateOrder(order models.CreateOrder) (int, error) {
 		order.IsPaid,
 		order.StoreId,
 		order.UserId,
+		order.Fee,
 	)
 
 	return lastInsertId, err

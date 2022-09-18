@@ -14,6 +14,7 @@ type CreateOrder struct {
 	IsPaid              bool      `db:"is_paid"`
 	StoreId             uuid.UUID `db:"store_id"`
 	UserId              int       `db:"user_id"`
+	Fee                 float32   `db:"fee"`
 }
 
 type CreateOrderItem struct {
