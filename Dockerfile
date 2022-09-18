@@ -9,7 +9,6 @@ FROM alpine
 RUN apk add --no-cache ca-certificates
 
 COPY --from=builder /go/src/app /app
-COPY --from=builder /go/src/certificates /certificates
 COPY --from=builder /go/src/migrations /migrations
 
 CMD ["/app"]
