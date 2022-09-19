@@ -46,7 +46,7 @@ const (
 )
 
 type Order struct {
-	Id                  int         `db:"id"`
+	Id                  uuid.UUID   `db:"id"`
 	Status              OrderStatus `db:"status"`
 	EstimatedPickupTime time.Time   `db:"estimated_pickup_time"`
 	Price               int         `db:"price"`
@@ -58,13 +58,13 @@ type Order struct {
 }
 
 type OrderItem struct {
-	Id       int           `db:"id"`
+	Id       uuid.UUID     `db:"id"`
 	Plu      string        `db:"plu"`
 	Name     string        `db:"name"`
 	Price    int           `db:"price"`
 	Quantity int           `db:"quantity"`
 	OrderId  int           `db:"order_id"`
-	ParentId sql.NullInt32 `db:"parent_id"`
+	ParentId uuid.NullUUID `db:"parent_id"`
 }
 
 type Store struct {
@@ -86,7 +86,7 @@ type Store struct {
 }
 
 type StoreOpeningHour struct {
-	Id             int          `db:"id"`
+	Id             uuid.UUID    `db:"id"`
 	DayOfWeek      time.Weekday `db:"day_of_week"`
 	StartTimestamp int          `db:"start_timestamp"`
 	EndTimestamp   int          `db:"end_timestamp"`
@@ -101,7 +101,7 @@ type DeliverectChannel struct {
 }
 
 type MenuCategory struct {
-	Id          int       `db:"id"`
+	Id          uuid.UUID `db:"id"`
 	Name        string    `db:"name"`
 	Description string    `db:"description"`
 	ImageUrl    string    `db:"image_url"`
@@ -110,7 +110,7 @@ type MenuCategory struct {
 }
 
 type MenuProduct struct {
-	Id          int       `db:"id"`
+	Id          uuid.UUID `db:"id"`
 	Name        string    `db:"name"`
 	Description string    `db:"description"`
 	Price       int       `db:"price"`
@@ -129,13 +129,13 @@ type MenuProduct struct {
 }
 
 type ProductProductRelation struct {
-	ParentProductId int `db:"parent_product_id"`
-	ChildProductId  int `db:"child_product_id"`
+	ParentProductId uuid.UUID `db:"parent_product_id"`
+	ChildProductId  uuid.UUID `db:"child_product_id"`
 }
 
 type CategoryProductRelation struct {
-	MenuCategoryId int `db:"menu_category_id"`
-	MenuProductId  int `db:"menu_product_id"`
+	MenuCategoryId uuid.UUID `db:"menu_category_id"`
+	MenuProductId  uuid.UUID `db:"menu_product_id"`
 }
 
 type Whitelist struct {

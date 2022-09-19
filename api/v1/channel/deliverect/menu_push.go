@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/go-redis/redis/v9"
+	"github.com/google/uuid"
 	"github.com/joelrose/crunch-merchant-service/db"
 	"github.com/joelrose/crunch-merchant-service/db/models"
 	"github.com/joelrose/crunch-merchant-service/dtos"
@@ -71,7 +72,7 @@ func MenuPush(c echo.Context) error {
 	}
 
 	// Save products
-	productIds := make(map[string]int)
+	productIds := make(map[string]uuid.UUID)
 	for _, product := range products {
 		productModel := models.MenuProduct{
 			Name:        product.Name,

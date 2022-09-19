@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"firebase.google.com/go/auth"
+	"github.com/google/uuid"
 	"github.com/joelrose/crunch-merchant-service/db"
 	"github.com/joelrose/crunch-merchant-service/db/models"
 	"github.com/joelrose/crunch-merchant-service/dtos"
@@ -102,7 +103,7 @@ func CreateOrder(c echo.Context) error {
 	}
 
 	for _, orderItem := range orderRequest.OrderItems {
-		createOrderItem(orderItem, -1, orderDatabaseId, db)
+		createOrderItem(orderItem, nil, orderDatabaseId, db)
 	}
 
 	response := dtos.CreateOrderResponse{
@@ -112,7 +113,7 @@ func CreateOrder(c echo.Context) error {
 	return c.JSON(http.StatusCreated, response)
 }
 
-func createOrderItem(dto dtos.OrderItem, parentId int, orderId int, db *db.DB) error {
+func createOrderItem(dto dtos.OrderItem, parentId *uuid.UUID, orderId int, db *db.DB) error {
 	orderItem := models.CreateOrderItem{
 		Plu:      dto.Plu,
 		Name:     dto.Name,
@@ -122,9 +123,9 @@ func createOrderItem(dto dtos.OrderItem, parentId int, orderId int, db *db.DB) e
 		ParentId: parentId,
 	}
 
-	var newId int
+	var newId uuid.UUID
 	var err error
-	if parentId == -1 {
+	if parentId == nil {
 		newId, err = db.CreateOrderItemWithoutParent(orderItem)
 	} else {
 		newId, err = db.CreateOrderItemWithParent(orderItem)
@@ -137,7 +138,7 @@ func createOrderItem(dto dtos.OrderItem, parentId int, orderId int, db *db.DB) e
 
 	if dto.SubItems != nil {
 		for _, subItem := range dto.SubItems {
-			err = createOrderItem(subItem, newId, orderId, db)
+			err = createOrderItem(subItem, &newId, orderId, db)
 			if err != nil {
 				return err
 			}

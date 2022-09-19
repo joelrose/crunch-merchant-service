@@ -1,6 +1,7 @@
 package db
 
 import (
+	"github.com/google/uuid"
 	"github.com/joelrose/crunch-merchant-service/db/models"
 	"github.com/joelrose/crunch-merchant-service/dtos"
 )
@@ -51,7 +52,7 @@ func (database *DB) GetOrdersByUserId(userId int) ([]dtos.GetOrdersResponse, err
 	return orders, nil
 }
 
-func (database *DB) GetOrderById(orderId int) (models.Order, error) {
+func (database *DB) GetOrderById(orderId uuid.UUID) (models.Order, error) {
 	order := models.Order{}
 	err := database.Sqlx.Get(&order, "SELECT * FROM orders WHERE id = $1", orderId)
 
@@ -62,7 +63,7 @@ func (database *DB) GetOrderById(orderId int) (models.Order, error) {
 	return order, nil
 }
 
-func (db *DB) UpdateOrderStatus(orderId int, orderStatus models.OrderStatus) error {
+func (db *DB) UpdateOrderStatus(orderId uuid.UUID, orderStatus models.OrderStatus) error {
 	_, err := db.Sqlx.Exec(
 		"UPDATE orders SET status = $1 WHERE id = $2",
 		orderId, int(orderStatus),
@@ -75,7 +76,7 @@ func (db *DB) UpdateOrderStatus(orderId int, orderStatus models.OrderStatus) err
 	return nil
 }
 
-func (database *DB) MarkOrderAsPaid(orderId int) error {
+func (database *DB) MarkOrderAsPaid(orderId uuid.UUID) error {
 	_, err := database.Sqlx.Exec("UPDATE orders SET is_paid=true WHERE id = $1", orderId)
 	if err != nil {
 		return err

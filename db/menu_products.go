@@ -7,8 +7,8 @@ import (
 	"github.com/joelrose/crunch-merchant-service/dtos"
 )
 
-func (db *DB) CreateProduct(product models.MenuProduct) (int, error) {
-	var lastInsertId int
+func (db *DB) CreateProduct(product models.MenuProduct) (uuid.UUID, error) {
+	var lastInsertId uuid.UUID
 	err := db.Sqlx.Get(
 		&lastInsertId,
 		"INSERT INTO menu_product (name, plu, price, description, snoozed, tax, image_url, max, min, multiply, multi_max, product_type, sort_order, visible, store_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING id",
@@ -38,7 +38,7 @@ func (db *DB) DeleteProducts(storeId uuid.UUID) error {
 	return err
 }
 
-func (db *DB) CreateProductRelation(childProductId int, parentProductId int) error {
+func (db *DB) CreateProductRelation(childProductId uuid.UUID, parentProductId uuid.UUID) error {
 	_, err := db.Sqlx.Exec(
 		"INSERT INTO product_product_relation (child_product_id, parent_product_id) VALUES ($1, $2)",
 		childProductId, parentProductId,
@@ -58,21 +58,21 @@ func (db *DB) GetProducts(storeId uuid.UUID) ([]dtos.GetStoreProduct, error) {
 	return products, err
 }
 
-func (db *DB) GetProductsByPlu(plu string, storeId uuid.UUID) ([]int, error) {
-	var productIds []int
+func (db *DB) GetProductsByPlu(plu string, storeId uuid.UUID) ([]uuid.UUID, error) {
+	var productIds []uuid.UUID
 	err := db.Sqlx.Select(&productIds, "SELECT id FROM menu_product WHERE plu LIKE $1 AND store_id = $2", "%"+plu+"%", storeId)
 
 	return productIds, err
 }
 
-func (db *DB) GetProductChildren(parentProductId int) ([]int, error) {
-	var productIds []int
+func (db *DB) GetProductChildren(parentProductId uuid.UUID) ([]uuid.UUID, error) {
+	var productIds []uuid.UUID
 	err := db.Sqlx.Select(&productIds, "SELECT child_product_id FROM product_product_relation WHERE parent_product_id = $1", parentProductId)
 
 	return productIds, err
 }
 
-func (db *DB) UpdateProductsSnooze(productIds []int, snooze bool) error {
+func (db *DB) UpdateProductsSnooze(productIds []uuid.UUID, snooze bool) error {
 	query, args, err := sqlx.In("UPDATE menu_product SET snoozed = ? WHERE id IN (?)", snooze, productIds)
 	if err != nil {
 		return err

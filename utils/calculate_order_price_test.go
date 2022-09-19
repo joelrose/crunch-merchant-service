@@ -3,6 +3,7 @@ package utils
 import (
 	"testing"
 
+	"github.com/google/uuid"
 	"github.com/joelrose/crunch-merchant-service/dtos"
 	"github.com/stretchr/testify/assert"
 )
@@ -21,7 +22,7 @@ func TestCalculateOrderPrice(t *testing.T) {
 		{
 			input: []dtos.OrderItem{
 				{
-					Id:       10,
+					Id:       uuid.New(),
 					Plu:      "10",
 					Name:     "10",
 					Quantity: 1,
@@ -29,19 +30,19 @@ func TestCalculateOrderPrice(t *testing.T) {
 					SubItems: []dtos.OrderItem{},
 				},
 				{
-					Id:       11,
+					Id:       uuid.New(),
 					Plu:      "11",
 					Name:     "11",
 					Quantity: 1,
 					Price:    100,
 					SubItems: []dtos.OrderItem{{
-						Id:       12,
+						Id:       uuid.New(),
 						Plu:      "12",
 						Name:     "12",
 						Quantity: 1,
 						Price:    100,
 						SubItems: []dtos.OrderItem{{
-							Id:       13,
+							Id:       uuid.New(),
 							Plu:      "13",
 							Name:     "13",
 							Quantity: 1,

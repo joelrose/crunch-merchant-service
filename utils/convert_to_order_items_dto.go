@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"github.com/google/uuid"
 	"github.com/joelrose/crunch-merchant-service/db/models"
 	"github.com/joelrose/crunch-merchant-service/dtos"
 )
@@ -16,7 +17,7 @@ func convertOrderItemToDto(orderItem models.OrderItem) dtos.OrderItem {
 	}
 }
 
-func convertHelper(parentMap map[int][]models.OrderItem, orderItems []models.OrderItem) []dtos.OrderItem {
+func convertHelper(parentMap map[uuid.UUID][]models.OrderItem, orderItems []models.OrderItem) []dtos.OrderItem {
 	var result []dtos.OrderItem
 	for ind, orderItem := range orderItems {
 		result = append(result, convertOrderItemToDto(orderItem))
@@ -30,10 +31,10 @@ func convertHelper(parentMap map[int][]models.OrderItem, orderItems []models.Ord
 }
 
 func ConvertOrderItemsToDto(orderItems []models.OrderItem) []dtos.OrderItem {
-	parentIdMap := make(map[int][]models.OrderItem)
+	parentIdMap := make(map[uuid.UUID][]models.OrderItem)
 	for ind, orderItem := range orderItems {
 		if orderItem.ParentId.Valid {
-			parentIdMap[int(orderItem.ParentId.Int32)] = append(parentIdMap[int(orderItem.ParentId.Int32)], orderItems[ind])
+			parentIdMap[orderItem.ParentId.UUID] = append(parentIdMap[orderItem.ParentId.UUID], orderItems[ind])
 		}
 	}
 

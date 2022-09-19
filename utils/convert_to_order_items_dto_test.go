@@ -1,10 +1,10 @@
 package utils
 
 import (
-	"database/sql"
 	"encoding/json"
 	"testing"
 
+	"github.com/google/uuid"
 	"github.com/joelrose/crunch-merchant-service/db/models"
 	"github.com/joelrose/crunch-merchant-service/dtos"
 	"github.com/stretchr/testify/assert"
@@ -16,12 +16,13 @@ type ConvertTest struct {
 }
 
 func TestConvertOrderItemsToDto(t *testing.T) {
-	var parent11 sql.NullInt32
-	parent11.Int32 = int32(11)
+	item1, item10, item11, item12, item13 := uuid.New(), uuid.New(), uuid.New(), uuid.New(), uuid.New()
+
+	parent11, parent12 := uuid.NullUUID{}, uuid.NullUUID{}
+	parent11.UUID = item11
 	parent11.Valid = true
 
-	var parent12 sql.NullInt32
-	parent12.Int32 = int32(12)
+	parent12.UUID = item12
 	parent12.Valid = true
 
 	testCases := []ConvertTest{
@@ -32,7 +33,7 @@ func TestConvertOrderItemsToDto(t *testing.T) {
 		{
 			input: []models.OrderItem{
 				{
-					Id:       1,
+					Id:       item1,
 					Plu:      "1",
 					Name:     "1",
 					Quantity: 1,
@@ -42,7 +43,7 @@ func TestConvertOrderItemsToDto(t *testing.T) {
 			},
 			expected: []dtos.OrderItem{
 				{
-					Id:       1,
+					Id:       item1,
 					Plu:      "1",
 					Name:     "1",
 					Quantity: 1,
@@ -54,7 +55,7 @@ func TestConvertOrderItemsToDto(t *testing.T) {
 		{
 			input: []models.OrderItem{
 				{
-					Id:       10,
+					Id:       item10,
 					Plu:      "10",
 					Name:     "10",
 					Quantity: 1,
@@ -62,7 +63,7 @@ func TestConvertOrderItemsToDto(t *testing.T) {
 					OrderId:  1,
 				},
 				{
-					Id:       11,
+					Id:       item11,
 					Plu:      "11",
 					Name:     "11",
 					Quantity: 1,
@@ -70,7 +71,7 @@ func TestConvertOrderItemsToDto(t *testing.T) {
 					OrderId:  1,
 				},
 				{
-					Id:       12,
+					Id:       item12,
 					Plu:      "12",
 					Name:     "12",
 					Quantity: 1,
@@ -79,7 +80,7 @@ func TestConvertOrderItemsToDto(t *testing.T) {
 					ParentId: parent11,
 				},
 				{
-					Id:       13,
+					Id:       item13,
 					Plu:      "13",
 					Name:     "13",
 					Quantity: 1,
@@ -90,7 +91,7 @@ func TestConvertOrderItemsToDto(t *testing.T) {
 			},
 			expected: []dtos.OrderItem{
 				{
-					Id:       10,
+					Id:       item10,
 					Plu:      "10",
 					Name:     "10",
 					Quantity: 1,
@@ -98,19 +99,19 @@ func TestConvertOrderItemsToDto(t *testing.T) {
 					SubItems: []dtos.OrderItem{},
 				},
 				{
-					Id:       11,
+					Id:       item11,
 					Plu:      "11",
 					Name:     "11",
 					Quantity: 1,
 					Price:    100,
 					SubItems: []dtos.OrderItem{{
-						Id:       12,
+						Id:       item12,
 						Plu:      "12",
 						Name:     "12",
 						Quantity: 1,
 						Price:    100,
 						SubItems: []dtos.OrderItem{{
-							Id:       13,
+							Id:       item13,
 							Plu:      "13",
 							Name:     "13",
 							Quantity: 1,

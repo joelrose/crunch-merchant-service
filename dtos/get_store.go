@@ -7,7 +7,7 @@ type GetStoreRequest struct {
 } //@name GetStoreRequest
 
 type GetStoreCategory struct {
-	Id          int               `db:"id" json:"id"`
+	Id          uuid.UUID         `db:"id" json:"id"`
 	Name        string            `db:"name" json:"name"`
 	Description string            `db:"description" json:"description"`
 	ImageUrl    string            `db:"image_url" json:"imageUrl"`
@@ -16,7 +16,7 @@ type GetStoreCategory struct {
 } //@name GetStoreCategory
 
 type GetStoreProduct struct {
-	Id          int               `db:"id" json:"id"`
+	Id          uuid.UUID         `db:"id" json:"id"`
 	Name        string            `db:"name" json:"name"`
 	Description string            `db:"description" json:"description"`
 	Price       int               `db:"price" json:"price"`

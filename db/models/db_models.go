@@ -18,10 +18,10 @@ type CreateOrder struct {
 }
 
 type CreateOrderItem struct {
-	Plu      string `db:"plu"`
-	Name     string `db:"name"`
-	Price    int    `db:"price"`
-	Quantity int    `db:"quantity"`
-	OrderId  int    `db:"order_id"`
-	ParentId int    `db:"parent_id"`
+	Plu      string     `db:"plu"`
+	Name     string     `db:"name"`
+	Price    int        `db:"price"`
+	Quantity int        `db:"quantity"`
+	OrderId  int        `db:"order_id"`
+	ParentId *uuid.UUID `db:"parent_id"`
 }

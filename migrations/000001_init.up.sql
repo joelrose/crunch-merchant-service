@@ -34,7 +34,7 @@ CREATE TABLE stores (
 );
 
 CREATE TABLE store_opening_hours (
-    id BIGSERIAL PRIMARY KEY,
+    id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
     day_of_week int NOT NULL,
     start_timestamp int NOT NULL,
     end_timestamp int NOT NULL,
@@ -66,19 +66,19 @@ CREATE TABLE orders (
 );
 
 CREATE TABLE order_items (
-    id BIGSERIAL PRIMARY KEY,
+    id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
     plu TEXT NOT NULL,
     name TEXT NOT NULL,
     price int NOT NULL,
     quantity int NOT NULL,
     order_id bigint NOT NULL,
-    parent_id bigint,
+    parent_id uuid,
     FOREIGN KEY (order_id) REFERENCES orders (id) ON DELETE CASCADE,
     FOREIGN KEY (parent_id) REFERENCES order_items (id) ON DELETE CASCADE
 );
 
 CREATE TABLE menu_categories (
-    id BIGSERIAL PRIMARY KEY,
+    id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
     name TEXT NOT NULL,
     description TEXT NOT NULL,
     image_url TEXT NOT NULL,
@@ -88,7 +88,7 @@ CREATE TABLE menu_categories (
 );
 
 CREATE TABLE menu_product (
-    id BIGSERIAL PRIMARY KEY,
+    id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
     name TEXT NOT NULL,
     plu TEXT NOT NULL,
     price int NOT NULL,
@@ -107,16 +107,16 @@ CREATE TABLE menu_product (
 );
 
 CREATE TABLE product_product_relation (
-    parent_product_id bigint NOT NULL,
-    child_product_id bigint NOT NULL,
+    parent_product_id uuid NOT NULL,
+    child_product_id uuid NOT NULL,
     PRIMARY KEY (child_product_id, parent_product_id),
     FOREIGN KEY (parent_product_id) REFERENCES menu_product (id) ON DELETE CASCADE,
     FOREIGN KEY (child_product_id) REFERENCES menu_product (id) ON DELETE CASCADE
 );
 
 CREATE TABLE category_product_relation (
-    menu_category_id bigint NOT NULL,
-    menu_product_id bigint NOT NULL,
+    menu_category_id uuid NOT NULL,
+    menu_product_id uuid NOT NULL,
     PRIMARY KEY (menu_product_id, menu_category_id),
     FOREIGN KEY (menu_category_id) REFERENCES menu_categories (id) ON DELETE CASCADE,
     FOREIGN KEY (menu_product_id) REFERENCES menu_product (id) ON DELETE CASCADE

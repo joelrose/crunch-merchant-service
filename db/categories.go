@@ -6,8 +6,8 @@ import (
 	"github.com/joelrose/crunch-merchant-service/dtos"
 )
 
-func (db *DB) CreateCategory(category models.MenuCategory) (int, error) {
-	var lastInsertId int
+func (db *DB) CreateCategory(category models.MenuCategory) (uuid.UUID, error) {
+	var lastInsertId uuid.UUID
 	err := db.Sqlx.Get(
 		&lastInsertId,
 		"INSERT INTO menu_categories (name, description, image_url, sort_order, store_id) VALUES ($1, $2, $3, $4, $5) RETURNING id",
@@ -27,7 +27,7 @@ func (db *DB) DeleteCategories(storeId uuid.UUID) error {
 	return err
 }
 
-func (db *DB) CreateProductCategoryRelation(categoryId int, productId int) error {
+func (db *DB) CreateProductCategoryRelation(categoryId uuid.UUID, productId uuid.UUID) error {
 	_, err := db.Sqlx.Exec(
 		"INSERT INTO category_product_relation (menu_category_id, menu_product_id) VALUES ($1, $2)",
 		categoryId, productId,
@@ -43,8 +43,8 @@ func (db *DB) GetCategories(storeId uuid.UUID) ([]dtos.GetStoreCategory, error) 
 	return categories, err
 }
 
-func (db *DB) GetCategoryChildren(categoryId int) ([]int, error) {
-	var categoryRelations []int
+func (db *DB) GetCategoryChildren(categoryId uuid.UUID) ([]uuid.UUID, error) {
+	var categoryRelations []uuid.UUID
 	err := db.Sqlx.Select(&categoryRelations, "SELECT menu_product_id FROM category_product_relation WHERE menu_category_id = $1", categoryId)
 
 	return categoryRelations, err

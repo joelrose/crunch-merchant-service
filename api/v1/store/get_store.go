@@ -25,7 +25,7 @@ type (
 	}
 )
 
-func convertHelperMenuCategory(db *db.DB, productMap map[int]dtos.GetStoreProduct, productId int) dtos.GetStoreProduct {
+func convertHelperMenuCategory(db *db.DB, productMap map[uuid.UUID]dtos.GetStoreProduct, productId uuid.UUID) dtos.GetStoreProduct {
 	childrenIds, err := db.GetProductChildren(productId)
 	if err != nil {
 		log.Errorf("failed to get product children: %v", err)
@@ -58,7 +58,7 @@ func buildMenu(db *db.DB, storeId uuid.UUID) (*MenuModel, error) {
 		return nil, err
 	}
 
-	productMap := make(map[int]dtos.GetStoreProduct)
+	productMap := make(map[uuid.UUID]dtos.GetStoreProduct)
 	for _, product := range products {
 		productMap[product.Id] = product
 	}

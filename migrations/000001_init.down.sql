@@ -1,1 +1,11 @@
+DROP TABLE IF EXISTS stores;
+DROP TABLE IF EXISTS store_opening_hours;
+DROP TABLE IF EXISTS deliverect_channels;
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS order_items;
+DROP TABLE IF EXISTS menu_categories;
+DROP TABLE IF EXISTS menu_product;
+DROP TABLE IF EXISTS product_product_relation;
+DROP TABLE IF EXISTS category_product_relation;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS merchants;

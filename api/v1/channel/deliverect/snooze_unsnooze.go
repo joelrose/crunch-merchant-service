@@ -2,8 +2,8 @@ package deliverect
 
 import (
 	"net/http"
-	"strconv"
 
+	"github.com/google/uuid"
 	"github.com/joelrose/crunch-merchant-service/db"
 	"github.com/joelrose/crunch-merchant-service/dtos"
 	"github.com/joelrose/crunch-merchant-service/middleware"
@@ -11,10 +11,10 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
-func convertToString(intArray []int) []string {
+func convertToString(uuidArray []uuid.UUID) []string {
 	var str []string
-	for _, value := range intArray {
-		str = append(str, strconv.Itoa(value))
+	for _, value := range uuidArray {
+		str = append(str, value.String())
 	}
 	return str
 }

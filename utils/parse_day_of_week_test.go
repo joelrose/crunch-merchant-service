@@ -46,6 +46,6 @@ func TestParseDeliverectDayOfWeek(t *testing.T) {
 	for _, testCase := range testCases {
 		output := ParseDeliverectDayOfWeek(testCase.input)
 
-		assert.Equal(t, testCase.expected, output)
+		assert.Equal(t, testCase.expected, int(output))
 	}
 }

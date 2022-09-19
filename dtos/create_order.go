@@ -8,7 +8,7 @@ type CreateOrderRequest struct {
 } //@name CreateOrderRequest
 
 type OrderItem struct {
-	Id       int         `json:"id"`
+	Id       uuid.UUID   `json:"id"`
 	Plu      string      `json:"plu"`
 	Name     string      `json:"name"`
 	Price    int         `json:"price"`
