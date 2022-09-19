@@ -1,8 +1,8 @@
 package db
 
 import (
-	"github.com/joelrose/crunch-merchant-service/db/models"
-	"github.com/joelrose/crunch-merchant-service/dtos"
+	"github.com/joelrose/crunch-merchant-service/models"
+	"github.com/joelrose/crunch-merchant-service/models/dtos"
 )
 
 func (database *DB) GetAllUsers() ([]models.User, error) {

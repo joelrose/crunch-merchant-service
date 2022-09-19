@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"github.com/joelrose/crunch-merchant-service/dtos"
+	"github.com/joelrose/crunch-merchant-service/models/dtos"
 )
 
 func CalculateOrderPrice(items []dtos.OrderItem) int {

@@ -3,7 +3,7 @@ package db
 import (
 	"database/sql"
 
-	"github.com/joelrose/crunch-merchant-service/db/models"
+	"github.com/joelrose/crunch-merchant-service/models"
 	"github.com/labstack/gommon/log"
 )
 

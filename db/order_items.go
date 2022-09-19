@@ -2,7 +2,7 @@ package db
 
 import (
 	"github.com/google/uuid"
-	"github.com/joelrose/crunch-merchant-service/db/models"
+	"github.com/joelrose/crunch-merchant-service/models"
 )
 
 func (db *DB) CreateOrderItemWithoutParent(orderItem models.CreateOrderItem) (uuid.UUID, error) {

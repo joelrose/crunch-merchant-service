@@ -9,8 +9,8 @@ import (
 	"github.com/go-redis/redis/v9"
 	"github.com/joelrose/crunch-merchant-service/db"
 	"github.com/joelrose/crunch-merchant-service/domain/menus"
-	"github.com/joelrose/crunch-merchant-service/dtos"
 	"github.com/joelrose/crunch-merchant-service/middleware"
+	"github.com/joelrose/crunch-merchant-service/models/dtos"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 )

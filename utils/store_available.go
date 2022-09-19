@@ -1,6 +1,6 @@
 package utils
 
-import "github.com/joelrose/crunch-merchant-service/dtos"
+import "github.com/joelrose/crunch-merchant-service/models/dtos"
 
 func IsStoreAvailable(openingHours []dtos.GetStoreOpeningHour) bool {
 	day, timestamp := GetDayAndTimestamp()

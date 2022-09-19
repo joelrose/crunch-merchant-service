@@ -1,6 +1,6 @@
 package menus
 
-import "github.com/joelrose/crunch-merchant-service/dtos"
+import "github.com/joelrose/crunch-merchant-service/models/dtos"
 
 type (
 	MenuRedisModel struct {

@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/joelrose/crunch-merchant-service/db"
-	"github.com/joelrose/crunch-merchant-service/dtos"
 	"github.com/joelrose/crunch-merchant-service/middleware"
+	"github.com/joelrose/crunch-merchant-service/models/dtos"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 )

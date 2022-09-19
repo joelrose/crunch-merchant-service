@@ -3,8 +3,8 @@ package db
 import (
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
-	"github.com/joelrose/crunch-merchant-service/db/models"
-	"github.com/joelrose/crunch-merchant-service/dtos"
+	"github.com/joelrose/crunch-merchant-service/models"
+	"github.com/joelrose/crunch-merchant-service/models/dtos"
 )
 
 func (db *DB) CreateProduct(product models.MenuProduct) (uuid.UUID, error) {

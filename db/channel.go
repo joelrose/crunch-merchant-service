@@ -2,8 +2,8 @@ package db
 
 import (
 	"github.com/google/uuid"
-	"github.com/joelrose/crunch-merchant-service/db/models"
-	"github.com/joelrose/crunch-merchant-service/dtos"
+	"github.com/joelrose/crunch-merchant-service/models"
+	"github.com/joelrose/crunch-merchant-service/models/dtos"
 )
 
 func (db *DB) GetChannelByStoreId(storeId uuid.UUID) (models.DeliverectChannel, error) {

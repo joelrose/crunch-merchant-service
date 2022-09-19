@@ -2,7 +2,7 @@ package dtos
 
 import (
 	"github.com/google/uuid"
-	"github.com/joelrose/crunch-merchant-service/db/models"
+	"github.com/joelrose/crunch-merchant-service/models"
 )
 
 type UpdateOrderStatusRequest struct {

@@ -3,7 +3,7 @@ package menus
 import (
 	"github.com/google/uuid"
 	"github.com/joelrose/crunch-merchant-service/db"
-	"github.com/joelrose/crunch-merchant-service/dtos"
+	"github.com/joelrose/crunch-merchant-service/models/dtos"
 	"github.com/labstack/gommon/log"
 )
 

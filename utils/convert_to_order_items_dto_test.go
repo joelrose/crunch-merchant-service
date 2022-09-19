@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
-	"github.com/joelrose/crunch-merchant-service/db/models"
-	"github.com/joelrose/crunch-merchant-service/dtos"
+	"github.com/joelrose/crunch-merchant-service/models"
+	"github.com/joelrose/crunch-merchant-service/models/dtos"
 	"github.com/stretchr/testify/assert"
 )
 
