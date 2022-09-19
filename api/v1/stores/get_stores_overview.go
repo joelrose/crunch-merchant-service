@@ -5,6 +5,7 @@ import (
 
 	"github.com/joelrose/crunch-merchant-service/db"
 	"github.com/joelrose/crunch-merchant-service/middleware"
+	"github.com/joelrose/crunch-merchant-service/utils"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 )
@@ -25,6 +26,16 @@ func GetStoresOverview(c echo.Context) error {
 	if err != nil {
 		log.Errorf("failed to get stores: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError)
+	}
+
+	for ind, store := range stores {
+		openingHours, err := db.GetOpeningHours(store.Id)
+		if err != nil {
+			log.Debugf("failed to get opening hours: %v", err)
+			return echo.NewHTTPError(http.StatusInternalServerError)
+		}
+
+		stores[ind].IsAvailable = utils.IsStoreAvailable(openingHours)
 	}
 
 	return c.JSON(http.StatusOK, stores)

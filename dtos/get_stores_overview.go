@@ -13,4 +13,5 @@ type GetStoresOverviewResponse struct {
 	GoogleMapsLink    string    `db:"google_maps_link" json:"googleMapsLink"`
 	PhoneNumber       string    `db:"phone_number" json:"phoneNumber"`
 	ImageUrl          string    `db:"image_url" json:"imageUrl"`
+	IsAvailable       bool      `json:"isAvailable"`
 } //@name GetStoresOverviewResponse

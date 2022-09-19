@@ -52,6 +52,5 @@ type GetStoreResponse struct {
 	PhoneNumber       string                `db:"phone_number" json:"phoneNumber"`
 	ImageUrl          string                `db:"image_url" json:"imageUrl"`
 	Categories        []GetStoreCategory    `json:"categories"`
-	IsAvailable       bool                  `json:"isAvailable"`
 	OpeningHours      []GetStoreOpeningHour `json:"openingHours"`
 } //@name GetStoreResponse
