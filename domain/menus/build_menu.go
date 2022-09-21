@@ -2,13 +2,12 @@ package menus
 
 import (
 	"github.com/google/uuid"
-	"github.com/joelrose/crunch-merchant-service/db"
 	"github.com/joelrose/crunch-merchant-service/models/dtos"
 	"github.com/labstack/gommon/log"
 )
 
-func getChildrenRecursive(db *db.DB, productMap map[uuid.UUID]dtos.GetStoreProduct, productId uuid.UUID) dtos.GetStoreProduct {
-	childrenIds, err := db.GetProductChildren(productId)
+func (s *MenuService) getChildrenRecursive(productMap map[uuid.UUID]dtos.GetStoreProduct, productId uuid.UUID) dtos.GetStoreProduct {
+	childrenIds, err := s.db.GetProductChildren(productId)
 	if err != nil {
 		log.Errorf("failed to get product children: %v", err)
 		return dtos.GetStoreProduct{}
@@ -17,7 +16,7 @@ func getChildrenRecursive(db *db.DB, productMap map[uuid.UUID]dtos.GetStoreProdu
 	product := productMap[productId]
 	result := []dtos.GetStoreProduct{}
 	for _, childId := range childrenIds {
-		result = append(result, getChildrenRecursive(db, productMap, childId))
+		result = append(result, s.getChildrenRecursive(productMap, childId))
 	}
 
 	if len(result) > 0 {
@@ -27,14 +26,16 @@ func getChildrenRecursive(db *db.DB, productMap map[uuid.UUID]dtos.GetStoreProdu
 	return product
 }
 
-func Build(db *db.DB, storeId uuid.UUID) (*MenuRedisModel, error) {
-	categories, err := db.GetCategories(storeId)
+func (s *MenuService) build() (*MenuRedisModel, error) {
+	log.Debugf("rebuilding menu: [%v]", s.storeId)
+
+	categories, err := s.db.GetCategories(s.storeId)
 	if err != nil {
 		log.Errorf("failed to get categories: %v", err)
 		return nil, err
 	}
 
-	products, err := db.GetProducts(storeId)
+	products, err := s.db.GetProducts(s.storeId)
 	if err != nil {
 		log.Errorf("failed to get products: %v", err)
 		return nil, err
@@ -46,7 +47,7 @@ func Build(db *db.DB, storeId uuid.UUID) (*MenuRedisModel, error) {
 	}
 
 	for ind, category := range categories {
-		childrenProductIds, err := db.GetCategoryChildren(category.Id)
+		childrenProductIds, err := s.db.GetCategoryChildren(category.Id)
 
 		if err != nil {
 			log.Errorf("failed to get category children: %v", err)
@@ -55,7 +56,7 @@ func Build(db *db.DB, storeId uuid.UUID) (*MenuRedisModel, error) {
 
 		children := []dtos.GetStoreProduct{}
 		for _, childrenProductId := range childrenProductIds {
-			children = append(children, getChildrenRecursive(db, productMap, childrenProductId))
+			children = append(children, s.getChildrenRecursive(productMap, childrenProductId))
 		}
 
 		if len(children) > 0 {
@@ -63,7 +64,7 @@ func Build(db *db.DB, storeId uuid.UUID) (*MenuRedisModel, error) {
 		}
 	}
 
-	openingHours, err := db.GetOpeningHours(storeId)
+	openingHours, err := s.db.GetOpeningHours(s.storeId)
 	if err != nil {
 		log.Errorf("failed to get opening hours: %v", err)
 		return nil, err

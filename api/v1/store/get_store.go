@@ -1,9 +1,6 @@
 package store
 
 import (
-	"context"
-	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/go-redis/redis/v9"
@@ -28,7 +25,6 @@ import (
 // @Failure      500  {object}  error
 // @Router       /store/{id} [get]
 func GetStore(c echo.Context) error {
-	ctx := context.Background()
 	db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
 
 	r := dtos.GetStoreRequest{}
@@ -45,36 +41,12 @@ func GetStore(c echo.Context) error {
 	}
 
 	rdb := c.Get(middleware.REDIS_CONTEXT_KEY).(*redis.Client)
+	menuService := menus.NewMenuService(db, rdb, r.StoreId)
 
-	value, err := rdb.Get(ctx, fmt.Sprint(r.StoreId)).Result()
-	if err == nil {
-		var menu menus.MenuRedisModel
-		err := json.Unmarshal([]byte(value), &menu)
-		if err != nil {
-			log.Errorf("failed to marshal menu model: %v", err)
-			return echo.NewHTTPError(http.StatusInternalServerError)
-		}
-
-		log.Debug("serving cached menu")
-		return c.JSON(http.StatusOK, menus.ConvertToGetStoreResponse(store, &menu))
-	} else {
-		log.Debugf("rebuilding menu: %v", err)
-	}
-
-	menu, err := menus.Build(db, r.StoreId)
+	menu, err := menuService.GetMenu()
 	if err != nil {
+		log.Debugf("failed to get menu: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError)
-	}
-
-	json, err := json.Marshal(menu)
-	if err != nil {
-		log.Errorf("failed to marshal menu: %v", err)
-		return echo.NewHTTPError(http.StatusInternalServerError)
-	}
-
-	err = rdb.Set(ctx, fmt.Sprint(r.StoreId), json, 0).Err()
-	if err != nil {
-		log.Errorf("failed to save menu to redis: %v", err)
 	}
 
 	return c.JSON(http.StatusOK, menus.ConvertToGetStoreResponse(store, menu))
