@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	AUTH0_USER_CONTEXT_KEY = "user"
+	AUTH0_USER_ID_CONTEXT_KEY = "user_id"
 )
 
 type Auth0 struct {
@@ -71,13 +71,15 @@ func (auth0 *Auth0) Middleware() echo.MiddlewareFunc {
 				return echo.NewHTTPError(http.StatusUnauthorized, "Failed to set up the jwt validator")
 			}
 
-			dest, err := jwtValidator.ValidateToken(context.Background(), authHeader[1])
+			user, err := jwtValidator.ValidateToken(context.Background(), authHeader[1])
 			if err != nil {
 				log.Fatalf("Failed to validate the token: %v", err)
 				return echo.NewHTTPError(http.StatusUnauthorized, "Failed to validate the token")
 			}
 
-			c.Set(AUTH0_USER_CONTEXT_KEY, dest)
+			claims := user.(*validator.ValidatedClaims)
+
+			c.Set(AUTH0_USER_ID_CONTEXT_KEY, claims.RegisteredClaims.Subject)
 
 			return next(c)
 		}

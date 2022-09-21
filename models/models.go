@@ -82,7 +82,7 @@ type Store struct {
 	Fee                 float32        `db:"fee"`
 	IsOpen              bool           `db:"is_open"`
 	ImageUrl            string         `db:"image_url"`
-	MerchantId          int            `db:"merchant_id"`
+	MerchantUserId      string         `db:"merchant_user_id"`
 }
 
 type StoreOpeningHour struct {
