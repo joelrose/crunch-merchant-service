@@ -54,6 +54,7 @@ type Order struct {
 	IsPaid              bool        `db:"is_paid"`
 	CreatedAt           time.Time   `db:"created_at"`
 	StoreId             uuid.UUID   `db:"store_id"`
+	Fee                 float32     `db:"fee"`
 	UserId              int         `db:"user_id"`
 }
 
