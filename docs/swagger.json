@@ -441,7 +441,7 @@
                     "type": "string"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "imageUrl": {
                     "type": "string"
@@ -481,7 +481,7 @@
                     "type": "string"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "imageUrl": {
                     "type": "string"
@@ -560,9 +560,6 @@
                 "imageUrl": {
                     "type": "string"
                 },
-                "isAvailable": {
-                    "type": "boolean"
-                },
                 "name": {
                     "type": "string"
                 },
@@ -604,6 +601,9 @@
                 "imageUrl": {
                     "type": "string"
                 },
+                "isAvailable": {
+                    "type": "boolean"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -619,7 +619,7 @@
             "type": "object",
             "properties": {
                 "id": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "name": {
                     "type": "string"
@@ -669,6 +669,23 @@
             "properties": {
                 "identifier": {
                     "type": "string"
+                }
+            }
+        },
+        "menus.MenuRedisModel": {
+            "type": "object",
+            "properties": {
+                "categories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/GetStoreCategory"
+                    }
+                },
+                "openingHours": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/GetStoreOpeningHour"
+                    }
                 }
             }
         }

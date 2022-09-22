@@ -448,7 +448,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "imageUrl": {
                     "type": "string"
@@ -488,7 +488,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "imageUrl": {
                     "type": "string"
@@ -567,9 +567,6 @@ const docTemplate = `{
                 "imageUrl": {
                     "type": "string"
                 },
-                "isAvailable": {
-                    "type": "boolean"
-                },
                 "name": {
                     "type": "string"
                 },
@@ -611,6 +608,9 @@ const docTemplate = `{
                 "imageUrl": {
                     "type": "string"
                 },
+                "isAvailable": {
+                    "type": "boolean"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -626,7 +626,7 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "id": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "name": {
                     "type": "string"
@@ -676,6 +676,23 @@ const docTemplate = `{
             "properties": {
                 "identifier": {
                     "type": "string"
+                }
+            }
+        },
+        "menus.MenuRedisModel": {
+            "type": "object",
+            "properties": {
+                "categories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/GetStoreCategory"
+                    }
+                },
+                "openingHours": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/GetStoreOpeningHour"
+                    }
                 }
             }
         }
