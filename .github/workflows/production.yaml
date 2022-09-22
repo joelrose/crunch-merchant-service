@@ -1,9 +1,9 @@
-name: 'Deploy service to Stage'
+name: 'Deploy service to Prod'
 
 on:
   push:
     branches:
-      - staging
+      - main
 
 jobs:
   build:
@@ -14,5 +14,5 @@ jobs:
         with:
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: crunch-backend-stage
+          heroku_app_name: crunch-backend-prod
           usedocker: true
