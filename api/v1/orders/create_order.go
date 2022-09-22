@@ -52,7 +52,7 @@ func CreateOrder(c echo.Context) error {
 	store, err := db.GetAvailableStore(orderRequest.StoreId)
 	if err != nil {
 		log.Errorf("failed to retrieve store: %v", err)
-		return echo.NewHTTPError(http.StatusInternalServerError)
+		return echo.NewHTTPError(http.StatusNotFound)
 	}
 
 	/*if !store.StripeAccountId.Valid {
