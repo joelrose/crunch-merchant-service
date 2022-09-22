@@ -11,8 +11,8 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
-// GetOrders godoc
-// @Summary      Get all orders from a store
+// GetMenu godoc
+// @Summary      Get the menu for a store
 // @Tags         dashboard
 // @Accept       json
 // @Produce      json
@@ -20,13 +20,14 @@ import (
 // @Success      200  {object}  []menus.MenuRedisModel
 // @Success      400  {object} 	error
 // @Failure      500  {object}  error
-// @Router       /dashboard/orders [get]
+// @Router       /dashboard/menu [get]
 func GetMenu(c echo.Context) error {
 	db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
 
-	userId := c.Get(middleware.AUTH0_USER_ID_CONTEXT_KEY).(*string)
+	userId := c.Get(middleware.AUTH0_USER_ID_CONTEXT_KEY)
+	userIdString := userId.(string)
 
-	storeId, err := db.GetStoreByMerchantUserId(*userId)
+	storeId, err := db.GetStoreByMerchantUserId(userIdString)
 	if err != nil {
 		log.Errorf("Failed to get store by merchant user id: %v", err)
 		return echo.NewHTTPError(http.StatusForbidden)

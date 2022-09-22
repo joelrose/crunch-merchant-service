@@ -41,7 +41,6 @@ func SetupRoutes(e *echo.Echo, config config.Config) {
 	deliverectGroup := channelGroup.Group("/deliverect")
 
 	deliverectGroup.POST("/channel_status", deliverect.ChannelStatus)
-
 	deliverectGroup.POST("/menu_push", deliverect.MenuPush)
 	deliverectGroup.POST("/snooze_unsnooze", deliverect.SnoozeUnsnooze)
 	deliverectGroup.POST("/busy_mode", deliverect.BusyMode)
@@ -60,8 +59,8 @@ func SetupRoutes(e *echo.Echo, config config.Config) {
 	dashboardGroup.Use(validator.Middleware())
 
 	dashboardGroup.GET("/status", okHandler)
-
 	dashboardGroup.GET("/orders", dashboard.GetOrders)
+	dashboardGroup.GET("/menu", dashboard.GetMenu)
 
 	usersGroup := apiV1.Group("/users", middleware.FirebaseAuth(config.FirebaseConfig))
 

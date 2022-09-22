@@ -173,6 +173,17 @@ definitions:
       reviewCount:
         type: integer
     type: object
+  Menu:
+    properties:
+      categories:
+        items:
+          $ref: '#/definitions/GetStoreCategory'
+        type: array
+      opening_hours:
+        items:
+          $ref: '#/definitions/GetStoreOpeningHour'
+        type: array
+    type: object
   OrderItem:
     properties:
       id:
@@ -210,17 +221,6 @@ definitions:
       identifier:
         type: string
     type: object
-  menus.MenuRedisModel:
-    properties:
-      categories:
-        items:
-          $ref: '#/definitions/GetStoreCategory'
-        type: array
-      openingHours:
-        items:
-          $ref: '#/definitions/GetStoreOpeningHour'
-        type: array
-    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -228,6 +228,30 @@ info:
   title: Swagger Example API
   version: "1.0"
 paths:
+  /dashboard/menu:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/Menu'
+            type: array
+        "400":
+          description: Bad Request
+          schema: {}
+        "500":
+          description: Internal Server Error
+          schema: {}
+      security:
+      - Auth0Token: []
+      summary: Get the menu for a store
+      tags:
+      - dashboard
   /dashboard/orders:
     get:
       consumes:

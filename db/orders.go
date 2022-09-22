@@ -54,9 +54,10 @@ func (database *DB) GetOrdersByUserId(userId int) ([]dtos.GetOrdersResponse, err
 
 func (database *DB) GetOrdersByStoreId(storeId uuid.UUID) ([]dtos.GetOrdersResponse, error) {
 	query := `
-		SELECT id, status, price, is_paid, estimated_pickup_time, created_at, name, description, image_url, address, phone_number, google_maps_link
-		FROM stores
-		WHERE store_id = $1
+	SELECT o.id, status, price, is_paid, estimated_pickup_time, created_at, name, description, image_url, address, phone_number, google_maps_link
+	FROM orders o
+	LEFT JOIN stores m on o.store_id = m.id
+	WHERE store_id = $1
 	`
 	orders := []dtos.GetOrdersResponse{}
 	err := database.Sqlx.Select(&orders, query, storeId)

@@ -9,9 +9,9 @@ import (
 
 type (
 	MenuRedisModel struct {
-		Categories   []dtos.GetStoreCategory
-		OpeningHours []dtos.GetStoreOpeningHour
-	}
+		Categories   []dtos.GetStoreCategory    `json:"categories"`
+		OpeningHours []dtos.GetStoreOpeningHour `json:"opening_hours"`
+	} //@name Menu
 
 	MenuService struct {
 		db      *db.DB

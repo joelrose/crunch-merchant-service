@@ -16,6 +16,44 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/dashboard/menu": {
+            "get": {
+                "security": [
+                    {
+                        "Auth0Token": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "dashboard"
+                ],
+                "summary": "Get the menu for a store",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Menu"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {}
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {}
+                    }
+                }
+            }
+        },
         "/dashboard/orders": {
             "get": {
                 "security": [
@@ -622,6 +660,23 @@ const docTemplate = `{
                 }
             }
         },
+        "Menu": {
+            "type": "object",
+            "properties": {
+                "categories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/GetStoreCategory"
+                    }
+                },
+                "opening_hours": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/GetStoreOpeningHour"
+                    }
+                }
+            }
+        },
         "OrderItem": {
             "type": "object",
             "properties": {
@@ -676,23 +731,6 @@ const docTemplate = `{
             "properties": {
                 "identifier": {
                     "type": "string"
-                }
-            }
-        },
-        "menus.MenuRedisModel": {
-            "type": "object",
-            "properties": {
-                "categories": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/GetStoreCategory"
-                    }
-                },
-                "openingHours": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/GetStoreOpeningHour"
-                    }
                 }
             }
         }
