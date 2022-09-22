@@ -52,6 +52,22 @@ func (database *DB) GetOrdersByUserId(userId int) ([]dtos.GetOrdersResponse, err
 	return orders, nil
 }
 
+func (database *DB) GetOrdersByStoreId(storeId uuid.UUID) ([]dtos.GetOrdersResponse, error) {
+	query := `
+		SELECT id, status, price, is_paid, estimated_pickup_time, created_at, name, description, image_url, address, phone_number, google_maps_link
+		FROM stores
+		WHERE store_id = $1
+	`
+	orders := []dtos.GetOrdersResponse{}
+	err := database.Sqlx.Select(&orders, query, storeId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return orders, nil
+}
+
 func (database *DB) GetOrderById(orderId uuid.UUID) (models.Order, error) {
 	order := models.Order{}
 	err := database.Sqlx.Get(&order, "SELECT * FROM orders WHERE id = $1", orderId)

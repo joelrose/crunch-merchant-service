@@ -33,18 +33,16 @@ func ChannelStatus(c echo.Context) error {
 
 	db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
 
-	// Check if [ChannelLocationId=StoreId] exists
-	_, err = db.GetStore(channelStatusRequest.ChannelLocationId)
+	// [ChannelLocationId=StoreId]
+	_, err = db.GetStoreById(channelStatusRequest.ChannelLocationId)
 	if err != nil {
 		log.Errorf("failed to get store: %v", err)
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
 
-	// Check if channel exists
-	_, err = db.GetChannelByStoreId(channelStatusRequest.ChannelLocationId)
-
 	channelStatus := convertToEnum(channelStatusRequest.Status)
 
+	_, err = db.GetChannelByStoreId(channelStatusRequest.ChannelLocationId)
 	if err != nil {
 		log.Debugf("channel does not exist, creating channel %v", err)
 		// Create new channel

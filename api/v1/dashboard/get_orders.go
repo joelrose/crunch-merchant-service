@@ -23,7 +23,15 @@ import (
 func GetOrders(c echo.Context) error {
 	db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
 
-	orders, err := db.GetOrdersByUserId(1)
+	userId := c.Get(middleware.AUTH0_USER_ID_CONTEXT_KEY).(*string)
+
+	storeId, err := db.GetStoreByMerchantUserId(*userId)
+	if err != nil {
+		log.Errorf("Failed to get store by merchant user id: %v", err)
+		return echo.NewHTTPError(http.StatusForbidden)
+	}
+
+	orders, err := db.GetOrdersByStoreId(storeId)
 	if err != nil {
 		log.Errorf("failed to get orders: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError)

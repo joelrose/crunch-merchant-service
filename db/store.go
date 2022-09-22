@@ -7,7 +7,7 @@ import (
 	"github.com/joelrose/crunch-merchant-service/utils"
 )
 
-func (db *DB) GetStore(id uuid.UUID) (models.Store, error) {
+func (db *DB) GetStoreById(id uuid.UUID) (models.Store, error) {
 	store := models.Store{}
 	err := db.Sqlx.Get(&store, "SELECT * FROM stores WHERE id = $1", id)
 
@@ -16,6 +16,17 @@ func (db *DB) GetStore(id uuid.UUID) (models.Store, error) {
 	}
 
 	return store, nil
+}
+
+func (db *DB) GetStoreByMerchantUserId(merchantUserId string) (uuid.UUID, error) {
+	storeId := uuid.UUID{}
+	err := db.Sqlx.Get(&storeId, "SELECT id FROM stores WHERE merchant_user_id = $1", merchantUserId)
+
+	if err != nil {
+		return uuid.UUID{}, err
+	}
+
+	return storeId, nil
 }
 
 func (db *DB) GetOpenStore(id uuid.UUID) (models.Store, error) {
