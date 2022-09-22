@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/labstack/gommon/log"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
 
 func (d DeliverectService) CreateOrder(order CreateOrderRequest) error {
@@ -18,7 +19,8 @@ func (d DeliverectService) CreateOrder(order CreateOrderRequest) error {
 	}
 
 	client := http.Client{
-		Timeout: time.Duration(1) * time.Second,
+		Timeout:   time.Duration(1) * time.Second,
+		Transport: otelhttp.NewTransport(http.DefaultTransport),
 	}
 
 	orderUrl := d.Config.BaseUrl + "/" + d.Config.ChannelName + "/order/" + d.Config.ChannelLinkId

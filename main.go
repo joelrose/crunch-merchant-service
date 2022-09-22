@@ -1,19 +1,26 @@
 package main
 
 import (
+	"context"
+	"net/http"
 	"os"
+	"time"
 
 	_ "github.com/golang-migrate/migrate/v4/source/file"
+	_ "github.com/honeycombio/honeycomb-opentelemetry-go"
 	"github.com/joelrose/crunch-merchant-service/config"
 	"github.com/joelrose/crunch-merchant-service/db"
 	"github.com/joelrose/crunch-merchant-service/middleware"
 	"github.com/joelrose/crunch-merchant-service/routes"
 	red "github.com/joelrose/crunch-merchant-service/services/redis"
+	"github.com/joelrose/crunch-merchant-service/services/tracing"
 	"github.com/labstack/echo/v4"
 	defaultMiddleware "github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
 	_ "github.com/lib/pq"
 	"github.com/stripe/stripe-go/v73"
+	"go.opentelemetry.io/contrib/instrumentation/github.com/labstack/echo/otelecho"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
 
 // @title           Swagger Example API
@@ -32,7 +39,23 @@ func main() {
 
 	c := config.LoadConfig()
 
+	ctx := context.Background()
+
+	otelShutdown, err := tracing.InstallExportPipeline(ctx)
+	if err != nil {
+		log.Fatalf("error setting up OTel SDK - %e", err)
+	}
+	defer func() {
+		if err := otelShutdown(ctx); err != nil {
+			log.Fatal(err)
+		}
+	}()
+
 	stripe.Key = c.Stripe.SecretKey
+	stripe.SetHTTPClient(&http.Client{
+		Timeout:   80 * time.Second, // defaultHTTPTimeout
+		Transport: otelhttp.NewTransport(http.DefaultTransport),
+	})
 
 	database := db.NewDatabase(c.DatabaseUrl)
 
@@ -40,6 +63,7 @@ func main() {
 
 	e := echo.New()
 
+	e.Use(otelecho.Middleware("crunch-backend-service"))
 	e.Use(defaultMiddleware.Logger())
 	e.Use(middleware.ConfigContext(&c))
 	e.Use(middleware.DatabaseContext(&db.DB{Sqlx: *database}))

@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/labstack/gommon/log"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
 
 const (
@@ -50,7 +51,8 @@ func (d DeliverectService) getMachineToMachineToken() (*string, error) {
 	}
 
 	client := http.Client{
-		Timeout: time.Duration(2) * time.Second,
+		Timeout:   time.Duration(2) * time.Second,
+		Transport: otelhttp.NewTransport(http.DefaultTransport),
 	}
 
 	url := d.Config.BaseUrl + MachineTokenPath

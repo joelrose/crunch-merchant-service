@@ -2,12 +2,10 @@ package dtos
 
 import (
 	"time"
-
-	"github.com/google/uuid"
 )
 
 type GetOrdersResponse struct {
-	Id                  uuid.UUID   `db:"id" json:"id"`
+	Id                  int         `db:"id" json:"id"`
 	Status              int         `db:"status" json:"status"`
 	Price               int         `db:"price" json:"price"`
 	IsPaid              bool        `db:"is_paid" json:"isPaid"`

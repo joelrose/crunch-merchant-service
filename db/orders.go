@@ -79,7 +79,7 @@ func (database *DB) GetOrderById(orderId uuid.UUID) (models.Order, error) {
 	return order, nil
 }
 
-func (db *DB) UpdateOrderStatus(orderId uuid.UUID, orderStatus models.OrderStatus) error {
+func (db *DB) UpdateOrderStatus(orderId int, orderStatus models.OrderStatus) error {
 	_, err := db.Sqlx.Exec(
 		"UPDATE orders SET status = $1 WHERE id = $2",
 		orderId, int(orderStatus),
@@ -92,7 +92,7 @@ func (db *DB) UpdateOrderStatus(orderId uuid.UUID, orderStatus models.OrderStatu
 	return nil
 }
 
-func (database *DB) MarkOrderAsPaid(orderId uuid.UUID) error {
+func (database *DB) MarkOrderAsPaid(orderId int) error {
 	_, err := database.Sqlx.Exec("UPDATE orders SET is_paid=true WHERE id = $1", orderId)
 	if err != nil {
 		return err

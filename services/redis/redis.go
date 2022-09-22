@@ -12,5 +12,7 @@ func NewClient(redisUrl string) *redis.Client {
 		log.Fatalf("failed to parse redis url: %v", err)
 	}
 
-	return redis.NewClient(opt)
+	client := redis.NewClient(opt)
+
+	return client
 }

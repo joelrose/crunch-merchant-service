@@ -46,7 +46,7 @@ const (
 )
 
 type Order struct {
-	Id                  uuid.UUID   `db:"id"`
+	Id                  int         `db:"id"`
 	Status              OrderStatus `db:"status"`
 	EstimatedPickupTime time.Time   `db:"estimated_pickup_time"`
 	Price               int         `db:"price"`
