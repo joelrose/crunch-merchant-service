@@ -8,13 +8,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type CalculateTest struct {
+type calculateTest struct {
 	input    []dtos.OrderItem
 	expected int
 }
 
 func TestCalculateOrderPrice(t *testing.T) {
-	testCases := []CalculateTest{
+	testCases := []calculateTest{
 		{
 			input:    []dtos.OrderItem{},
 			expected: 0,

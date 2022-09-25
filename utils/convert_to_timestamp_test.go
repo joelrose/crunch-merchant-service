@@ -6,14 +6,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type TimestampTest struct {
+type timestampTest struct {
 	inputHour   int
 	inputMinute int
 	expected    int
 }
 
-func TestConvertToTimestamp(t *testing.T) {
-	testCases := []TimestampTest{
+var (
+	timestampTestCases = []timestampTest{
 		{
 			inputHour:   12,
 			inputMinute: 30,
@@ -35,8 +35,10 @@ func TestConvertToTimestamp(t *testing.T) {
 			expected:    1380,
 		},
 	}
+)
 
-	for _, testCase := range testCases {
+func TestConvertToTimestamp(t *testing.T) {
+	for _, testCase := range timestampTestCases {
 		actual := ConvertToTimestamp(testCase.inputHour, testCase.inputMinute)
 
 		assert.Equal(t, testCase.expected, actual)

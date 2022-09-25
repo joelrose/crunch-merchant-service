@@ -6,13 +6,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type DayOfWeekTest struct {
+type dayOfWeekTest struct {
 	input    int
 	expected int
 }
 
-func TestParseDeliverectDayOfWeek(t *testing.T) {
-	testCases := []DayOfWeekTest{
+var (
+	dayOfWeekTestCases = []dayOfWeekTest{
 		{
 			input:    1,
 			expected: 1,
@@ -42,8 +42,10 @@ func TestParseDeliverectDayOfWeek(t *testing.T) {
 			expected: 0,
 		},
 	}
+)
 
-	for _, testCase := range testCases {
+func TestParseDeliverectDayOfWeek(t *testing.T) {
+	for _, testCase := range dayOfWeekTestCases {
 		output := ParseDeliverectDayOfWeek(testCase.input)
 
 		assert.Equal(t, testCase.expected, int(output))

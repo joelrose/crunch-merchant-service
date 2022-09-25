@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type ConvertTest struct {
+type convertTest struct {
 	input    []models.OrderItem
 	expected []dtos.OrderItem
 }
@@ -25,7 +25,7 @@ func TestConvertOrderItemsToDto(t *testing.T) {
 	parent12.UUID = item12
 	parent12.Valid = true
 
-	testCases := []ConvertTest{
+	testCases := []convertTest{
 		{
 			input:    []models.OrderItem{},
 			expected: []dtos.OrderItem{},

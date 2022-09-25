@@ -1,16 +1,17 @@
 package utils
 
-import "github.com/joelrose/crunch-merchant-service/models/dtos"
+import (
+	"time"
 
-func IsStoreAvailable(openingHours []dtos.GetStoreOpeningHour) bool {
-	day, timestamp := GetDayAndTimestamp()
+	"github.com/joelrose/crunch-merchant-service/models/dtos"
+)
+
+func IsStoreAvailable(openingHours []dtos.GetStoreOpeningHour, day time.Weekday, timestamp int) bool {
 	for _, openingHour := range openingHours {
 		if openingHour.DayOfWeek == day {
-			continue
-		}
-
-		if openingHour.StartTimestamp < timestamp && timestamp < openingHour.EndTimestamp {
-			return true
+			if openingHour.StartTimestamp < timestamp && timestamp < openingHour.EndTimestamp {
+				return true
+			}
 		}
 	}
 

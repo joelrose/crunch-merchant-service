@@ -28,6 +28,7 @@ func GetStoresOverview(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusNotFound)
 	}
 
+	day, time := utils.GetDayAndTimestamp()
 	for ind, store := range stores {
 		openingHours, err := db.GetOpeningHours(store.Id)
 		if err != nil {
@@ -35,7 +36,7 @@ func GetStoresOverview(c echo.Context) error {
 			return echo.NewHTTPError(http.StatusInternalServerError)
 		}
 
-		stores[ind].IsAvailable = utils.IsStoreAvailable(openingHours)
+		stores[ind].IsAvailable = utils.IsStoreAvailable(openingHours, day, time)
 	}
 
 	return c.JSON(http.StatusOK, stores)
