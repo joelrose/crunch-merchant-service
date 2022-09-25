@@ -7,6 +7,12 @@
 3. Run `copy .env.example .env`
 4. Run `go run main.go`
 
+## Tests
+
+Run tests with `go test -cover ./...`
+
+Create the database mocks with `mockgen -source=db/interface.go -destination=mock/interface.go`
+
 ## Database
 
 ### Setup

@@ -20,7 +20,7 @@ func BusyMode(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
 
-	db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
+	db := c.Get(middleware.DATABASE_CONTEXT_KEY).(db.DBInterface)
 
 	channel, err := db.GetChannelByDeliverectLinkId(busyModeRequest.ChannelLinkId)
 	if err != nil {

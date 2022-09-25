@@ -31,9 +31,9 @@ import (
 // @Failure      500  {object}  error
 // @Router       /orders [post]
 func CreateOrder(c echo.Context) error {
-	db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
+	db := c.Get(middleware.DATABASE_CONTEXT_KEY).(db.DBInterface)
 
-	token := c.Get("token").(*auth.Token)
+	token := c.Get(middleware.FIREBASE_CONTEXT_KEY).(*auth.Token)
 
 	user, err := db.GetUserByFirebaseId(token.UID)
 
@@ -79,7 +79,6 @@ func CreateOrder(c echo.Context) error {
 	}
 
 	paymentIntent, err := paymentintent.New(params)
-
 	if err != nil {
 		log.Errorf("failed to create payment intent: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError)
@@ -113,7 +112,7 @@ func CreateOrder(c echo.Context) error {
 	return c.JSON(http.StatusCreated, response)
 }
 
-func createOrderItem(dto dtos.OrderItem, parentId *uuid.UUID, orderId int, db *db.DB) error {
+func createOrderItem(dto dtos.OrderItem, parentId *uuid.UUID, orderId int, db db.DBInterface) error {
 	orderItem := models.CreateOrderItem{
 		Plu:      dto.Plu,
 		Name:     dto.Name,

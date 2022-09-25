@@ -12,6 +12,10 @@ import (
 	"google.golang.org/api/option"
 )
 
+const (
+	FIREBASE_CONTEXT_KEY = "token"
+)
+
 func FirebaseAuth(firebaseConfig string) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
@@ -35,7 +39,7 @@ func FirebaseAuth(firebaseConfig string) echo.MiddlewareFunc {
 				return echo.NewHTTPError(http.StatusUnauthorized)
 			}
 
-			c.Set("token", token)
+			c.Set(FIREBASE_CONTEXT_KEY, token)
 			return next(c)
 		}
 	}

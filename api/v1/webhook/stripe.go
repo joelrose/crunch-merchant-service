@@ -43,7 +43,7 @@ func HandleStripe(c echo.Context) error {
 			return echo.NewHTTPError(http.StatusBadRequest)
 		}
 
-		db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
+		db := c.Get(middleware.DATABASE_CONTEXT_KEY).(db.DBInterface)
 
 		order, err := db.GetOrderByStripeOrderId(charge.PaymentIntent.ID)
 		if err != nil {

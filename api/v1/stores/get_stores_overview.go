@@ -20,7 +20,7 @@ import (
 // @Failure      500  {object}  error
 // @Router       /stores [get]
 func GetStoresOverview(c echo.Context) error {
-	db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
+	db := c.Get(middleware.DATABASE_CONTEXT_KEY).(db.DBInterface)
 
 	stores, err := db.GetAvailableStores()
 	if err != nil {

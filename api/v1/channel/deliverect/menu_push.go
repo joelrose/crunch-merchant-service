@@ -28,7 +28,7 @@ func MenuPush(c echo.Context) error {
 	}
 
 	menu := r[0]
-	db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
+	db := c.Get(middleware.DATABASE_CONTEXT_KEY).(db.DBInterface)
 
 	channel, err := db.GetChannelByDeliverectLinkId(menu.ChannelLinkID)
 	if err != nil {

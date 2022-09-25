@@ -4,9 +4,11 @@ go 1.19
 
 require (
 	firebase.google.com/go v3.13.0+incompatible
+	github.com/DATA-DOG/go-sqlmock v1.5.0
 	github.com/auth0/go-jwt-middleware/v2 v2.0.1
 	github.com/go-redis/redis/v9 v9.0.0-beta.2
 	github.com/golang-migrate/migrate/v4 v4.15.2
+	github.com/golang/mock v1.6.0
 	github.com/google/uuid v1.3.0
 	github.com/honeycombio/honeycomb-opentelemetry-go v0.2.0
 	github.com/jmoiron/sqlx v1.3.5

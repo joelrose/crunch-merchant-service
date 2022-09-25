@@ -14,7 +14,7 @@ type (
 	} //@name Menu
 
 	MenuService struct {
-		db      *db.DB
+		db      db.DBInterface
 		rdb     *redis.Client
 		storeId uuid.UUID
 	}
