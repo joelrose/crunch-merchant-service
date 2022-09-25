@@ -25,6 +25,37 @@ var (
 			input:  "23:00",
 			output: 1380,
 		},
+
+		// edge cases
+		{
+			input:  "24:01",
+			output: 0,
+		},
+		{
+			input:  "25:01",
+			output: 0,
+		},
+		{
+			input:  "-1:-22",
+			output: 0,
+		},
+		{
+			input:  "-1:22",
+			output: 0,
+		},
+		{
+			input:  "-1:-22",
+			output: 0,
+		},
+		{
+			input:  "0:-22",
+			output: 0,
+		},
+		{
+			input:  "0:100",
+			output: 0,
+		},
+		// end endge cases
 	}
 )
 

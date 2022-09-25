@@ -27,6 +27,43 @@ func TestCalculateOrderPrice(t *testing.T) {
 					Name:     "10",
 					Quantity: 1,
 					Price:    100,
+					SubItems: nil,
+				},
+				{
+					Id:       uuid.New(),
+					Plu:      "11",
+					Name:     "11",
+					Quantity: 1,
+					Price:    100,
+					SubItems: []dtos.OrderItem{{
+						Id:       uuid.New(),
+						Plu:      "12",
+						Name:     "12",
+						Quantity: 1,
+						Price:    100,
+						SubItems: []dtos.OrderItem{{
+							Id:       uuid.New(),
+							Plu:      "13",
+							Name:     "13",
+							Quantity: 1,
+							Price:    100,
+							SubItems: []dtos.OrderItem{},
+						},
+						},
+					},
+					},
+				},
+			},
+			expected: 400,
+		},
+		{
+			input: []dtos.OrderItem{
+				{
+					Id:       uuid.New(),
+					Plu:      "10",
+					Name:     "10",
+					Quantity: 1,
+					Price:    100,
 					SubItems: []dtos.OrderItem{},
 				},
 				{
