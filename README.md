@@ -11,7 +11,7 @@
 
 Run tests with `go test -cover ./...`
 
-Create the database mocks with `mockgen -source=db/interface.go -destination=mock/interface.go`
+Create the database mocks with `mockgen -source=db/interface.go -destination=test_helper/mock_db/interface.go`
 
 ## Database
 

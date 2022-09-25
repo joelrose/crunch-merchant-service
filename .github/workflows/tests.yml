@@ -1,27 +1,18 @@
-name: 'Run tests'
+name: Test and coverage
 
-on:
-  pull_request:
-    branches:
-      - staging
-      - main
-  push:
-    branches:
-      - staging
+on: [push, pull_request]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      
-      - name: Set up Go
-        uses: actions/setup-go@v3
+      - uses: actions/checkout@v2
         with:
-          go-version: 1.19
-
-      - name: Build
-        run: go build -v ./...
-
-      - name: Test
-        run: go test -v ./...
+          fetch-depth: 2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '1.18'
+      - name: Run coverage
+        run: go test ./... -race -coverprofile=coverage.out -covermode=atomic
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3

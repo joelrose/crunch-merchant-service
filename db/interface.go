@@ -53,7 +53,7 @@ type DBInterface interface {
 	GetStoreByMerchantUserId(merchantUserId string) (uuid.UUID, error)
 	GetOpenStore(id uuid.UUID) (models.Store, error)
 	GetAvailableStore(id uuid.UUID) (models.Store, error)
-	GetAvailableStores() ([]dtos.GetStoresOverviewResponse, error)
+	GetOpenStores() ([]dtos.GetStoresOverviewResponse, error)
 	SetIsOpen(isOpen bool, id uuid.UUID) error
 
 	// Users
