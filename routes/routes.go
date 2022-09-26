@@ -63,6 +63,7 @@ func SetupRoutes(e *echo.Echo, config config.Config) {
 	dashboardGroup.GET("/status", okHandler)
 	dashboardGroup.GET("/orders", dashboard.GetOrders)
 	dashboardGroup.GET("/menu", dashboard.GetMenu)
+	dashboardGroup.GET("/products", dashboard.GetProducts)
 
 	usersGroup := apiV1.Group("/users", middleware.FirebaseAuth(config.FirebaseConfig))
 
