@@ -359,7 +359,7 @@ func (mr *MockDBInterfaceMockRecorder) GetOpeningHours(storeId interface{}) *gom
 }
 
 // GetOrderById mocks base method.
-func (m *MockDBInterface) GetOrderById(orderId uuid.UUID) (models.Order, error) {
+func (m *MockDBInterface) GetOrderById(orderId int) (models.Order, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetOrderById", orderId)
 	ret0, _ := ret[0].(models.Order)

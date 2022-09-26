@@ -17,8 +17,7 @@ type CustomHttpClient interface {
 	SendPost(requestBody []byte, url string, headers map[string]string) (*http.Response, error)
 }
 
-type HttpClient struct {
-}
+type HttpClient struct{}
 
 func (httpClient *HttpClient) SendPost(requestBody []byte, url string, headers map[string]string) (*http.Response, error) {
 	client := http.Client{

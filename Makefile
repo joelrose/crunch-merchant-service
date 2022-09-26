@@ -7,8 +7,8 @@ stripe-webhook:
 gen-swagger:
 	swag init --parseDependency
 gen-mocks:
-	mockgen -source=db/interface.go -destination=test_helper/mock_db/interface.go && mockgen -source=services/http_client/http_client.go -destination=test_helper/mock_http_client/interface.go
+	mockgen -source=db/interface.go -destination=test_helper/mock_db/mock_db.go && mockgen -source=services/http_client/http_client.go -destination=test_helper/mock_http_client/mock_http_client.go
 test:
-	go test -v -cover ./...
+	go test -cover ./...
 db-import:
 	PGPASSWORD=password psql -h localhost -p 5432 -U username database -f .development/db_dump.sql

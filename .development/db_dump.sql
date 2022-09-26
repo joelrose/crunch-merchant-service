@@ -8,7 +8,7 @@ values  (1, '97ud9dLHEtUDTe5j6GVjR3rhXro2', 'DE', 'Joel', 'Rose', '2022-09-21 13
 
 /* stores */
 insert into public.stores (id, name, description, address, average_pickup_time, average_review, review_count, google_maps_link, phone_number, stripe_account_id, stripe_account_status, fee, is_open, image_url, merchant_user_id)
-values  ('9142ac52-e5a4-4ad8-8811-240c1f389ece', 'Name', 'Description', 'Address', 5, 5, 5, 'https://google.com/maps', '0123456789', null, null, 0.5, true, 'https://resizer.staging.deliverect.com/0KGNmtuUuldFR1S3V4W1KHs_KLOQCytSTr77pZgBGbU/rt:fill/g:ce/el:0/cb:f324f1661db6463e9552f15f61752f1a/aHR0cHM6Ly9zdG9yYWdlLmdvb2dsZWFwaXMuY29tL2lrb25hLWJ1Y2tldC1zdGFnaW5nL2ltYWdlcy81ZmY2ZWUwODkzMjhjOGFlZmVlYWJlMzMvRnJpZWQtQ2hpY2tlbi0yLTItNjIyYTJjZWJkYjU5ODYwMDFlYmY1OGY3LmpwZWc=', 'auth0|6325f524bda241ddc6fca32e');
+values  ('9142ac52-e5a4-4ad8-8811-240c1f389ece', 'Name', 'Description', 'Address', 5, 5, 5, 'https://google.com/maps', '0123456789', 'acct_1LG3qeGfYlyyZ9H4', null, 0.5, true, 'https://resizer.staging.deliverect.com/0KGNmtuUuldFR1S3V4W1KHs_KLOQCytSTr77pZgBGbU/rt:fill/g:ce/el:0/cb:f324f1661db6463e9552f15f61752f1a/aHR0cHM6Ly9zdG9yYWdlLmdvb2dsZWFwaXMuY29tL2lrb25hLWJ1Y2tldC1zdGFnaW5nL2ltYWdlcy81ZmY2ZWUwODkzMjhjOGFlZmVlYWJlMzMvRnJpZWQtQ2hpY2tlbi0yLTItNjIyYTJjZWJkYjU5ODYwMDFlYmY1OGY3LmpwZWc=', 'auth0|6325f524bda241ddc6fca32e');
 
 /* deliverect */
 insert into public.deliverect_channels (status, store_id, deliverect_link_id, location_id)

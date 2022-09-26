@@ -39,7 +39,7 @@ type DBInterface interface {
 	GetOrderByStripeOrderId(stripeOrderId string) (models.Order, error)
 	GetOrdersByUserId(userId int) ([]dtos.GetOrdersResponse, error)
 	GetOrdersByStoreId(storeId uuid.UUID) ([]dtos.GetOrdersResponse, error)
-	GetOrderById(orderId uuid.UUID) (models.Order, error)
+	GetOrderById(orderId int) (models.Order, error)
 	UpdateOrderStatus(orderId int, orderStatus models.OrderStatus) error
 	MarkOrderAsPaid(orderId int) error
 

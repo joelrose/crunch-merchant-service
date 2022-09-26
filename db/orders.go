@@ -69,7 +69,7 @@ func (database *DB) GetOrdersByStoreId(storeId uuid.UUID) ([]dtos.GetOrdersRespo
 	return orders, nil
 }
 
-func (database *DB) GetOrderById(orderId uuid.UUID) (models.Order, error) {
+func (database *DB) GetOrderById(orderId int) (models.Order, error) {
 	order := models.Order{}
 	err := database.Sqlx.Get(&order, "SELECT * FROM orders WHERE id = $1", orderId)
 

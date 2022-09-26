@@ -224,8 +224,8 @@ definitions:
 host: localhost:8080
 info:
   contact: {}
-  description: This is a sample server celler server.
-  title: Swagger Example API
+  description: This is the Crunch Backend API
+  title: Crunch Backend API
   version: "1.0"
 paths:
   /dashboard/menu:

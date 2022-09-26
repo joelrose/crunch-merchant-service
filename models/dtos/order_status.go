@@ -1,7 +1,6 @@
 package dtos
 
 import (
-	"github.com/google/uuid"
 	"github.com/joelrose/crunch-merchant-service/models"
 )
 
@@ -10,7 +9,7 @@ type UpdateOrderStatusRequest struct {
 	Status         models.OrderStatus `json:"status"`
 	ReceiptId      string             `json:"receiptId"`
 	Reason         string             `json:"reason"`
-	ChannelOrderId uuid.UUID          `json:"channelOrderId"`
+	ChannelOrderId int                `json:"channelOrderId"`
 	Location       string             `json:"location"`
 	ChannelLink    string             `json:"channelLink"`
 }

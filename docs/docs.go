@@ -755,8 +755,8 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:8080",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
-	Title:            "Swagger Example API",
-	Description:      "This is a sample server celler server.",
+	Title:            "Crunch Backend API",
+	Description:      "This is the Crunch Backend API",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }
