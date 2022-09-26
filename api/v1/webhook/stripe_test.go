@@ -10,6 +10,8 @@ import (
 	"github.com/joelrose/crunch-merchant-service/config"
 	"github.com/joelrose/crunch-merchant-service/middleware"
 	"github.com/joelrose/crunch-merchant-service/models"
+	"github.com/joelrose/crunch-merchant-service/models/dtos"
+	"github.com/joelrose/crunch-merchant-service/services/deliverect"
 	"github.com/joelrose/crunch-merchant-service/test_helper"
 	"github.com/joelrose/crunch-merchant-service/test_helper/mock_deliverect"
 	"github.com/labstack/echo/v4"
@@ -24,6 +26,10 @@ const (
 )
 
 var (
+	mockOrderId     = uuid.MustParse("a7286987-72b8-459a-9a06-223ef7418be4")
+	mockStoreId     = uuid.MustParse("783ed769-dca9-4031-9ff6-03ce6f126a4c")
+	mockOrderItemId = uuid.MustParse("dd419c16-57b1-4c83-af39-6bc63e54e0fd")
+	mockUserId      = uuid.MustParse("5550a287-87b7-473f-87d1-04b6a351454f")
 	mockRequestBody = stripe.Event{
 		Type:       "charge.succeeded",
 		APIVersion: "2022-08-01",
@@ -41,24 +47,51 @@ var (
 		},
 	}
 	mockOrder = models.Order{
-		Id:      uuid.New(),
-		StoreId: uuid.New(),
+		Id:      mockOrderId,
+		StoreId: mockStoreId,
 		UserId:  mockUser.Id,
 	}
 	mockOrderItems = []models.OrderItem{
 		{
-			Id:       uuid.New(),
+			Id:       mockOrderItemId,
 			OrderId:  mockOrder.Id,
+			Plu:      "123",
 			Quantity: 1,
 			Price:    2000,
+			Name:     "Test Item",
+		},
+	}
+	mockOrderItemsDto = []dtos.OrderItem{
+		{
+			Id:       mockOrderItems[0].Id,
+			Quantity: mockOrderItems[0].Quantity,
+			Price:    mockOrderItems[0].Price,
+			Name:     mockOrderItems[0].Name,
+			Plu:      mockOrderItems[0].Plu,
+			SubItems: []dtos.OrderItem{},
 		},
 	}
 	mockUser = models.User{
-		Id:        uuid.New(),
+		Id:        mockUserId,
 		Firstname: "John",
 	}
 	mockChannel = models.DeliverectChannel{
 		DeliverectLinkId: "delivered_link_id",
+	}
+	mockDeliverectObject = deliverect.CreateOrderRequest{
+		ChannelOrderId:        mockOrder.Id.String(),
+		ChannelOrderDisplayId: "John#be4",
+		Items:                 mockOrderItemsDto,
+		OrderType:             deliverect.PICKUP,
+		OrderIsAlreadyPaid:    true,
+		DecimalDigits:         2,
+		Payment: deliverect.PaymentModel{
+			Amount: 2000,
+			Type:   deliverect.CREDIT_CARD_ONLINE,
+		},
+		Customer: deliverect.CustomerModel{
+			Name: mockUser.Firstname,
+		},
 	}
 )
 
@@ -113,7 +146,7 @@ func TestStripeWebhookSucceeds(t *testing.T) {
 
 	c.Set(middleware.DELIVERECT_SERVICE_CONTEXT_KEY, mockDeliverect)
 
-	mockDeliverect.EXPECT().CreateOrder(gomock.Any(), mockChannel.DeliverectLinkId).Return(nil)
+	mockDeliverect.EXPECT().CreateOrder(mockDeliverectObject, mockChannel.DeliverectLinkId).Return(nil)
 
 	err := HandleStripe(c)
 	if assert.Nil(t, err) {

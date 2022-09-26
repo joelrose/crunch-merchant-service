@@ -2,7 +2,6 @@ package webhook
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 
@@ -80,13 +79,14 @@ func HandleStripe(c echo.Context) error {
 
 		orderItemsDto := utils.ConvertOrderItemsToDto(orderItems)
 		amount := utils.CalculateOrderPrice(orderItemsDto)
+		orderId := order.Id.String()
 		createOrderRequest := deliverect.CreateOrderRequest{
-			ChannelOrderId:        fmt.Sprint(order.Id),
-			ChannelOrderDisplayId: users.Firstname + "#" + fmt.Sprint(order.Id),
+			ChannelOrderId:        orderId,
+			ChannelOrderDisplayId: users.Firstname + "#" + orderId[len(orderId)-3:],
 			Items:                 orderItemsDto,
-			OrderType:             deliverect.PICKUP,
-			OrderIsAlreadyPaid:    true,
-			DecimalDigits:         2,
+			OrderType:          deliverect.PICKUP,
+			OrderIsAlreadyPaid: true,
+			DecimalDigits:      2,
 			Payment: deliverect.PaymentModel{
 				Amount: amount,
 				Type:   deliverect.CREDIT_CARD_ONLINE,
