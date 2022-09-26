@@ -32,7 +32,7 @@ definitions:
       googleMapsLink:
         type: string
       id:
-        type: integer
+        type: string
       isPaid:
         type: boolean
       orderItems:
@@ -210,7 +210,7 @@ definitions:
       firstname:
         type: string
       id:
-        type: integer
+        type: string
       languageCode:
         type: string
       lastname:
@@ -224,8 +224,8 @@ definitions:
 host: localhost:8080
 info:
   contact: {}
-  description: This is a sample server celler server.
-  title: Swagger Example API
+  description: This is the Crunch Backend API
+  title: Crunch Backend API
   version: "1.0"
 paths:
   /dashboard/menu:

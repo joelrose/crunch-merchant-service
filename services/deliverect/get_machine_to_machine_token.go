@@ -1,15 +1,12 @@
 package deliverect
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"io"
-	"net/http"
 	"time"
 
 	"github.com/labstack/gommon/log"
-	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
 
 const (
@@ -50,26 +47,11 @@ func (d DeliverectService) getMachineToMachineToken() (*string, error) {
 		return nil, err
 	}
 
-	client := http.Client{
-		Timeout:   time.Duration(2) * time.Second,
-		Transport: otelhttp.NewTransport(http.DefaultTransport),
-	}
-
-	url := d.Config.BaseUrl + MachineTokenPath
-
-	log.Debugf("requesting machine to machine token from deliverect api: %v", url)
-
-	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(requestJson))
-
-	req.Header.Add("accept", "application/json")
-	req.Header.Add("content-type", "application/json")
-
-	resp, err := client.Do(req)
+	resp, err := d.HttpClient.SendPost(requestJson, d.Config.BaseUrl+MachineTokenPath, nil)
 	if err != nil {
 		log.Errorf("failed to send request: %v", err)
 		return nil, err
 	}
-
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)

@@ -1,6 +1,10 @@
 package dtos
 
-import "github.com/google/uuid"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type GetStoreRequest struct {
 	StoreId uuid.UUID `param:"id"`
@@ -35,9 +39,9 @@ type GetStoreProduct struct {
 } //@name GetStoreProduct
 
 type GetStoreOpeningHour struct {
-	DayOfWeek      int `db:"day_of_week" json:"dayOfWeek"`
-	StartTimestamp int `db:"start_timestamp" json:"startTimestamp"`
-	EndTimestamp   int `db:"end_timestamp" json:"endTimestamp"`
+	DayOfWeek      time.Weekday `db:"day_of_week" json:"dayOfWeek"`
+	StartTimestamp int          `db:"start_timestamp" json:"startTimestamp"`
+	EndTimestamp   int          `db:"end_timestamp" json:"endTimestamp"`
 } //@name GetStoreOpeningHour
 
 type GetStoreResponse struct {

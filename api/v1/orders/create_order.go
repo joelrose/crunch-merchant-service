@@ -1,6 +1,7 @@
 package orders
 
 import (
+	"math"
 	"net/http"
 	"time"
 
@@ -31,9 +32,8 @@ import (
 // @Failure      500  {object}  error
 // @Router       /orders [post]
 func CreateOrder(c echo.Context) error {
-	db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
-
-	token := c.Get("token").(*auth.Token)
+	db := c.Get(middleware.DATABASE_CONTEXT_KEY).(db.DBInterface)
+	token := c.Get(middleware.FIREBASE_CONTEXT_KEY).(*auth.Token)
 
 	user, err := db.GetUserByFirebaseId(token.UID)
 
@@ -55,10 +55,10 @@ func CreateOrder(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusNotFound)
 	}
 
-	/*if !store.StripeAccountId.Valid {
+	if !store.StripeAccountId.Valid {
 		log.Errorf("store has no stripe account id: %v", orderRequest.StoreId)
 		return echo.NewHTTPError(http.StatusBadRequest)
-	}*/
+	}
 
 	// check if order items exists (recursively)
 	if len(orderRequest.OrderItems) == 0 {
@@ -67,33 +67,36 @@ func CreateOrder(c echo.Context) error {
 	}
 
 	price := utils.CalculateOrderPrice(orderRequest.OrderItems)
-	_ = float32(price) * store.Fee
-
+	fee := float32(price) * store.Fee
 	params := &stripe.PaymentIntentParams{
-		Amount:   stripe.Int64(int64(price)),
-		Currency: stripe.String(string(stripe.CurrencyEUR)),
-		// ApplicationFeeAmount: stripe.Int64(int64(fee)),
+		Amount:               stripe.Int64(int64(price)),
+		Currency:             stripe.String(string(stripe.CurrencyEUR)),
+		ApplicationFeeAmount: stripe.Int64(int64(fee)),
 		PaymentMethodTypes: []*string{
 			stripe.String("card"),
+		},
+		TransferData: &stripe.PaymentIntentTransferDataParams{
+			Destination: stripe.String(store.StripeAccountId.String),
 		},
 	}
 
 	paymentIntent, err := paymentintent.New(params)
-
 	if err != nil {
 		log.Errorf("failed to create payment intent: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
+	// TODO: why do we need this?
+	orderFee := math.Round(float64(store.Fee)*100) / 100
 	order := models.CreateOrder{
-		Status:              1,
+		Status:              models.New,
 		EstimatedPickupTime: time.Now(),
 		Price:               price,
 		StripeOrderId:       paymentIntent.ID,
 		IsPaid:              false,
 		StoreId:             orderRequest.StoreId,
 		UserId:              user.Id,
-		Fee:                 store.Fee,
+		Fee:                 float32(orderFee),
 	}
 
 	orderDatabaseId, err := db.CreateOrder(order)
@@ -113,7 +116,7 @@ func CreateOrder(c echo.Context) error {
 	return c.JSON(http.StatusCreated, response)
 }
 
-func createOrderItem(dto dtos.OrderItem, parentId *uuid.UUID, orderId int, db *db.DB) error {
+func createOrderItem(dto dtos.OrderItem, parentId *uuid.UUID, orderId uuid.UUID, db db.DBInterface) error {
 	orderItem := models.CreateOrderItem{
 		Plu:      dto.Plu,
 		Name:     dto.Name,
@@ -147,5 +150,3 @@ func createOrderItem(dto dtos.OrderItem, parentId *uuid.UUID, orderId int, db *d
 
 	return nil
 }
-
-// Creat

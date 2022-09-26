@@ -1,5 +1,5 @@
 CREATE TABLE users (
-    id BIGSERIAL PRIMARY KEY,
+    id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
     firebase_id TEXT UNIQUE NOT NULL,
     language_code TEXT NOT NULL,
     firstname TEXT NOT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE users (
 );
 
 CREATE TABLE merchants (
-    id BIGSERIAL PRIMARY KEY,
+    id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
     name TEXT NOT NULL,
     active BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -29,7 +29,7 @@ CREATE TABLE stores (
     fee float NOT NULL,
     is_open BOOLEAN NOT NULL DEFAULT FALSE,
     image_url TEXT NOT NULL,
-    merchant_id BIGINT NOT NULL,
+    merchant_id uuid NOT NULL,
     FOREIGN KEY (merchant_id) REFERENCES merchants (id) ON DELETE CASCADE
 );
 
@@ -52,7 +52,7 @@ CREATE TABLE deliverect_channels (
 );
 
 CREATE TABLE orders (
-    id BIGSERIAL PRIMARY KEY,
+    id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
     status int NOT NULL,
     estimated_pickup_time TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     price int NOT NULL,
@@ -60,7 +60,7 @@ CREATE TABLE orders (
     is_paid BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     store_id uuid NOT NULL,
-    user_id bigint NOT NULL,
+    user_id uuid NOT NULL,
     FOREIGN KEY (store_id) REFERENCES stores (id),
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
@@ -71,7 +71,7 @@ CREATE TABLE order_items (
     name TEXT NOT NULL,
     price int NOT NULL,
     quantity int NOT NULL,
-    order_id bigint NOT NULL,
+    order_id uuid NOT NULL,
     parent_id uuid,
     FOREIGN KEY (order_id) REFERENCES orders (id) ON DELETE CASCADE,
     FOREIGN KEY (parent_id) REFERENCES order_items (id) ON DELETE CASCADE

@@ -1,37 +1,33 @@
 package deliverect
 
-import "github.com/joelrose/crunch-merchant-service/models/dtos"
+type PaymentType int
 
-type CreateMachineMachineTokenRequest struct {
-	CliendId     string `json:"client_id"`
-	ClientSecret string `json:"client_secret"`
-	Audience     string `json:"audience"`
-	GrantType    string `json:"grant_type"`
-}
+const (
+	CREDIT_CARD_ONLINE PaymentType = iota
+	CASH
+	ON_DELIVERY
+	ONLINE
+	CREDIT_CARD_AT_DOOR
+	PIN_AT_DOOR
+	VOUCHER_AT_DOO
+	CHEQUE
+	BANK_CONTACT
+	OTHER
+)
 
-type CreateMachineMachineTokenResponse struct {
-	AccessToken string `json:"access_token"`
-	ExpiresAt   int64  `json:"expires_at"`
-	TokenType   string `json:"token_type"`
-	Scope       string `json:"scope"`
-}
+type OrderType int
 
-type CustomerModel struct {
-	Name string `json:"name"`
-}
+const (
+	PICKUP OrderType = iota + 1
+	DELIVERY
+	EAT_IN
+	CURBSIDE
+)
 
-type PaymentModel struct {
-	Amount int `json:"amount"`
-	Type   int `json:"type"`
-}
+type AccountType int
 
-type CreateOrderRequest struct {
-	ChannelOrderId        string           `json:"channelOrderId"`
-	ChannelOrderDisplayId string           `json:"channelOrderDisplayId"`
-	Items                 []dtos.OrderItem `json:"items"`
-	Payment               PaymentModel     `json:"payment"`
-	Customer              CustomerModel    `json:"customer"`
-	OrderType             int              `json:"orderType"`
-	OrderIsAlreadyPaid    bool             `json:"orderIsAlreadyPaid"`
-	DecimalDigits         int              `json:"decimalDigits"`
-}
+const (
+	PARTNER AccountType = iota + 1
+	CHAIN
+	CUSTOMER
+)

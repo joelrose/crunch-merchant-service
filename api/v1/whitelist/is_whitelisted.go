@@ -25,10 +25,9 @@ type WhitelistRequest struct {
 // @Failure      500  {object}  error
 // @Router       /whitelist [post]
 func IsWhitelisted(c echo.Context) error {
-	db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
+	db := c.Get(middleware.DATABASE_CONTEXT_KEY).(db.DBInterface)
 
 	request := WhitelistRequest{}
-
 	err := c.Bind(&request)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest)

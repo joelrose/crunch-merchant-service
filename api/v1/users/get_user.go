@@ -11,6 +11,10 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
+const (
+	
+)
+
 // GetUser godoc
 // @Summary      Get User associated with the given Firebase Token
 // @Tags         users
@@ -22,8 +26,8 @@ import (
 // @Failure      500  {object}  error
 // @Router       /users [get]
 func GetUser(c echo.Context) error {
-	db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
-	token := c.Get("token").(*auth.Token)
+	db := c.Get(middleware.DATABASE_CONTEXT_KEY).(db.DBInterface)
+	token := c.Get(middleware.FIREBASE_CONTEXT_KEY).(*auth.Token)
 
 	users, err := db.GetUserByFirebaseId(token.UID)
 	if err != nil {

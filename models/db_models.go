@@ -13,7 +13,7 @@ type CreateOrder struct {
 	StripeOrderId       string      `db:"stripe_order_id"`
 	IsPaid              bool        `db:"is_paid"`
 	StoreId             uuid.UUID   `db:"store_id"`
-	UserId              int         `db:"user_id"`
+	UserId              uuid.UUID   `db:"user_id"`
 	Fee                 float32     `db:"fee"`
 }
 
@@ -22,6 +22,6 @@ type CreateOrderItem struct {
 	Name     string     `db:"name"`
 	Price    int        `db:"price"`
 	Quantity int        `db:"quantity"`
-	OrderId  int        `db:"order_id"`
+	OrderId  uuid.UUID  `db:"order_id"`
 	ParentId *uuid.UUID `db:"parent_id"`
 }

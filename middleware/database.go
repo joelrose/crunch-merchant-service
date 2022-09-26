@@ -6,13 +6,13 @@ import (
 )
 
 const (
-	DATBASE_CONTEXT_KEY = "db"
+	DATABASE_CONTEXT_KEY = "db"
 )
 
-func DatabaseContext(db *db.DB) echo.MiddlewareFunc {
+func DatabaseContext(db db.DBInterface) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			c.Set(DATBASE_CONTEXT_KEY, db)
+			c.Set(DATABASE_CONTEXT_KEY, db)
 			return next(c)
 		}
 	}

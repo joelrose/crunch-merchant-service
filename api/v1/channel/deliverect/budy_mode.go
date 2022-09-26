@@ -11,16 +11,14 @@ import (
 )
 
 func BusyMode(c echo.Context) error {
-	// Bind request body
 	busyModeRequest := dtos.BusyModeRequest{}
-
 	err := c.Bind(&busyModeRequest)
 	if err != nil {
 		log.Errorf("failed to bind request body: %v", err)
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
 
-	db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
+	db := c.Get(middleware.DATABASE_CONTEXT_KEY).(db.DBInterface)
 
 	channel, err := db.GetChannelByDeliverectLinkId(busyModeRequest.ChannelLinkId)
 	if err != nil {
@@ -29,7 +27,7 @@ func BusyMode(c echo.Context) error {
 	}
 
 	isOpen := busyModeRequest.Status == "ONLINE"
-	err = db.SetIsOpen(isOpen, channel.StoreId)
+	err = db.SetIsOpen(channel.StoreId, isOpen)
 	if err != nil {
 		log.Errorf("failed to set is_open: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError)

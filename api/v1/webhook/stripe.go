@@ -2,11 +2,9 @@ package webhook
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 
-	"github.com/go-redis/redis/v9"
 	"github.com/joelrose/crunch-merchant-service/config"
 	"github.com/joelrose/crunch-merchant-service/db"
 	"github.com/joelrose/crunch-merchant-service/middleware"
@@ -28,6 +26,10 @@ func HandleStripe(c echo.Context) error {
 
 	config := c.Get(middleware.CONFIG_CONTEXT_KEY).(*config.Config)
 	stripeSignature := request.Header["Stripe-Signature"]
+	if stripeSignature == nil {
+		log.Errorf("No stripe signature found")
+		return echo.NewHTTPError(http.StatusBadRequest)
+	}
 
 	event, err := webhook.ConstructEvent(payload, stripeSignature[0], config.Stripe.WebhookSecret)
 	if err != nil {
@@ -43,7 +45,7 @@ func HandleStripe(c echo.Context) error {
 			return echo.NewHTTPError(http.StatusBadRequest)
 		}
 
-		db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
+		db := c.Get(middleware.DATABASE_CONTEXT_KEY).(db.DBInterface)
 
 		order, err := db.GetOrderByStripeOrderId(charge.PaymentIntent.ID)
 		if err != nil {
@@ -77,26 +79,25 @@ func HandleStripe(c echo.Context) error {
 
 		orderItemsDto := utils.ConvertOrderItemsToDto(orderItems)
 		amount := utils.CalculateOrderPrice(orderItemsDto)
+		orderId := order.Id.String()
 		createOrderRequest := deliverect.CreateOrderRequest{
-			ChannelOrderId:        fmt.Sprint(order.Id),
-			ChannelOrderDisplayId: users.Firstname + "#" + fmt.Sprint(order.Id),
+			ChannelOrderId:        orderId,
+			ChannelOrderDisplayId: users.Firstname + "#" + orderId[len(orderId)-3:],
 			Items:                 orderItemsDto,
-			OrderType:             int(deliverect.PICKUP),
-			OrderIsAlreadyPaid:    true,
-			DecimalDigits:         2,
+			OrderType:          deliverect.PICKUP,
+			OrderIsAlreadyPaid: true,
+			DecimalDigits:      2,
 			Payment: deliverect.PaymentModel{
 				Amount: amount,
-				Type:   int(deliverect.CREDIT_CARD_ONLINE),
+				Type:   deliverect.CREDIT_CARD_ONLINE,
 			},
 			Customer: deliverect.CustomerModel{
 				Name: users.Firstname,
 			},
 		}
 
-		redisClient := c.Get(middleware.REDIS_CONTEXT_KEY).(*redis.Client)
-		deliverectService := deliverect.NewDeliverectService(*config, redisClient, channel.DeliverectLinkId, "crunch")
-
-		err = deliverectService.CreateOrder(createOrderRequest)
+		deliverectService := c.Get(middleware.DELIVERECT_SERVICE_CONTEXT_KEY).(deliverect.DeliverectInterface)
+		err = deliverectService.CreateOrder(createOrderRequest, channel.DeliverectLinkId)
 		if err != nil {
 			log.Errorf("Error creating order in deliverect: %v\n", err)
 			return echo.NewHTTPError(http.StatusInternalServerError)

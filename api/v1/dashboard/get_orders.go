@@ -21,7 +21,7 @@ import (
 // @Failure      500  {object}  error
 // @Router       /dashboard/orders [get]
 func GetOrders(c echo.Context) error {
-	db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
+	db := c.Get(middleware.DATABASE_CONTEXT_KEY).(db.DBInterface)
 
 	userId := c.Get(middleware.AUTH0_USER_ID_CONTEXT_KEY)
 	userIdString := userId.(string)

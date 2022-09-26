@@ -13,7 +13,12 @@ func ParseTimestamp(time string) int {
 	hour, hErr := strconv.Atoi(splitTime[0])
 	minute, mErr := strconv.Atoi(splitTime[1])
 
-	if hErr != nil || mErr != nil {
+	timeConvertError := hErr != nil || mErr != nil
+	minuteInvalid := minute > 59 || minute < 0
+	hourInvalid := hour > 24 || hour < 0
+	timeUpwardsInvalid := hour == 24 && minute > 0
+
+	if timeConvertError || timeUpwardsInvalid || hourInvalid || minuteInvalid {
 		log.Errorf("failed to convert time to timestamp: %v", time)
 		return 0
 	}

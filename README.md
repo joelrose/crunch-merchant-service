@@ -7,6 +7,13 @@
 3. Run `copy .env.example .env`
 4. Run `go run main.go`
 
+## Tests
+
+Run tests with `go test -cover ./...`
+
+Create the database mocks with `mockgen -source=db/interface.go -destination=test_helper/mocks/mock_db/mock_db.go`
+Create the deliverect service mocks with `mockgen -source=services/deliverect/interface.go -destination=test_helper/mocks/mock_deliverect/mock_deliverect.go`
+
 ## Database
 
 ### Setup

@@ -12,6 +12,8 @@ import (
 	"github.com/joelrose/crunch-merchant-service/db"
 	"github.com/joelrose/crunch-merchant-service/middleware"
 	"github.com/joelrose/crunch-merchant-service/routes"
+	"github.com/joelrose/crunch-merchant-service/services/deliverect"
+	"github.com/joelrose/crunch-merchant-service/services/http_client"
 	red "github.com/joelrose/crunch-merchant-service/services/redis"
 	"github.com/joelrose/crunch-merchant-service/services/tracing"
 	"github.com/labstack/echo/v4"
@@ -23,9 +25,9 @@ import (
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
 
-// @title           Swagger Example API
+// @title           Crunch Backend API
 // @version         1.0
-// @description     This is a sample server celler server.
+// @description     This is the Crunch Backend API
 // @BasePath  /api/v1
 // @host localhost:8080
 // @securityDefinitions.apikey FirebaseToken
@@ -40,7 +42,6 @@ func main() {
 	c := config.LoadConfig()
 
 	ctx := context.Background()
-
 	otelShutdown, err := tracing.InstallExportPipeline(ctx)
 	if err != nil {
 		log.Fatalf("error setting up OTel SDK - %e", err)
@@ -58,8 +59,9 @@ func main() {
 	})
 
 	database := db.NewDatabase(c.DatabaseUrl)
-
 	redis := red.NewClient(c.RedisUrl)
+	httpClient := http_client.NewClient()
+	deliverect := deliverect.NewDeliverectService(c, redis, httpClient)
 
 	e := echo.New()
 
@@ -68,6 +70,8 @@ func main() {
 	e.Use(middleware.ConfigContext(&c))
 	e.Use(middleware.DatabaseContext(&db.DB{Sqlx: *database}))
 	e.Use(middleware.RedisContext(redis))
+	// TODO: restrict echo contextutal inforamtion to route level
+	e.Use(middleware.DeliverectServiceContext(deliverect))
 
 	routes.SetupRoutes(e, c)
 

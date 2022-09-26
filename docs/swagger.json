@@ -1,8 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "This is a sample server celler server.",
-        "title": "Swagger Example API",
+        "description": "This is the Crunch Backend API",
+        "title": "Crunch Backend API",
         "contact": {},
         "version": "1.0"
     },
@@ -438,7 +438,7 @@
                     "type": "string"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "isPaid": {
                     "type": "boolean"
@@ -709,7 +709,7 @@
                     "type": "string"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "languageCode": {
                     "type": "string"

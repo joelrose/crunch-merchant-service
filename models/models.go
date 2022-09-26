@@ -8,20 +8,13 @@ import (
 )
 
 type User struct {
-	Id           int       `db:"id" json:"id"`
+	Id           uuid.UUID `db:"id" json:"id"`
 	FirebaseId   string    `db:"firebase_id" json:"firebaseId"`
 	LanguageCode string    `db:"language_code" json:"languageCode"`
 	Firstname    string    `db:"firstname" json:"firstname"`
 	Lastname     string    `db:"lastname" json:"lastname"`
 	CreatedAt    time.Time `db:"created_at" json:"createdAt"`
 } //@name User
-
-type Merchant struct {
-	Id        int       `db:"id"`
-	Name      string    `db:"name"`
-	Active    bool      `db:"active"`
-	CreatedAt time.Time `db:"created_at"`
-}
 
 type OrderStatus int
 
@@ -46,7 +39,7 @@ const (
 )
 
 type Order struct {
-	Id                  int         `db:"id"`
+	Id                  uuid.UUID   `db:"id"`
 	Status              OrderStatus `db:"status"`
 	EstimatedPickupTime time.Time   `db:"estimated_pickup_time"`
 	Price               int         `db:"price"`
@@ -55,7 +48,7 @@ type Order struct {
 	CreatedAt           time.Time   `db:"created_at"`
 	StoreId             uuid.UUID   `db:"store_id"`
 	Fee                 float32     `db:"fee"`
-	UserId              int         `db:"user_id"`
+	UserId              uuid.UUID   `db:"user_id"`
 }
 
 type OrderItem struct {
@@ -64,7 +57,7 @@ type OrderItem struct {
 	Name     string        `db:"name"`
 	Price    int           `db:"price"`
 	Quantity int           `db:"quantity"`
-	OrderId  int           `db:"order_id"`
+	OrderId  uuid.UUID     `db:"order_id"`
 	ParentId uuid.NullUUID `db:"parent_id"`
 }
 

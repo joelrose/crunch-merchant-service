@@ -6,8 +6,8 @@ import (
 	"github.com/joelrose/crunch-merchant-service/models/dtos"
 )
 
-func (db *DB) CreateOrder(order models.CreateOrder) (int, error) {
-	var lastInsertId int
+func (db *DB) CreateOrder(order models.CreateOrder) (uuid.UUID, error) {
+	var lastInsertId uuid.UUID
 	err := db.Sqlx.Get(
 		&lastInsertId,
 		"INSERT INTO orders (status, estimated_pickup_time, price, stripe_order_id, is_paid, store_id, user_id, fee) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id",
@@ -35,13 +35,14 @@ func (database *DB) GetOrderByStripeOrderId(stripeOrderId string) (models.Order,
 	return order, nil
 }
 
-func (database *DB) GetOrdersByUserId(userId int) ([]dtos.GetOrdersResponse, error) {
+func (database *DB) GetOrdersByUserId(userId uuid.UUID) ([]dtos.GetOrdersResponse, error) {
 	query := `
 		SELECT o.id, status, price, is_paid, estimated_pickup_time, created_at, name, description, image_url, address, phone_number, google_maps_link
 		FROM orders o
 		LEFT JOIN stores m on o.store_id = m.id
-		WHERE user_id = $1
-	`
+		WHERE user_id = $1 AND is_paid = true
+		ORDER BY created_at DESC`
+
 	orders := []dtos.GetOrdersResponse{}
 	err := database.Sqlx.Select(&orders, query, userId)
 
@@ -54,11 +55,12 @@ func (database *DB) GetOrdersByUserId(userId int) ([]dtos.GetOrdersResponse, err
 
 func (database *DB) GetOrdersByStoreId(storeId uuid.UUID) ([]dtos.GetOrdersResponse, error) {
 	query := `
-	SELECT o.id, status, price, is_paid, estimated_pickup_time, created_at, name, description, image_url, address, phone_number, google_maps_link
-	FROM orders o
-	LEFT JOIN stores m on o.store_id = m.id
-	WHERE store_id = $1
-	`
+		SELECT o.id, status, price, is_paid, estimated_pickup_time, created_at, name, description, image_url, address, phone_number, google_maps_link
+		FROM orders o
+		LEFT JOIN stores m on o.store_id = m.id
+		WHERE store_id = $1
+		ORDER BY created_at DESC`
+
 	orders := []dtos.GetOrdersResponse{}
 	err := database.Sqlx.Select(&orders, query, storeId)
 
@@ -80,10 +82,10 @@ func (database *DB) GetOrderById(orderId uuid.UUID) (models.Order, error) {
 	return order, nil
 }
 
-func (db *DB) UpdateOrderStatus(orderId int, orderStatus models.OrderStatus) error {
+func (db *DB) UpdateOrderStatus(orderId uuid.UUID, orderStatus models.OrderStatus) error {
 	_, err := db.Sqlx.Exec(
 		"UPDATE orders SET status = $1 WHERE id = $2",
-		orderId, int(orderStatus),
+		int(orderStatus), orderId,
 	)
 
 	if err != nil {
@@ -93,7 +95,7 @@ func (db *DB) UpdateOrderStatus(orderId int, orderStatus models.OrderStatus) err
 	return nil
 }
 
-func (database *DB) MarkOrderAsPaid(orderId int) error {
+func (database *DB) MarkOrderAsPaid(orderId uuid.UUID) error {
 	_, err := database.Sqlx.Exec("UPDATE orders SET is_paid=true WHERE id = $1", orderId)
 	if err != nil {
 		return err

@@ -18,7 +18,7 @@ func OrderStatus(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
 
-	db := c.Get(middleware.DATBASE_CONTEXT_KEY).(*db.DB)
+	db := c.Get(middleware.DATABASE_CONTEXT_KEY).(db.DBInterface)
 	order, err := db.GetOrderById(request.ChannelOrderId)
 	if err != nil {
 		log.Errorf("failed to get order: %v", err)

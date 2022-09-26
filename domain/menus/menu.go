@@ -68,7 +68,7 @@ func (s *MenuService) GetMenu() (*MenuRedisModel, error) {
 	return menu, nil
 }
 
-func NewMenuService(db *db.DB, rdb *redis.Client, storeId uuid.UUID) *MenuService {
+func NewMenuService(db db.DBInterface, rdb *redis.Client, storeId uuid.UUID) *MenuService {
 	return &MenuService{
 		db:      db,
 		rdb:     rdb,

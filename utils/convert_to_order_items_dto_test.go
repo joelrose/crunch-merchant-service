@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type ConvertTest struct {
+type convertTest struct {
 	input    []models.OrderItem
 	expected []dtos.OrderItem
 }
@@ -25,7 +25,9 @@ func TestConvertOrderItemsToDto(t *testing.T) {
 	parent12.UUID = item12
 	parent12.Valid = true
 
-	testCases := []ConvertTest{
+	orderId := uuid.New()
+
+	testCases := []convertTest{
 		{
 			input:    []models.OrderItem{},
 			expected: []dtos.OrderItem{},
@@ -38,7 +40,7 @@ func TestConvertOrderItemsToDto(t *testing.T) {
 					Name:     "1",
 					Quantity: 1,
 					Price:    100,
-					OrderId:  1,
+					OrderId:  orderId,
 				},
 			},
 			expected: []dtos.OrderItem{
@@ -60,7 +62,7 @@ func TestConvertOrderItemsToDto(t *testing.T) {
 					Name:     "10",
 					Quantity: 1,
 					Price:    100,
-					OrderId:  1,
+					OrderId:  orderId,
 				},
 				{
 					Id:       item11,
@@ -68,7 +70,7 @@ func TestConvertOrderItemsToDto(t *testing.T) {
 					Name:     "11",
 					Quantity: 1,
 					Price:    100,
-					OrderId:  1,
+					OrderId:  orderId,
 				},
 				{
 					Id:       item12,
@@ -76,7 +78,7 @@ func TestConvertOrderItemsToDto(t *testing.T) {
 					Name:     "12",
 					Quantity: 1,
 					Price:    100,
-					OrderId:  1,
+					OrderId:  orderId,
 					ParentId: parent11,
 				},
 				{
@@ -85,7 +87,7 @@ func TestConvertOrderItemsToDto(t *testing.T) {
 					Name:     "13",
 					Quantity: 1,
 					Price:    100,
-					OrderId:  1,
+					OrderId:  orderId,
 					ParentId: parent12,
 				},
 			},
