@@ -5,6 +5,7 @@ go 1.19
 require (
 	firebase.google.com/go v3.13.0+incompatible
 	github.com/DATA-DOG/go-sqlmock v1.5.0
+	github.com/alicebob/miniredis/v2 v2.23.0
 	github.com/auth0/go-jwt-middleware/v2 v2.0.1
 	github.com/go-redis/redis/v9 v9.0.0-beta.2
 	github.com/golang-migrate/migrate/v4 v4.15.2
@@ -37,6 +38,7 @@ require (
 	cloud.google.com/go/iam v0.4.0 // indirect
 	cloud.google.com/go/storage v1.26.0 // indirect
 	github.com/KyleBanks/depth v1.2.1 // indirect
+	github.com/alicebob/gopher-json v0.0.0-20200520072559-a9ecdc9d1d3a // indirect
 	github.com/cenkalti/backoff/v4 v4.1.3 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -74,6 +76,7 @@ require (
 	github.com/tklauser/numcpus v0.4.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.1 // indirect
+	github.com/yuin/gopher-lua v0.0.0-20210529063254-f4c35e4016d9 // indirect
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
 	go.opencensus.io v0.23.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/host v0.33.0 // indirect
