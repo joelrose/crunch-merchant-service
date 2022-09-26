@@ -15,7 +15,7 @@ import (
 )
 
 func TestGetUserFound(t *testing.T) {
-	rec, c, mockDB := test_helper.NewRequest(t, http.MethodPost, "")
+	rec, c, mockDB := test_helper.NewRequest(t, http.MethodGet, "")
 
 	c.Set(middleware.FIREBASE_CONTEXT_KEY, &test_helper.MockToken)
 
@@ -34,7 +34,7 @@ func TestGetUserFound(t *testing.T) {
 }
 
 func TestGetUserNotFound(t *testing.T) {
-	_, c, mockDB := test_helper.NewRequest(t, http.MethodPost, "")
+	_, c, mockDB := test_helper.NewRequest(t, http.MethodGet, "")
 
 	c.Set(middleware.FIREBASE_CONTEXT_KEY, &test_helper.MockToken)
 
