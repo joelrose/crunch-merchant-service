@@ -85,7 +85,7 @@ func (database *DB) GetOrderById(orderId uuid.UUID) (models.Order, error) {
 func (db *DB) UpdateOrderStatus(orderId uuid.UUID, orderStatus models.OrderStatus) error {
 	_, err := db.Sqlx.Exec(
 		"UPDATE orders SET status = $1 WHERE id = $2",
-		orderId, int(orderStatus),
+		int(orderStatus), orderId,
 	)
 
 	if err != nil {
