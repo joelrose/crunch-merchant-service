@@ -36,7 +36,7 @@ func GetMenu(c echo.Context) error {
 
 	rdb := c.Get(middleware.REDIS_CONTEXT_KEY).(*redis.Client)
 
-	menuService := menus.NewMenuService(db, rdb, uuid.MustParse("69db0f24-7d29-4b95-9483-d3e1ab661c65"))
+	menuService := menus.NewMenuService(db, rdb, uuid.MustParse("9142ac52-e5a4-4ad8-8811-240c1f389ece"))
 	menu, err := menuService.GetMenu()
 	if err != nil {
 		log.Debugf("failed to get menu: %v", err)
