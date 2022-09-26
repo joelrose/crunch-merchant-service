@@ -58,7 +58,8 @@ func (database *DB) GetOrdersByStoreId(storeId uuid.UUID) ([]dtos.GetOrdersRespo
 	FROM orders o
 	LEFT JOIN stores m on o.store_id = m.id
 	WHERE store_id = $1
-	`
+	ORDER BY created_at DESC`
+
 	orders := []dtos.GetOrdersResponse{}
 	err := database.Sqlx.Select(&orders, query, storeId)
 
