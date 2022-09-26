@@ -1,6 +1,7 @@
 package orders
 
 import (
+	"math"
 	"net/http"
 	"time"
 
@@ -85,6 +86,8 @@ func CreateOrder(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
+	// TODO: why do we need this?
+	orderFee := math.Round(float64(store.Fee)*100) / 100
 	order := models.CreateOrder{
 		Status:              models.New,
 		EstimatedPickupTime: time.Now(),
@@ -93,7 +96,7 @@ func CreateOrder(c echo.Context) error {
 		IsPaid:              false,
 		StoreId:             orderRequest.StoreId,
 		UserId:              user.Id,
-		Fee:                 store.Fee,
+		Fee:                 float32(orderFee),
 	}
 
 	orderDatabaseId, err := db.CreateOrder(order)
