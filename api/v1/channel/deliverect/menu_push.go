@@ -27,6 +27,11 @@ func MenuPush(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
 
+	if len(r) != 1 {
+		log.Errorf("deliverect menu push request body must have exactly one element")
+		return echo.NewHTTPError(http.StatusBadRequest)
+	}
+
 	menu := r[0]
 	db := c.Get(middleware.DATABASE_CONTEXT_KEY).(db.DBInterface)
 
@@ -107,11 +112,17 @@ func MenuPush(c echo.Context) error {
 			continue
 		}
 
-		for _, subProductId := range product.SubProducts {
-			err := db.CreateProductRelation(productIds[subProductId], productIds[product.Id])
-
+		for ind, subProductId := range product.SubProducts {
+			childProductId := productIds[subProductId]
+			err := db.CreateProductRelation(childProductId, productIds[product.Id])
 			if err != nil {
 				log.Errorf("failed to save product relation: %v", err)
+				return echo.NewHTTPError(http.StatusInternalServerError)
+			}
+
+			err = db.UpdateProductSortOrder(childProductId, ind)
+			if err != nil {
+				log.Errorf("failed to update product sort order: %v", err)
 				return echo.NewHTTPError(http.StatusInternalServerError)
 			}
 		}
@@ -142,12 +153,18 @@ func MenuPush(c echo.Context) error {
 		}
 	}
 
-	rdb := c.Get(middleware.REDIS_CONTEXT_KEY).(*redis.Client)
+	// Save Store Details
+	err = db.SetStoreImageUrl(channel.StoreId, menu.MenuImageURL)
+	if err != nil {
+		log.Errorf("failed to save store image url: %v", err)
+		return echo.NewHTTPError(http.StatusInternalServerError)
+	}
 
-	ctx := context.Background()
-	cmd := rdb.Del(ctx, fmt.Sprint(channel.StoreId))
+	rdb := c.Get(middleware.REDIS_CONTEXT_KEY).(*redis.Client)
+	cmd := rdb.Del(context.Background(), fmt.Sprint(channel.StoreId))
 	if cmd.Err() != nil {
 		log.Errorf("failed to delete redis cache: %v", cmd)
+		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
 	return c.NoContent(http.StatusOK)

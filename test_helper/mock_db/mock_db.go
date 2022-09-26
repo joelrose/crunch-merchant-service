@@ -239,18 +239,18 @@ func (mr *MockDBInterfaceMockRecorder) GetAllUsers() *gomock.Call {
 }
 
 // GetAvailableStore mocks base method.
-func (m *MockDBInterface) GetAvailableStore(id uuid.UUID) (models.Store, error) {
+func (m *MockDBInterface) GetAvailableStore(storeId uuid.UUID) (models.Store, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAvailableStore", id)
+	ret := m.ctrl.Call(m, "GetAvailableStore", storeId)
 	ret0, _ := ret[0].(models.Store)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetAvailableStore indicates an expected call of GetAvailableStore.
-func (mr *MockDBInterfaceMockRecorder) GetAvailableStore(id interface{}) *gomock.Call {
+func (mr *MockDBInterfaceMockRecorder) GetAvailableStore(storeId interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAvailableStore", reflect.TypeOf((*MockDBInterface)(nil).GetAvailableStore), id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAvailableStore", reflect.TypeOf((*MockDBInterface)(nil).GetAvailableStore), storeId)
 }
 
 // GetCategories mocks base method.
@@ -314,18 +314,18 @@ func (mr *MockDBInterfaceMockRecorder) GetChannelByStoreId(storeId interface{}) 
 }
 
 // GetOpenStore mocks base method.
-func (m *MockDBInterface) GetOpenStore(id uuid.UUID) (models.Store, error) {
+func (m *MockDBInterface) GetOpenStore(storeId uuid.UUID) (models.Store, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetOpenStore", id)
+	ret := m.ctrl.Call(m, "GetOpenStore", storeId)
 	ret0, _ := ret[0].(models.Store)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetOpenStore indicates an expected call of GetOpenStore.
-func (mr *MockDBInterfaceMockRecorder) GetOpenStore(id interface{}) *gomock.Call {
+func (mr *MockDBInterfaceMockRecorder) GetOpenStore(storeId interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOpenStore", reflect.TypeOf((*MockDBInterface)(nil).GetOpenStore), id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOpenStore", reflect.TypeOf((*MockDBInterface)(nil).GetOpenStore), storeId)
 }
 
 // GetOpenStores mocks base method.
@@ -479,18 +479,18 @@ func (mr *MockDBInterfaceMockRecorder) GetProductsByPlu(plu, storeId interface{}
 }
 
 // GetStoreById mocks base method.
-func (m *MockDBInterface) GetStoreById(id uuid.UUID) (models.Store, error) {
+func (m *MockDBInterface) GetStoreById(storeId uuid.UUID) (models.Store, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetStoreById", id)
+	ret := m.ctrl.Call(m, "GetStoreById", storeId)
 	ret0, _ := ret[0].(models.Store)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetStoreById indicates an expected call of GetStoreById.
-func (mr *MockDBInterfaceMockRecorder) GetStoreById(id interface{}) *gomock.Call {
+func (mr *MockDBInterfaceMockRecorder) GetStoreById(storeId interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStoreById", reflect.TypeOf((*MockDBInterface)(nil).GetStoreById), id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStoreById", reflect.TypeOf((*MockDBInterface)(nil).GetStoreById), storeId)
 }
 
 // GetStoreByMerchantUserId mocks base method.
@@ -567,17 +567,31 @@ func (mr *MockDBInterfaceMockRecorder) MarkOrderAsPaid(orderId interface{}) *gom
 }
 
 // SetIsOpen mocks base method.
-func (m *MockDBInterface) SetIsOpen(isOpen bool, id uuid.UUID) error {
+func (m *MockDBInterface) SetIsOpen(storeId uuid.UUID, isOpen bool) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetIsOpen", isOpen, id)
+	ret := m.ctrl.Call(m, "SetIsOpen", storeId, isOpen)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // SetIsOpen indicates an expected call of SetIsOpen.
-func (mr *MockDBInterfaceMockRecorder) SetIsOpen(isOpen, id interface{}) *gomock.Call {
+func (mr *MockDBInterfaceMockRecorder) SetIsOpen(storeId, isOpen interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetIsOpen", reflect.TypeOf((*MockDBInterface)(nil).SetIsOpen), isOpen, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetIsOpen", reflect.TypeOf((*MockDBInterface)(nil).SetIsOpen), storeId, isOpen)
+}
+
+// SetStoreImageUrl mocks base method.
+func (m *MockDBInterface) SetStoreImageUrl(storeId uuid.UUID, imageUrl string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetStoreImageUrl", storeId, imageUrl)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SetStoreImageUrl indicates an expected call of SetStoreImageUrl.
+func (mr *MockDBInterfaceMockRecorder) SetStoreImageUrl(storeId, imageUrl interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetStoreImageUrl", reflect.TypeOf((*MockDBInterface)(nil).SetStoreImageUrl), storeId, imageUrl)
 }
 
 // UpdateChannelStatus mocks base method.
@@ -606,6 +620,20 @@ func (m *MockDBInterface) UpdateOrderStatus(orderId uuid.UUID, orderStatus model
 func (mr *MockDBInterfaceMockRecorder) UpdateOrderStatus(orderId, orderStatus interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateOrderStatus", reflect.TypeOf((*MockDBInterface)(nil).UpdateOrderStatus), orderId, orderStatus)
+}
+
+// UpdateProductSortOrder mocks base method.
+func (m *MockDBInterface) UpdateProductSortOrder(childProductId uuid.UUID, sortOrder int) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateProductSortOrder", childProductId, sortOrder)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateProductSortOrder indicates an expected call of UpdateProductSortOrder.
+func (mr *MockDBInterfaceMockRecorder) UpdateProductSortOrder(childProductId, sortOrder interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateProductSortOrder", reflect.TypeOf((*MockDBInterface)(nil).UpdateProductSortOrder), childProductId, sortOrder)
 }
 
 // UpdateProductsSnooze mocks base method.

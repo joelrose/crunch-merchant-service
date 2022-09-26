@@ -83,3 +83,9 @@ func (db *DB) UpdateProductsSnooze(productIds []uuid.UUID, snooze bool) error {
 
 	return err
 }
+
+func (db *DB) UpdateProductSortOrder(childProductId uuid.UUID, sortOrder int) error {
+	_, err := db.Sqlx.Exec("UPDATE menu_product SET sort_order = $1 WHERE id = $2", sortOrder, childProductId)
+
+	return err
+}

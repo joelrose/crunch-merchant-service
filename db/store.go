@@ -7,9 +7,9 @@ import (
 	"github.com/joelrose/crunch-merchant-service/utils"
 )
 
-func (db *DB) GetStoreById(id uuid.UUID) (models.Store, error) {
+func (db *DB) GetStoreById(storeId uuid.UUID) (models.Store, error) {
 	store := models.Store{}
-	err := db.Sqlx.Get(&store, "SELECT * FROM stores WHERE id = $1", id)
+	err := db.Sqlx.Get(&store, "SELECT * FROM stores WHERE id = $1", storeId)
 
 	if err != nil {
 		return models.Store{}, err
@@ -29,9 +29,9 @@ func (db *DB) GetStoreByMerchantUserId(merchantUserId string) (uuid.UUID, error)
 	return storeId, nil
 }
 
-func (db *DB) GetOpenStore(id uuid.UUID) (models.Store, error) {
+func (db *DB) GetOpenStore(storeId uuid.UUID) (models.Store, error) {
 	store := models.Store{}
-	err := db.Sqlx.Get(&store, "SELECT * FROM stores WHERE id = $1 AND is_open = true", id)
+	err := db.Sqlx.Get(&store, "SELECT * FROM stores WHERE id = $1 AND is_open = true", storeId)
 
 	if err != nil {
 		return models.Store{}, err
@@ -40,7 +40,7 @@ func (db *DB) GetOpenStore(id uuid.UUID) (models.Store, error) {
 	return store, nil
 }
 
-func (db *DB) GetAvailableStore(id uuid.UUID) (models.Store, error) {
+func (db *DB) GetAvailableStore(storeId uuid.UUID) (models.Store, error) {
 	storeQuery := `
 	SELECT *
 	FROM stores s
@@ -58,7 +58,7 @@ func (db *DB) GetAvailableStore(id uuid.UUID) (models.Store, error) {
 	weekday, timestamp := utils.GetDayAndTimestamp()
 
 	store := models.Store{}
-	err := db.Sqlx.Get(&store, storeQuery, id, weekday, timestamp)
+	err := db.Sqlx.Get(&store, storeQuery, storeId, weekday, timestamp)
 
 	if err != nil {
 		return models.Store{}, err
@@ -83,10 +83,10 @@ func (db *DB) GetOpenStores() ([]dtos.GetStoresOverviewResponse, error) {
 	return stores, nil
 }
 
-func (db *DB) SetIsOpen(isOpen bool, id uuid.UUID) error {
+func (db *DB) SetIsOpen(storeId uuid.UUID, isOpen bool) error {
 	_, err := db.Sqlx.Exec(
 		"UPDATE stores SET is_open = $1 WHERE id = $2",
-		isOpen, id,
+		isOpen, storeId,
 	)
 
 	if err != nil {
@@ -94,4 +94,13 @@ func (db *DB) SetIsOpen(isOpen bool, id uuid.UUID) error {
 	}
 
 	return nil
+}
+
+func (db *DB) SetStoreImageUrl(storeId uuid.UUID, imageUrl string) error {
+	_, err := db.Sqlx.Exec(
+		"UPDATE stores SET image_url = $1 WHERE id = $2",
+		imageUrl, storeId,
+	)
+
+	return err
 }

@@ -28,6 +28,7 @@ type DBInterface interface {
 	GetProductsByPlu(plu string, storeId uuid.UUID) ([]uuid.UUID, error)
 	GetProductChildren(parentProductId uuid.UUID) ([]uuid.UUID, error)
 	UpdateProductsSnooze(productIds []uuid.UUID, snooze bool) error
+	UpdateProductSortOrder(childProductId uuid.UUID, sortOrder int) error
 
 	// Order items
 	CreateOrderItemWithoutParent(orderItem models.CreateOrderItem) (uuid.UUID, error)
@@ -49,12 +50,13 @@ type DBInterface interface {
 	GetOpeningHours(storeId uuid.UUID) ([]dtos.GetStoreOpeningHour, error)
 
 	// Stores
-	GetStoreById(id uuid.UUID) (models.Store, error)
+	GetStoreById(storeId uuid.UUID) (models.Store, error)
 	GetStoreByMerchantUserId(merchantUserId string) (uuid.UUID, error)
-	GetOpenStore(id uuid.UUID) (models.Store, error)
-	GetAvailableStore(id uuid.UUID) (models.Store, error)
+	GetOpenStore(storeId uuid.UUID) (models.Store, error)
+	GetAvailableStore(storeId uuid.UUID) (models.Store, error)
 	GetOpenStores() ([]dtos.GetStoresOverviewResponse, error)
-	SetIsOpen(isOpen bool, id uuid.UUID) error
+	SetIsOpen(storeId uuid.UUID, isOpen bool) error
+	SetStoreImageUrl(storeId uuid.UUID, imageUrl string) error
 
 	// Users
 	GetAllUsers() ([]models.User, error)
