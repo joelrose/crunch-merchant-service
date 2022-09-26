@@ -40,7 +40,7 @@ func (database *DB) GetOrdersByUserId(userId int) ([]dtos.GetOrdersResponse, err
 		SELECT o.id, status, price, is_paid, estimated_pickup_time, created_at, name, description, image_url, address, phone_number, google_maps_link
 		FROM orders o
 		LEFT JOIN stores m on o.store_id = m.id
-		WHERE user_id = $1
+		WHERE user_id = $1 AND is_paid = true
 	`
 	orders := []dtos.GetOrdersResponse{}
 	err := database.Sqlx.Select(&orders, query, userId)
