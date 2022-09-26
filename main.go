@@ -42,7 +42,6 @@ func main() {
 	c := config.LoadConfig()
 
 	ctx := context.Background()
-
 	otelShutdown, err := tracing.InstallExportPipeline(ctx)
 	if err != nil {
 		log.Fatalf("error setting up OTel SDK - %e", err)

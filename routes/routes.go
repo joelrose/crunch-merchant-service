@@ -48,6 +48,8 @@ func SetupRoutes(e *echo.Echo, config config.Config) {
 	deliverectGroup.POST("/order_status", deliverect.OrderStatus)
 
 	dashboardGroup := apiV1.Group("/dashboard")
+
+	// TODO: only allow specific origins and methods
 	dashboardGroup.Use(defaultMiddleware.CORSWithConfig(defaultMiddleware.CORSConfig{
 		Skipper:      defaultMiddleware.DefaultSkipper,
 		AllowOrigins: []string{"*"},

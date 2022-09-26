@@ -11,9 +11,7 @@ import (
 )
 
 func BusyMode(c echo.Context) error {
-	// Bind request body
 	busyModeRequest := dtos.BusyModeRequest{}
-
 	err := c.Bind(&busyModeRequest)
 	if err != nil {
 		log.Errorf("failed to bind request body: %v", err)
