@@ -41,7 +41,8 @@ func (database *DB) GetOrdersByUserId(userId uuid.UUID) ([]dtos.GetOrdersRespons
 		FROM orders o
 		LEFT JOIN stores m on o.store_id = m.id
 		WHERE user_id = $1 AND is_paid = true
-	`
+		ORDER BY created_at DESC`
+
 	orders := []dtos.GetOrdersResponse{}
 	err := database.Sqlx.Select(&orders, query, userId)
 
@@ -54,11 +55,11 @@ func (database *DB) GetOrdersByUserId(userId uuid.UUID) ([]dtos.GetOrdersRespons
 
 func (database *DB) GetOrdersByStoreId(storeId uuid.UUID) ([]dtos.GetOrdersResponse, error) {
 	query := `
-	SELECT o.id, status, price, is_paid, estimated_pickup_time, created_at, name, description, image_url, address, phone_number, google_maps_link
-	FROM orders o
-	LEFT JOIN stores m on o.store_id = m.id
-	WHERE store_id = $1
-	ORDER BY created_at DESC`
+		SELECT o.id, status, price, is_paid, estimated_pickup_time, created_at, name, description, image_url, address, phone_number, google_maps_link
+		FROM orders o
+		LEFT JOIN stores m on o.store_id = m.id
+		WHERE store_id = $1
+		ORDER BY created_at DESC`
 
 	orders := []dtos.GetOrdersResponse{}
 	err := database.Sqlx.Select(&orders, query, storeId)
