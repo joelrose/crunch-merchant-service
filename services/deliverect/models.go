@@ -21,8 +21,8 @@ type CustomerModel struct {
 }
 
 type PaymentModel struct {
-	Amount int `json:"amount"`
-	Type   int `json:"type"`
+	Amount int         `json:"amount"`
+	Type   PaymentType `json:"type"`
 }
 
 type CreateOrderRequest struct {
@@ -31,7 +31,7 @@ type CreateOrderRequest struct {
 	Items                 []dtos.OrderItem `json:"items"`
 	Payment               PaymentModel     `json:"payment"`
 	Customer              CustomerModel    `json:"customer"`
-	OrderType             int              `json:"orderType"`
+	OrderType             OrderType        `json:"orderType"`
 	OrderIsAlreadyPaid    bool             `json:"orderIsAlreadyPaid"`
 	DecimalDigits         int              `json:"decimalDigits"`
 }

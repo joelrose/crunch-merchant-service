@@ -6,11 +6,10 @@ import (
 )
 
 type DeliverectServiceConfig struct {
-	BaseUrl       string
-	ClientId      string
-	ClientSecret  string
-	ChannelLinkId string
-	ChannelName   string
+	BaseUrl      string
+	ChannelName  string
+	ClientId     string
+	ClientSecret string
 }
 
 type DeliverectService struct {
@@ -18,15 +17,15 @@ type DeliverectService struct {
 	RedisClient *redis.Client
 }
 
-func NewDeliverectService(config config.Config, redisClient *redis.Client, channelLinkId string, channelName string) *DeliverectService {
-	return &DeliverectService{
+func NewDeliverectService(config config.Config, redisClient *redis.Client) DeliverectInterface {
+	var deliverectInterface DeliverectInterface = &DeliverectService{
 		RedisClient: redisClient,
 		Config: DeliverectServiceConfig{
-			BaseUrl:       config.Deliverect.BaseUrl,
-			ClientId:      config.Deliverect.ClientId,
-			ClientSecret:  config.Deliverect.ClientSecret,
-			ChannelLinkId: channelLinkId,
-			ChannelName:   channelName,
+			BaseUrl:      config.Deliverect.BaseUrl,
+			ChannelName:  config.Deliverect.ChannelName,
+			ClientId:     config.Deliverect.ClientId,
+			ClientSecret: config.Deliverect.ClientSecret,
 		},
 	}
+	return deliverectInterface
 }

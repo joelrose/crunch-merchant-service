@@ -11,7 +11,8 @@
 
 Run tests with `go test -cover ./...`
 
-Create the database mocks with `mockgen -source=db/interface.go -destination=test_helper/mock_db/interface.go`
+Create the database mocks with `mockgen -source=db/interface.go -destination=test_helper/mocks/mock_db/mock_db.go`
+Create the deliverect service mocks with `mockgen -source=services/deliverect/interface.go -destination=test_helper/mocks/mock_deliverect/mock_deliverect.go`
 
 ## Database
 

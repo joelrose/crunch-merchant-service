@@ -9,6 +9,7 @@ import (
 
 type Deliverect struct {
 	BaseUrl      string
+	ChannelName  string
 	ClientId     string
 	ClientSecret string
 }
@@ -60,6 +61,7 @@ func LoadConfig() Config {
 		},
 		Deliverect: Deliverect{
 			BaseUrl:      mustGetEnv("DELIVERECT_BASE_URL"),
+			ChannelName:  "crunch",
 			ClientId:     mustGetEnv("DELIVERECT_CLIENT_ID"),
 			ClientSecret: mustGetEnv("DELIVERECT_CLIENT_SECRET"),
 		},

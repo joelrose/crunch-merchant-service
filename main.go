@@ -12,6 +12,7 @@ import (
 	"github.com/joelrose/crunch-merchant-service/db"
 	"github.com/joelrose/crunch-merchant-service/middleware"
 	"github.com/joelrose/crunch-merchant-service/routes"
+	"github.com/joelrose/crunch-merchant-service/services/deliverect"
 	red "github.com/joelrose/crunch-merchant-service/services/redis"
 	"github.com/joelrose/crunch-merchant-service/services/tracing"
 	"github.com/labstack/echo/v4"
@@ -58,8 +59,8 @@ func main() {
 	})
 
 	database := db.NewDatabase(c.DatabaseUrl)
-
 	redis := red.NewClient(c.RedisUrl)
+	deliverect := deliverect.NewDeliverectService(c, redis)
 
 	e := echo.New()
 
@@ -68,6 +69,8 @@ func main() {
 	e.Use(middleware.ConfigContext(&c))
 	e.Use(middleware.DatabaseContext(&db.DB{Sqlx: *database}))
 	e.Use(middleware.RedisContext(redis))
+	// TODO: restrict echo contextutal inforamtion to route level
+	e.Use(middleware.DeliverectServiceContext(deliverect))
 
 	routes.SetupRoutes(e, c)
 

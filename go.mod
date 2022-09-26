@@ -17,7 +17,7 @@ require (
 	github.com/labstack/gommon v0.3.1
 	github.com/lib/pq v1.10.7
 	github.com/stretchr/testify v1.8.0
-	github.com/stripe/stripe-go/v73 v73.8.0
+	github.com/stripe/stripe-go/v73 v73.10.0
 	github.com/swaggo/echo-swagger v1.3.4
 	github.com/swaggo/swag v1.8.5
 	go.opentelemetry.io/contrib/instrumentation/github.com/labstack/echo/otelecho v0.36.0
