@@ -9,4 +9,6 @@ gen-swagger:
 gen-mocks:
 	mockgen -source=db/interface.go -destination=test_helper/mock_db/interface.go && mockgen -source=services/http_client/http_client.go -destination=test_helper/mock_http_client/interface.go
 test:
-	go test -cover ./...
+	go test -v -cover ./...
+db-import:
+	PGPASSWORD=password psql -h localhost -p 5432 -U username database -f .development/db_dump.sql
