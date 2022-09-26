@@ -1,6 +1,7 @@
 package db
 
 import (
+	"github.com/google/uuid"
 	"github.com/joelrose/crunch-merchant-service/models"
 	"github.com/joelrose/crunch-merchant-service/models/dtos"
 )
@@ -28,7 +29,7 @@ func (database *DB) GetUserByFirebaseId(firebaseId string) (models.User, error) 
 	return user, nil
 }
 
-func (database *DB) GetUserByUserId(userId int) (models.User, error) {
+func (database *DB) GetUserByUserId(userId uuid.UUID) (models.User, error) {
 	user := models.User{}
 	err := database.Sqlx.Get(&user, "SELECT * FROM users WHERE id = $1", userId)
 

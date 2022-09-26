@@ -41,9 +41,9 @@ var (
 		},
 	}
 	mockOrder = models.Order{
-		Id:      1,
+		Id:      uuid.New(),
 		StoreId: uuid.New(),
-		UserId:  1,
+		UserId:  mockUser.Id,
 	}
 	mockOrderItems = []models.OrderItem{
 		{
@@ -54,7 +54,7 @@ var (
 		},
 	}
 	mockUser = models.User{
-		Id:        1,
+		Id:        uuid.New(),
 		Firstname: "John",
 	}
 	mockChannel = models.DeliverectChannel{

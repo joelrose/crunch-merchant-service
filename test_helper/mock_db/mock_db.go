@@ -66,10 +66,10 @@ func (mr *MockDBInterfaceMockRecorder) CreateChannel(storeId, locationId, delive
 }
 
 // CreateOrder mocks base method.
-func (m *MockDBInterface) CreateOrder(order models.CreateOrder) (int, error) {
+func (m *MockDBInterface) CreateOrder(order models.CreateOrder) (uuid.UUID, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateOrder", order)
-	ret0, _ := ret[0].(int)
+	ret0, _ := ret[0].(uuid.UUID)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -359,7 +359,7 @@ func (mr *MockDBInterfaceMockRecorder) GetOpeningHours(storeId interface{}) *gom
 }
 
 // GetOrderById mocks base method.
-func (m *MockDBInterface) GetOrderById(orderId int) (models.Order, error) {
+func (m *MockDBInterface) GetOrderById(orderId uuid.UUID) (models.Order, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetOrderById", orderId)
 	ret0, _ := ret[0].(models.Order)
@@ -389,7 +389,7 @@ func (mr *MockDBInterfaceMockRecorder) GetOrderByStripeOrderId(stripeOrderId int
 }
 
 // GetOrderItems mocks base method.
-func (m *MockDBInterface) GetOrderItems(orderId int) ([]models.OrderItem, error) {
+func (m *MockDBInterface) GetOrderItems(orderId uuid.UUID) ([]models.OrderItem, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetOrderItems", orderId)
 	ret0, _ := ret[0].([]models.OrderItem)
@@ -419,7 +419,7 @@ func (mr *MockDBInterfaceMockRecorder) GetOrdersByStoreId(storeId interface{}) *
 }
 
 // GetOrdersByUserId mocks base method.
-func (m *MockDBInterface) GetOrdersByUserId(userId int) ([]dtos.GetOrdersResponse, error) {
+func (m *MockDBInterface) GetOrdersByUserId(userId uuid.UUID) ([]dtos.GetOrdersResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetOrdersByUserId", userId)
 	ret0, _ := ret[0].([]dtos.GetOrdersResponse)
@@ -524,7 +524,7 @@ func (mr *MockDBInterfaceMockRecorder) GetUserByFirebaseId(firebaseId interface{
 }
 
 // GetUserByUserId mocks base method.
-func (m *MockDBInterface) GetUserByUserId(userId int) (models.User, error) {
+func (m *MockDBInterface) GetUserByUserId(userId uuid.UUID) (models.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetUserByUserId", userId)
 	ret0, _ := ret[0].(models.User)
@@ -553,7 +553,7 @@ func (mr *MockDBInterfaceMockRecorder) IsWhitelisted(identifier interface{}) *go
 }
 
 // MarkOrderAsPaid mocks base method.
-func (m *MockDBInterface) MarkOrderAsPaid(orderId int) error {
+func (m *MockDBInterface) MarkOrderAsPaid(orderId uuid.UUID) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "MarkOrderAsPaid", orderId)
 	ret0, _ := ret[0].(error)
@@ -595,7 +595,7 @@ func (mr *MockDBInterfaceMockRecorder) UpdateChannelStatus(status, storeId inter
 }
 
 // UpdateOrderStatus mocks base method.
-func (m *MockDBInterface) UpdateOrderStatus(orderId int, orderStatus models.OrderStatus) error {
+func (m *MockDBInterface) UpdateOrderStatus(orderId uuid.UUID, orderStatus models.OrderStatus) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateOrderStatus", orderId, orderStatus)
 	ret0, _ := ret[0].(error)

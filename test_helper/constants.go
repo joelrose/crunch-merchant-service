@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"firebase.google.com/go/auth"
+	"github.com/google/uuid"
 	"github.com/joelrose/crunch-merchant-service/models"
 )
 
@@ -13,7 +14,7 @@ var (
 		UID: MockTokenUID,
 	}
 	MockUser = models.User{
-		Id:           1,
+		Id:           uuid.New(),
 		FirebaseId:   MockTokenUID,
 		LanguageCode: "en",
 		Firstname:    "John",

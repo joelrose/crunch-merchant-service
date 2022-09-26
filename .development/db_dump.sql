@@ -4,7 +4,7 @@ values  ('+491743645092', '2022-09-22 08:44:45.837476 +00:00');
 
 /* users  */
 insert into public.users (id, firebase_id, language_code, firstname, lastname, created_at)
-values  (1, '97ud9dLHEtUDTe5j6GVjR3rhXro2', 'DE', 'Joel', 'Rose', '2022-09-21 13:05:49.996927 +00:00');
+values  ('37043e7d-8989-4859-a59c-168193323dfc', '97ud9dLHEtUDTe5j6GVjR3rhXro2', 'DE', 'Joel', 'Rose', '2022-09-21 13:05:49.996927 +00:00');
 
 /* stores */
 insert into public.stores (id, name, description, address, average_pickup_time, average_review, review_count, google_maps_link, phone_number, stripe_account_id, stripe_account_status, fee, is_open, image_url, merchant_user_id)
@@ -12,7 +12,7 @@ values  ('9142ac52-e5a4-4ad8-8811-240c1f389ece', 'Name', 'Description', 'Address
 
 /* deliverect */
 insert into public.deliverect_channels (status, store_id, deliverect_link_id, location_id)
-values  (0, '9142ac52-e5a4-4ad8-8811-240c1f389ece', 'linkId', 'location');
+values  (1, '9142ac52-e5a4-4ad8-8811-240c1f389ece', 'linkId', 'location');
 
 /* opening_hours */ 
 insert into public.store_opening_hours (id, day_of_week, start_timestamp, end_timestamp, store_id)
@@ -31,52 +31,43 @@ values  ('a75a1502-f970-4400-8e1d-ce0dedaf7ea3', 'Chicken', 'Delicious chicken, 
 
 /* orders */
 insert into public.orders (id, status, estimated_pickup_time, price, stripe_order_id, is_paid, created_at, store_id, user_id, fee)
-values  (1, 1, '2022-09-21 13:10:26.456517 +00:00', 47440, 'pi_3LkSh4K5PYFPbUlO1Nt9Z7qF', false, '2022-09-21 13:10:26.462087 +00:00', '9142ac52-e5a4-4ad8-8811-240c1f389ece', 1, 0.5),
-        (2, 1, '2022-09-22 07:14:17.968163 +00:00', 47440, 'pi_3LkjbxK5PYFPbUlO1JAcSgOy', false, '2022-09-22 07:14:17.973700 +00:00', '9142ac52-e5a4-4ad8-8811-240c1f389ece', 1, 0.5),
-        (3, 1, '2022-09-22 07:14:22.359918 +00:00', 47440, 'pi_3Lkjc2K5PYFPbUlO1f5oGfvA', false, '2022-09-22 07:14:22.360912 +00:00', '9142ac52-e5a4-4ad8-8811-240c1f389ece', 1, 0.5),
-        (4, 1, '2022-09-22 07:14:24.173741 +00:00', 47440, 'pi_3Lkjc4K5PYFPbUlO0ArkwAla', false, '2022-09-22 07:14:24.174450 +00:00', '9142ac52-e5a4-4ad8-8811-240c1f389ece', 1, 0.5),
-        (5, 1, '2022-09-22 07:58:53.392894 +00:00', 6350, 'pi_3LkkJ7K5PYFPbUlO0DyQB709', false, '2022-09-22 07:58:53.400320 +00:00', '9142ac52-e5a4-4ad8-8811-240c1f389ece', 1, 0.5),
-        (6, 1, '2022-09-22 08:02:32.404134 +00:00', 800, 'pi_3LkkMeK5PYFPbUlO0lrU36vU', false, '2022-09-22 08:02:32.402635 +00:00', '9142ac52-e5a4-4ad8-8811-240c1f389ece', 1, 0.5),
-        (7, 1, '2022-09-22 08:13:04.299018 +00:00', 800, 'pi_3LkkWqK5PYFPbUlO11lUJSId', false, '2022-09-22 08:13:04.303708 +00:00', '9142ac52-e5a4-4ad8-8811-240c1f389ece', 1, 0.5),
-        (8, 1, '2022-09-22 08:13:44.240305 +00:00', 800, 'pi_3LkkXUK5PYFPbUlO09QgDtjR', true, '2022-09-22 08:13:44.245166 +00:00', '9142ac52-e5a4-4ad8-8811-240c1f389ece', 1, 0.5);
+values  ('0e7285e6-ac83-479f-8cb4-1436ee9a4bdb', 1, '2022-09-21 13:10:26.456517 +00:00', 47440, 'pi_3LkSh4K5PYFPbUlO1Nt9Z7qF', false, '2022-09-21 13:10:26.462087 +00:00', '9142ac52-e5a4-4ad8-8811-240c1f389ece', '37043e7d-8989-4859-a59c-168193323dfc', 0.5),
+        ('e798781d-ba11-4f18-adfc-bd69e1dda2d9', 1, '2022-09-22 07:14:17.968163 +00:00', 47440, 'pi_3LkjbxK5PYFPbUlO1JAcSgOy', false, '2022-09-22 07:14:17.973700 +00:00', '9142ac52-e5a4-4ad8-8811-240c1f389ece', '37043e7d-8989-4859-a59c-168193323dfc', 0.5),
+        ('ceb94179-c3a0-4e60-893d-ab6d86cd936d', 1, '2022-09-22 07:14:22.359918 +00:00', 47440, 'pi_3Lkjc2K5PYFPbUlO1f5oGfvA', false, '2022-09-22 07:14:22.360912 +00:00', '9142ac52-e5a4-4ad8-8811-240c1f389ece', '37043e7d-8989-4859-a59c-168193323dfc', 0.5),
+        ('6acae81d-85fd-4438-b03f-88f9dc9d9081', 1, '2022-09-22 07:14:24.173741 +00:00', 47440, 'pi_3Lkjc4K5PYFPbUlO0ArkwAla', false, '2022-09-22 07:14:24.174450 +00:00', '9142ac52-e5a4-4ad8-8811-240c1f389ece', '37043e7d-8989-4859-a59c-168193323dfc', 0.5),
+        ('aaf6985b-44d9-479b-a991-54b288bf9326', 1, '2022-09-22 07:58:53.392894 +00:00', 6350, 'pi_3LkkJ7K5PYFPbUlO0DyQB709', false, '2022-09-22 07:58:53.400320 +00:00', '9142ac52-e5a4-4ad8-8811-240c1f389ece', '37043e7d-8989-4859-a59c-168193323dfc', 0.5);
 
 /* order_items */
 insert into public.order_items (id, plu, name, price, quantity, order_id, parent_id)
-values  ('e3322b41-35fe-45dd-9bfc-789b4b05a3d0', '1', 'Eins', 1000, 1, 1, null),
-        ('2fb09171-4a79-40dc-b266-d6ea04343da5', '3', 'Drei', 1000, 1, 1, 'e3322b41-35fe-45dd-9bfc-789b4b05a3d0'),
-        ('8f0b0922-ffdb-4086-a4bd-67ccd23aa1c0', '6', 'Sechs', 8888, 5, 1, '2fb09171-4a79-40dc-b266-d6ea04343da5'),
-        ('c3b1e456-30d7-4283-971b-18ddc3c65fa4', '2', 'Zwei', 1000, 1, 1, null),
-        ('17033b5d-8f25-4016-80e7-de2fb68848ba', '1', 'Eins', 1000, 1, 2, null),
-        ('c5ba1107-63b9-4f47-8ee3-084d498ea49d', '3', 'Drei', 1000, 1, 2, '17033b5d-8f25-4016-80e7-de2fb68848ba'),
-        ('dcca7f32-81b7-4dcb-a07d-26755091915a', '6', 'Sechs', 8888, 5, 2, 'c5ba1107-63b9-4f47-8ee3-084d498ea49d'),
-        ('939b8307-9df6-4f4e-88bc-e73edc638868', '2', 'Zwei', 1000, 1, 2, null),
-        ('b6cf4973-dcb1-4a16-96fd-8a2327662b7b', '1', 'Eins', 1000, 1, 3, null),
-        ('f72fd8cc-1455-4b6d-a893-71fc1d602d00', '3', 'Drei', 1000, 1, 3, 'b6cf4973-dcb1-4a16-96fd-8a2327662b7b'),
-        ('cbe761c8-6d41-425e-a731-373661dcd1fa', '6', 'Sechs', 8888, 5, 3, 'f72fd8cc-1455-4b6d-a893-71fc1d602d00'),
-        ('c6337774-d7bf-4d7e-b25e-b743ff5dc961', '2', 'Zwei', 1000, 1, 3, null),
-        ('64633f72-3cd5-45d7-aee5-17b9d934abaf', '1', 'Eins', 1000, 1, 4, null),
-        ('d576cebd-c1a1-48a9-b7af-7082489a78d4', '3', 'Drei', 1000, 1, 4, '64633f72-3cd5-45d7-aee5-17b9d934abaf'),
-        ('0c346db6-3506-4fe6-8b93-0d33664d9480', '6', 'Sechs', 8888, 5, 4, 'd576cebd-c1a1-48a9-b7af-7082489a78d4'),
-        ('d4b389ec-87fd-4e1c-a43d-dcd40bbb4d13', '2', 'Zwei', 1000, 1, 4, null),
-        ('992804ad-d476-480b-9d84-087a6c4a7369', 'VAR-PROD-1-#D1#-', 'Chicken Tenders', 800, 1, 5, null),
-        ('8dffb77a-4e9f-4571-b7be-5dfca7e0b388', 'VAR-1-#D1#V0#-', '3 Pieces', 0, 1, 5, '992804ad-d476-480b-9d84-087a6c4a7369'),
-        ('209e1ba9-7317-4341-8adc-0065d5a8d94d', 'P-SATE-#D1#-', 'Chicken Sate', 450, 1, 5, null),
-        ('577a7de7-84ec-4e2d-a694-ad4400318b1d', 'P-SATE-#D1#-', 'Chicken Sate', 450, 1, 5, null),
-        ('9faa2996-c942-4fa8-88c3-8d416ba4d839', 'RICE-01-#D2#-', 'White Rice', 450, 1, 5, '577a7de7-84ec-4e2d-a694-ad4400318b1d'),
-        ('f0c730db-a4ec-433a-967d-3a7b1fa45b96', 'RICE-02-#D1#-', 'Yellow Rice', 450, 1, 5, '577a7de7-84ec-4e2d-a694-ad4400318b1d'),
-        ('86c53518-43da-495a-9a02-5d1ce33875c5', 'P-BURG-CHK-#D1#-', 'Chicken Burger', 800, 1, 5, null),
-        ('4e47040b-c311-4322-8930-c75795738b11', 'P-BURG-VEG-#D1#-', 'Veggie Burger', 750, 1, 5, null),
-        ('86109b2c-2fa7-44d7-8cea-87f6f6e918c6', 'STK-01-#D1#-', 'Delicious Steak Frites ***NEW', 2000, 1, 5, null),
-        ('e34971a5-8e93-4644-98d0-19acf6a52c68', 'COOK-02-#D1#-', 'Medium Rare', 0, 1, 5, '86109b2c-2fa7-44d7-8cea-87f6f6e918c6'),
-        ('b02eb42f-ec3a-4d84-a28e-c5b44a28ae21', 'COOK-03-#D1#-', 'Well Done', 0, 1, 5, '86109b2c-2fa7-44d7-8cea-87f6f6e918c6'),
-        ('0fae0f36-40b6-489e-acbb-468b5c98e879', 'SI-01-#D1#-', 'Fries', 0, 1, 5, '86109b2c-2fa7-44d7-8cea-87f6f6e918c6'),
-        ('4934b085-0be8-4391-85bf-8318dfb2e5f9', 'SI-02-#D1#-', 'Salad', 200, 1, 5, '86109b2c-2fa7-44d7-8cea-87f6f6e918c6'),
-        ('28a2e33a-ea97-4d43-bd6d-b5b9b0eeb7d6', 'VAR-PROD-1-#D1#-', 'Chicken Tenders', 800, 1, 6, null),
-        ('e8997972-6695-422d-805f-b3cefe9ab9db', 'VAR-1-#D1#V0#-', '3 Pieces', 0, 1, 6, '28a2e33a-ea97-4d43-bd6d-b5b9b0eeb7d6'),
-        ('43bcb646-eae4-423a-9688-386456c885a4', 'VAR-PROD-1-#D1#-', 'Chicken Tenders', 800, 1, 7, null),
-        ('327f1867-cd5a-41fb-8833-04e8aef2df29', 'VAR-1-#D1#V0#-', '3 Pieces', 0, 1, 7, '43bcb646-eae4-423a-9688-386456c885a4'),
-        ('d5e09098-eb12-46f6-8a9d-e13eaa00d649', 'VAR-PROD-1-#D1#-', 'Chicken Tenders', 800, 1, 8, null),
-        ('5f6f22a6-faef-415a-a0a4-836d7b165a44', 'VAR-1-#D1#V0#-', '3 Pieces', 0, 1, 8, 'd5e09098-eb12-46f6-8a9d-e13eaa00d649');
+values  ('e3322b41-35fe-45dd-9bfc-789b4b05a3d0', '1', 'Eins', 1000, 1, '0e7285e6-ac83-479f-8cb4-1436ee9a4bdb', null),
+        ('2fb09171-4a79-40dc-b266-d6ea04343da5', '3', 'Drei', 1000, 1, '0e7285e6-ac83-479f-8cb4-1436ee9a4bdb', 'e3322b41-35fe-45dd-9bfc-789b4b05a3d0'),
+        ('8f0b0922-ffdb-4086-a4bd-67ccd23aa1c0', '6', 'Sechs', 8888, 5, '0e7285e6-ac83-479f-8cb4-1436ee9a4bdb', '2fb09171-4a79-40dc-b266-d6ea04343da5'),
+        ('c3b1e456-30d7-4283-971b-18ddc3c65fa4', '2', 'Zwei', 1000, 1, '0e7285e6-ac83-479f-8cb4-1436ee9a4bdb', null),
+        ('17033b5d-8f25-4016-80e7-de2fb68848ba', '1', 'Eins', 1000, 1, 'e798781d-ba11-4f18-adfc-bd69e1dda2d9', null),
+        ('c5ba1107-63b9-4f47-8ee3-084d498ea49d', '3', 'Drei', 1000, 1, 'e798781d-ba11-4f18-adfc-bd69e1dda2d9', '17033b5d-8f25-4016-80e7-de2fb68848ba'),
+        ('dcca7f32-81b7-4dcb-a07d-26755091915a', '6', 'Sechs', 8888, 5, 'e798781d-ba11-4f18-adfc-bd69e1dda2d9', 'c5ba1107-63b9-4f47-8ee3-084d498ea49d'),
+        ('939b8307-9df6-4f4e-88bc-e73edc638868', '2', 'Zwei', 1000, 1, 'e798781d-ba11-4f18-adfc-bd69e1dda2d9', null),
+        ('b6cf4973-dcb1-4a16-96fd-8a2327662b7b', '1', 'Eins', 1000, 1, 'ceb94179-c3a0-4e60-893d-ab6d86cd936d', null),
+        ('f72fd8cc-1455-4b6d-a893-71fc1d602d00', '3', 'Drei', 1000, 1, 'ceb94179-c3a0-4e60-893d-ab6d86cd936d', 'b6cf4973-dcb1-4a16-96fd-8a2327662b7b'),
+        ('cbe761c8-6d41-425e-a731-373661dcd1fa', '6', 'Sechs', 8888, 5, 'ceb94179-c3a0-4e60-893d-ab6d86cd936d', 'f72fd8cc-1455-4b6d-a893-71fc1d602d00'),
+        ('c6337774-d7bf-4d7e-b25e-b743ff5dc961', '2', 'Zwei', 1000, 1, 'ceb94179-c3a0-4e60-893d-ab6d86cd936d', null),
+        ('64633f72-3cd5-45d7-aee5-17b9d934abaf', '1', 'Eins', 1000, 1, '6acae81d-85fd-4438-b03f-88f9dc9d9081', null),
+        ('d576cebd-c1a1-48a9-b7af-7082489a78d4', '3', 'Drei', 1000, 1, '6acae81d-85fd-4438-b03f-88f9dc9d9081', '64633f72-3cd5-45d7-aee5-17b9d934abaf'),
+        ('0c346db6-3506-4fe6-8b93-0d33664d9480', '6', 'Sechs', 8888, 5, '6acae81d-85fd-4438-b03f-88f9dc9d9081', 'd576cebd-c1a1-48a9-b7af-7082489a78d4'),
+        ('d4b389ec-87fd-4e1c-a43d-dcd40bbb4d13', '2', 'Zwei', 1000, 1, '6acae81d-85fd-4438-b03f-88f9dc9d9081', null),
+        ('992804ad-d476-480b-9d84-087a6c4a7369', 'VAR-PROD-1-#D1#-', 'Chicken Tenders', 800, 1, 'aaf6985b-44d9-479b-a991-54b288bf9326', null),
+        ('8dffb77a-4e9f-4571-b7be-5dfca7e0b388', 'VAR-1-#D1#V0#-', '3 Pieces', 0, 1, 'aaf6985b-44d9-479b-a991-54b288bf9326', '992804ad-d476-480b-9d84-087a6c4a7369'),
+        ('209e1ba9-7317-4341-8adc-0065d5a8d94d', 'P-SATE-#D1#-', 'Chicken Sate', 450, 1, 'aaf6985b-44d9-479b-a991-54b288bf9326', null),
+        ('577a7de7-84ec-4e2d-a694-ad4400318b1d', 'P-SATE-#D1#-', 'Chicken Sate', 450, 1, 'aaf6985b-44d9-479b-a991-54b288bf9326', null),
+        ('9faa2996-c942-4fa8-88c3-8d416ba4d839', 'RICE-01-#D2#-', 'White Rice', 450, 1, 'aaf6985b-44d9-479b-a991-54b288bf9326', '577a7de7-84ec-4e2d-a694-ad4400318b1d'),
+        ('f0c730db-a4ec-433a-967d-3a7b1fa45b96', 'RICE-02-#D1#-', 'Yellow Rice', 450, 1, 'aaf6985b-44d9-479b-a991-54b288bf9326', '577a7de7-84ec-4e2d-a694-ad4400318b1d'),
+        ('86c53518-43da-495a-9a02-5d1ce33875c5', 'P-BURG-CHK-#D1#-', 'Chicken Burger', 800, 1, 'aaf6985b-44d9-479b-a991-54b288bf9326', null),
+        ('4e47040b-c311-4322-8930-c75795738b11', 'P-BURG-VEG-#D1#-', 'Veggie Burger', 750, 1, 'aaf6985b-44d9-479b-a991-54b288bf9326', null),
+        ('86109b2c-2fa7-44d7-8cea-87f6f6e918c6', 'STK-01-#D1#-', 'Delicious Steak Frites ***NEW', 2000, 1, 'aaf6985b-44d9-479b-a991-54b288bf9326', null),
+        ('e34971a5-8e93-4644-98d0-19acf6a52c68', 'COOK-02-#D1#-', 'Medium Rare', 0, 1, 'aaf6985b-44d9-479b-a991-54b288bf9326', '86109b2c-2fa7-44d7-8cea-87f6f6e918c6'),
+        ('b02eb42f-ec3a-4d84-a28e-c5b44a28ae21', 'COOK-03-#D1#-', 'Well Done', 0, 1, 'aaf6985b-44d9-479b-a991-54b288bf9326', '86109b2c-2fa7-44d7-8cea-87f6f6e918c6'),
+        ('0fae0f36-40b6-489e-acbb-468b5c98e879', 'SI-01-#D1#-', 'Fries', 0, 1, 'aaf6985b-44d9-479b-a991-54b288bf9326', '86109b2c-2fa7-44d7-8cea-87f6f6e918c6'),
+        ('4934b085-0be8-4391-85bf-8318dfb2e5f9', 'SI-02-#D1#-', 'Salad', 200, 1, 'aaf6985b-44d9-479b-a991-54b288bf9326', '86109b2c-2fa7-44d7-8cea-87f6f6e918c6');
 
 /* menu product */
 insert into public.menu_product (id, name, plu, price, description, snoozed, tax, image_url, max, min, multiply, product_type, sort_order, visible, store_id, multi_max)

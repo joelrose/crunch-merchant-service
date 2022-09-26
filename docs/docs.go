@@ -445,7 +445,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "isPaid": {
                     "type": "boolean"
@@ -716,7 +716,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "languageCode": {
                     "type": "string"

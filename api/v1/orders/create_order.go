@@ -116,7 +116,7 @@ func CreateOrder(c echo.Context) error {
 	return c.JSON(http.StatusCreated, response)
 }
 
-func createOrderItem(dto dtos.OrderItem, parentId *uuid.UUID, orderId int, db db.DBInterface) error {
+func createOrderItem(dto dtos.OrderItem, parentId *uuid.UUID, orderId uuid.UUID, db db.DBInterface) error {
 	orderItem := models.CreateOrderItem{
 		Plu:      dto.Plu,
 		Name:     dto.Name,

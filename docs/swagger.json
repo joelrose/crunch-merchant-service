@@ -438,7 +438,7 @@
                     "type": "string"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "isPaid": {
                     "type": "boolean"
@@ -709,7 +709,7 @@
                     "type": "string"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "languageCode": {
                     "type": "string"

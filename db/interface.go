@@ -32,16 +32,16 @@ type DBInterface interface {
 	// Order items
 	CreateOrderItemWithoutParent(orderItem models.CreateOrderItem) (uuid.UUID, error)
 	CreateOrderItemWithParent(orderItem models.CreateOrderItem) (uuid.UUID, error)
-	GetOrderItems(orderId int) ([]models.OrderItem, error)
+	GetOrderItems(orderId uuid.UUID) ([]models.OrderItem, error)
 
 	// Orders
-	CreateOrder(order models.CreateOrder) (int, error)
+	CreateOrder(order models.CreateOrder) (uuid.UUID, error)
 	GetOrderByStripeOrderId(stripeOrderId string) (models.Order, error)
-	GetOrdersByUserId(userId int) ([]dtos.GetOrdersResponse, error)
+	GetOrdersByUserId(userId uuid.UUID) ([]dtos.GetOrdersResponse, error)
 	GetOrdersByStoreId(storeId uuid.UUID) ([]dtos.GetOrdersResponse, error)
-	GetOrderById(orderId int) (models.Order, error)
-	UpdateOrderStatus(orderId int, orderStatus models.OrderStatus) error
-	MarkOrderAsPaid(orderId int) error
+	GetOrderById(orderId uuid.UUID) (models.Order, error)
+	UpdateOrderStatus(orderId uuid.UUID, orderStatus models.OrderStatus) error
+	MarkOrderAsPaid(orderId uuid.UUID) error
 
 	// Store Opening Hours
 	CreateStoreOpeningHour(openingHour models.StoreOpeningHour) error
@@ -59,7 +59,7 @@ type DBInterface interface {
 	// Users
 	GetAllUsers() ([]models.User, error)
 	GetUserByFirebaseId(firebaseId string) (models.User, error)
-	GetUserByUserId(userId int) (models.User, error)
+	GetUserByUserId(userId uuid.UUID) (models.User, error)
 	CreateUser(firebaseId string, user dtos.CreateUserRequest) error
 
 	// Whitelist
