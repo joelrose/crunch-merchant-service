@@ -508,6 +508,21 @@ func (mr *MockDBInterfaceMockRecorder) GetStoreByMerchantUserId(merchantUserId i
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStoreByMerchantUserId", reflect.TypeOf((*MockDBInterface)(nil).GetStoreByMerchantUserId), merchantUserId)
 }
 
+// GetTopProducts mocks base method.
+func (m *MockDBInterface) GetTopProducts(storeId uuid.UUID) ([]dtos.GetStoreProduct, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetTopProducts", storeId)
+	ret0, _ := ret[0].([]dtos.GetStoreProduct)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetTopProducts indicates an expected call of GetTopProducts.
+func (mr *MockDBInterfaceMockRecorder) GetTopProducts(storeId interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTopProducts", reflect.TypeOf((*MockDBInterface)(nil).GetTopProducts), storeId)
+}
+
 // GetUserByFirebaseId mocks base method.
 func (m *MockDBInterface) GetUserByFirebaseId(firebaseId string) (models.User, error) {
 	m.ctrl.T.Helper()

@@ -58,6 +58,26 @@ func (db *DB) GetProducts(storeId uuid.UUID) ([]dtos.GetStoreProduct, error) {
 	return products, err
 }
 
+func (db *DB) GetTopProducts(storeId uuid.UUID) ([]dtos.GetStoreProduct, error) {
+	query := `
+	select id, name, description, price, max, min, multiply, multi_max, plu, snoozed, tax, product_type, image_url, sort_order,visible from menu_product
+	where id IN (
+		select relation.menu_product_id from category_product_relation relation
+		where relation.menu_category_id IN (
+			select id from menu_categories
+			where store_id = $1))
+	order by name`
+
+	var products []dtos.GetStoreProduct
+	err := db.Sqlx.Select(
+		&products,
+		query,
+		storeId,
+	)
+
+	return products, err
+}
+
 func (db *DB) GetProductsByPlu(plu string, storeId uuid.UUID) ([]uuid.UUID, error) {
 	var productIds []uuid.UUID
 	err := db.Sqlx.Select(&productIds, "SELECT id FROM menu_product WHERE plu LIKE $1 AND store_id = $2", "%"+plu+"%", storeId)

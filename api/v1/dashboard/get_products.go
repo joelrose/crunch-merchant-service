@@ -32,7 +32,7 @@ func GetProducts(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusForbidden)
 	}
 	*/
-	products, err := db.GetProducts(uuid.MustParse("9142ac52-e5a4-4ad8-8811-240c1f389ece"))
+	products, err := db.GetTopProducts(uuid.MustParse("9142ac52-e5a4-4ad8-8811-240c1f389ece"))
 	if err != nil {
 		log.Errorf("failed to get orders: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError)
