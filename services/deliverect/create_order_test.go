@@ -17,24 +17,24 @@ import (
 )
 
 var (
-	machineTokenResponse = CreateMachineMachineTokenResponse{
+	mockMachineTokenResponse = CreateMachineMachineTokenResponse{
 		AccessToken: "access_token",
 		ExpiresAt:   time.Now().Add(time.Hour * 24).Unix(),
 		TokenType:   "Bearer",
 		Scope:       "scope",
 	}
-	deliverectConfig = DeliverectServiceConfig{
+	mockDeliverectConfig = DeliverectServiceConfig{
 		BaseUrl:      "https://deliverect.getcrunch.tech",
 		ChannelName:  "crunch",
 		ClientId:     "client_id",
 		ClientSecret: "client_secret",
 	}
-	service = DeliverectService{
+	mockDeliverectService = DeliverectService{
 		RedisClient: nil,
-		Config:      deliverectConfig,
+		Config:      mockDeliverectConfig,
 		HttpClient:  nil,
 	}
-	channelLinkId = "channel_link_id"
+	mockChannelLinkId = "channel_link_id"
 )
 
 func createServices(t *testing.T) (*mock_http_client.MockCustomHttpClient, *miniredis.Miniredis) {
@@ -43,8 +43,8 @@ func createServices(t *testing.T) (*mock_http_client.MockCustomHttpClient, *mini
 	redisClient := redisService.NewClient("redis://" + miniRedis.Addr())
 	httpClient := http_client.NewMockClient(t)
 
-	service.HttpClient = httpClient
-	service.RedisClient = redisClient
+	mockDeliverectService.HttpClient = httpClient
+	mockDeliverectService.RedisClient = redisClient
 
 	return httpClient, miniRedis
 }
@@ -52,24 +52,24 @@ func createServices(t *testing.T) (*mock_http_client.MockCustomHttpClient, *mini
 func TestCreateOrderRequestToken(t *testing.T) {
 	httpClient, miniRedis := createServices(t)
 
-	machineTokenResponseJson, _ := json.Marshal(machineTokenResponse)
+	machineTokenResponseJson, _ := json.Marshal(mockMachineTokenResponse)
 	machineTokenReader := io.NopCloser(bytes.NewReader([]byte(machineTokenResponseJson)))
 
-	httpClient.EXPECT().SendPost(gomock.Any(), deliverectConfig.BaseUrl+MachineTokenPath, gomock.Any()).Return(&http.Response{
+	httpClient.EXPECT().SendPost(gomock.Any(), mockDeliverectConfig.BaseUrl+MachineTokenPath, gomock.Any()).Return(&http.Response{
 		StatusCode: 200,
 		Body:       machineTokenReader,
 	}, nil).Times(1)
 
 	httpClient.EXPECT().SendPost(
 		gomock.Any(),
-		deliverectConfig.BaseUrl+"/"+deliverectConfig.ChannelName+"/order/"+channelLinkId,
+		mockDeliverectConfig.BaseUrl+"/"+mockDeliverectConfig.ChannelName+"/order/"+mockChannelLinkId,
 		map[string]string{
-			"Authorization": "Bearer " + machineTokenResponse.AccessToken,
+			"Authorization": "Bearer " + mockMachineTokenResponse.AccessToken,
 		}).Return(&http.Response{
 		StatusCode: 201,
 	}, nil).Times(1)
 
-	assert.Nil(t, service.CreateOrder(CreateOrderRequest{}, channelLinkId))
+	assert.Nil(t, mockDeliverectService.CreateOrder(CreateOrderRequest{}, mockChannelLinkId))
 
 	token, _ := miniRedis.Get(DeliverectMachineToken)
 	assert.Equal(t, string(machineTokenResponseJson), token)
@@ -78,18 +78,18 @@ func TestCreateOrderRequestToken(t *testing.T) {
 func TestCreateOrderCachedToken(t *testing.T) {
 	httpClient, miniRedis := createServices(t)
 
-	machineTokenResponseJson, _ := json.Marshal(machineTokenResponse)
+	machineTokenResponseJson, _ := json.Marshal(mockMachineTokenResponse)
 
 	miniRedis.Set(DeliverectMachineToken, string(machineTokenResponseJson))
 
 	httpClient.EXPECT().SendPost(
 		gomock.Any(),
-		deliverectConfig.BaseUrl+"/"+deliverectConfig.ChannelName+"/order/"+channelLinkId,
+		mockDeliverectConfig.BaseUrl+"/"+mockDeliverectConfig.ChannelName+"/order/"+mockChannelLinkId,
 		map[string]string{
-			"Authorization": "Bearer " + machineTokenResponse.AccessToken,
+			"Authorization": "Bearer " + mockMachineTokenResponse.AccessToken,
 		}).Return(&http.Response{
 		StatusCode: 201,
 	}, nil).Times(1)
 
-	assert.Nil(t, service.CreateOrder(CreateOrderRequest{}, channelLinkId))
+	assert.Nil(t, mockDeliverectService.CreateOrder(CreateOrderRequest{}, mockChannelLinkId))
 }

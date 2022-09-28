@@ -15,19 +15,11 @@ type convertTest struct {
 	expected []dtos.OrderItem
 }
 
-func TestConvertOrderItemsToDto(t *testing.T) {
-	item1, item10, item11, item12, item13 := uuid.New(), uuid.New(), uuid.New(), uuid.New(), uuid.New()
-
-	parent11, parent12 := uuid.NullUUID{}, uuid.NullUUID{}
-	parent11.UUID = item11
-	parent11.Valid = true
-
-	parent12.UUID = item12
-	parent12.Valid = true
-
-	orderId := uuid.New()
-
-	testCases := []convertTest{
+var (
+	mockItemId1, mockItemId10, mockItemId11, mockItemId12, mockItemId13 = uuid.New(), uuid.New(), uuid.New(), uuid.New(), uuid.New()
+	mockParentId11, mockParentId12                                      = uuid.NullUUID{UUID: mockItemId11, Valid: true}, uuid.NullUUID{UUID: mockItemId12, Valid: true}
+	mockOrderId                                                         = uuid.New()
+	convertTestCases                                                    = []convertTest{
 		{
 			input:    []models.OrderItem{},
 			expected: []dtos.OrderItem{},
@@ -35,17 +27,17 @@ func TestConvertOrderItemsToDto(t *testing.T) {
 		{
 			input: []models.OrderItem{
 				{
-					Id:       item1,
+					Id:       mockItemId1,
 					Plu:      "1",
 					Name:     "1",
 					Quantity: 1,
 					Price:    100,
-					OrderId:  orderId,
+					OrderId:  mockOrderId,
 				},
 			},
 			expected: []dtos.OrderItem{
 				{
-					Id:       item1,
+					Id:       mockItemId1,
 					Plu:      "1",
 					Name:     "1",
 					Quantity: 1,
@@ -57,43 +49,43 @@ func TestConvertOrderItemsToDto(t *testing.T) {
 		{
 			input: []models.OrderItem{
 				{
-					Id:       item10,
+					Id:       mockItemId10,
 					Plu:      "10",
 					Name:     "10",
 					Quantity: 1,
 					Price:    100,
-					OrderId:  orderId,
+					OrderId:  mockOrderId,
 				},
 				{
-					Id:       item11,
+					Id:       mockItemId11,
 					Plu:      "11",
 					Name:     "11",
 					Quantity: 1,
 					Price:    100,
-					OrderId:  orderId,
+					OrderId:  mockOrderId,
 				},
 				{
-					Id:       item12,
+					Id:       mockItemId12,
 					Plu:      "12",
 					Name:     "12",
 					Quantity: 1,
 					Price:    100,
-					OrderId:  orderId,
-					ParentId: parent11,
+					OrderId:  mockOrderId,
+					ParentId: mockParentId11,
 				},
 				{
-					Id:       item13,
+					Id:       mockItemId13,
 					Plu:      "13",
 					Name:     "13",
 					Quantity: 1,
 					Price:    100,
-					OrderId:  orderId,
-					ParentId: parent12,
+					OrderId:  mockOrderId,
+					ParentId: mockParentId12,
 				},
 			},
 			expected: []dtos.OrderItem{
 				{
-					Id:       item10,
+					Id:       mockItemId10,
 					Plu:      "10",
 					Name:     "10",
 					Quantity: 1,
@@ -101,19 +93,19 @@ func TestConvertOrderItemsToDto(t *testing.T) {
 					SubItems: []dtos.OrderItem{},
 				},
 				{
-					Id:       item11,
+					Id:       mockItemId11,
 					Plu:      "11",
 					Name:     "11",
 					Quantity: 1,
 					Price:    100,
 					SubItems: []dtos.OrderItem{{
-						Id:       item12,
+						Id:       mockItemId12,
 						Plu:      "12",
 						Name:     "12",
 						Quantity: 1,
 						Price:    100,
 						SubItems: []dtos.OrderItem{{
-							Id:       item13,
+							Id:       mockItemId13,
 							Plu:      "13",
 							Name:     "13",
 							Quantity: 1,
@@ -127,8 +119,10 @@ func TestConvertOrderItemsToDto(t *testing.T) {
 			},
 		},
 	}
+)
 
-	for _, testCase := range testCases {
+func TestConvertOrderItemsToDto(t *testing.T) {
+	for _, testCase := range convertTestCases {
 		output := ConvertOrderItemsToDto(testCase.input)
 
 		expectedJson, _ := json.Marshal(testCase.expected)
