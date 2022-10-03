@@ -5,9 +5,12 @@ import (
 	"encoding/json"
 	"net/http"
 	"testing"
+	"time"
 
 	"github.com/golang/mock/gomock"
 	"github.com/google/uuid"
+	"github.com/joelrose/crunch-merchant-service/config"
+	"github.com/joelrose/crunch-merchant-service/middleware"
 	"github.com/joelrose/crunch-merchant-service/models/dtos"
 	"github.com/joelrose/crunch-merchant-service/test_helper"
 	"github.com/labstack/echo/v4"
@@ -132,6 +135,9 @@ var (
 func TestGetStoresOverviewNotFound(t *testing.T) {
 	_, c, mockDB := test_helper.NewRequest(t, http.MethodGet, "")
 
+	timezone, _ := time.LoadLocation("Europe/Berlin")
+	c.Set(middleware.CONFIG_CONTEXT_KEY, config.Config{Timezone: timezone})
+
 	mockDB.
 		EXPECT().
 		GetOpenStores().
@@ -151,6 +157,9 @@ func TestGetStoresOverviewNotFound(t *testing.T) {
 
 func TestGetStoresOverviewFound(t *testing.T) {
 	rec, c, mockDB := test_helper.NewRequest(t, http.MethodGet, "")
+
+	timezone, _ := time.LoadLocation("Europe/Berlin")
+	c.Set(middleware.CONFIG_CONTEXT_KEY, config.Config{Timezone: timezone})
 
 	mockDB.
 		EXPECT().

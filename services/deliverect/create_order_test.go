@@ -19,7 +19,7 @@ import (
 var (
 	mockMachineTokenResponse = CreateMachineMachineTokenResponse{
 		AccessToken: "access_token",
-		ExpiresAt:   time.Now().Add(time.Hour * 24).Unix(),
+		ExpiresAt:   time.Now().UTC().Add(time.Hour * 24).Unix(),
 		TokenType:   "Bearer",
 		Scope:       "scope",
 	}

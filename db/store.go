@@ -1,10 +1,11 @@
 package db
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/joelrose/crunch-merchant-service/models"
 	"github.com/joelrose/crunch-merchant-service/models/dtos"
-	"github.com/joelrose/crunch-merchant-service/utils"
 )
 
 func (db *DB) GetStoreById(storeId uuid.UUID) (models.Store, error) {
@@ -40,7 +41,7 @@ func (db *DB) GetOpenStore(storeId uuid.UUID) (models.Store, error) {
 	return store, nil
 }
 
-func (db *DB) GetAvailableStore(storeId uuid.UUID) (models.Store, error) {
+func (db *DB) GetAvailableStore(storeId uuid.UUID, weekday time.Weekday, timestamp int) (models.Store, error) {
 	storeQuery := `
 	SELECT *
 	FROM stores s
@@ -54,8 +55,6 @@ func (db *DB) GetAvailableStore(storeId uuid.UUID) (models.Store, error) {
 			  AND o.start_timestamp <= $3
 			  AND o.end_timestamp >= $3
 		);`
-
-	weekday, timestamp := utils.GetDayAndTimestamp()
 
 	store := models.Store{}
 	err := db.Sqlx.Get(&store, storeQuery, storeId, weekday, timestamp)

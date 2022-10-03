@@ -2,6 +2,7 @@ package config
 
 import (
 	"os"
+	"time"
 
 	"github.com/joho/godotenv"
 	"github.com/labstack/gommon/log"
@@ -28,6 +29,7 @@ type Config struct {
 	FirebaseConfig string
 	DatabaseUrl    string
 	RedisUrl       string
+	Timezone       *time.Location
 	Stripe         Stripe
 	Deliverect     Deliverect
 	Auth0          Auth0
@@ -51,10 +53,16 @@ func LoadConfig() Config {
 		log.Debugf("Could not load .env file")
 	}
 
+	timezone, err := time.LoadLocation("Europe/Berlin")
+	if err != nil {
+		log.Fatalf("failed to load timezone: %v", err)
+	}
+
 	config := Config{
 		FirebaseConfig: mustGetEnv("FIREBASE_CONFIG"),
 		DatabaseUrl:    mustGetEnv("DATABASE_URL"),
 		RedisUrl:       mustGetEnv("REDISCLOUD_URL"),
+		Timezone:       timezone,
 		Stripe: Stripe{
 			SecretKey:     mustGetEnv("STRIPE_SECRET_KEY"),
 			WebhookSecret: mustGetEnv("STRIPE_WEBHOOK_SIGNATURE"),

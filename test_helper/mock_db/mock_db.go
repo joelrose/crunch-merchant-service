@@ -6,6 +6,7 @@ package mock_db
 
 import (
 	reflect "reflect"
+	time "time"
 
 	gomock "github.com/golang/mock/gomock"
 	uuid "github.com/google/uuid"
@@ -239,18 +240,18 @@ func (mr *MockDBInterfaceMockRecorder) GetAllUsers() *gomock.Call {
 }
 
 // GetAvailableStore mocks base method.
-func (m *MockDBInterface) GetAvailableStore(storeId uuid.UUID) (models.Store, error) {
+func (m *MockDBInterface) GetAvailableStore(storeId uuid.UUID, weekday time.Weekday, timestamp int) (models.Store, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAvailableStore", storeId)
+	ret := m.ctrl.Call(m, "GetAvailableStore", storeId, weekday, timestamp)
 	ret0, _ := ret[0].(models.Store)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetAvailableStore indicates an expected call of GetAvailableStore.
-func (mr *MockDBInterfaceMockRecorder) GetAvailableStore(storeId interface{}) *gomock.Call {
+func (mr *MockDBInterfaceMockRecorder) GetAvailableStore(storeId, weekday, timestamp interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAvailableStore", reflect.TypeOf((*MockDBInterface)(nil).GetAvailableStore), storeId)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAvailableStore", reflect.TypeOf((*MockDBInterface)(nil).GetAvailableStore), storeId, weekday, timestamp)
 }
 
 // GetCategories mocks base method.

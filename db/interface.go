@@ -1,6 +1,8 @@
 package db
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/joelrose/crunch-merchant-service/models"
 	"github.com/joelrose/crunch-merchant-service/models/dtos"
@@ -54,7 +56,7 @@ type DBInterface interface {
 	GetStoreById(storeId uuid.UUID) (models.Store, error)
 	GetStoreByMerchantUserId(merchantUserId string) (uuid.UUID, error)
 	GetOpenStore(storeId uuid.UUID) (models.Store, error)
-	GetAvailableStore(storeId uuid.UUID) (models.Store, error)
+	GetAvailableStore(storeId uuid.UUID, weekday time.Weekday, timestamp int) (models.Store, error)
 	GetOpenStores() ([]dtos.GetStoresOverviewResponse, error)
 	SetIsOpen(storeId uuid.UUID, isOpen bool) error
 	SetStoreImageUrl(storeId uuid.UUID, imageUrl string) error
