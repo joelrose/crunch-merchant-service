@@ -25,14 +25,10 @@ func (db *DB) CreateOrder(order models.CreateOrder) (uuid.UUID, error) {
 }
 
 func (database *DB) GetOrderByStripeOrderId(stripeOrderId string) (models.Order, error) {
-	order := models.Order{}
+	var order models.Order
 	err := database.Sqlx.Get(&order, "SELECT * FROM orders WHERE stripe_order_id = $1", stripeOrderId)
 
-	if err != nil {
-		return models.Order{}, err
-	}
-
-	return order, nil
+	return order, err
 }
 
 func (database *DB) GetOrdersByUserId(userId uuid.UUID) ([]dtos.GetOrdersResponse, error) {
@@ -43,14 +39,10 @@ func (database *DB) GetOrdersByUserId(userId uuid.UUID) ([]dtos.GetOrdersRespons
 		WHERE user_id = $1 AND is_paid = true
 		ORDER BY created_at DESC`
 
-	orders := []dtos.GetOrdersResponse{}
+	var orders []dtos.GetOrdersResponse
 	err := database.Sqlx.Select(&orders, query, userId)
 
-	if err != nil {
-		return nil, err
-	}
-
-	return orders, nil
+	return orders, err
 }
 
 func (database *DB) GetOrdersByStoreId(storeId uuid.UUID) ([]dtos.GetOrdersResponse, error) {
@@ -61,25 +53,17 @@ func (database *DB) GetOrdersByStoreId(storeId uuid.UUID) ([]dtos.GetOrdersRespo
 		WHERE store_id = $1
 		ORDER BY created_at DESC`
 
-	orders := []dtos.GetOrdersResponse{}
+	var orders []dtos.GetOrdersResponse
 	err := database.Sqlx.Select(&orders, query, storeId)
 
-	if err != nil {
-		return nil, err
-	}
-
-	return orders, nil
+	return orders, err
 }
 
 func (database *DB) GetOrderById(orderId uuid.UUID) (models.Order, error) {
-	order := models.Order{}
+	var order models.Order
 	err := database.Sqlx.Get(&order, "SELECT * FROM orders WHERE id = $1", orderId)
 
-	if err != nil {
-		return models.Order{}, err
-	}
-
-	return order, nil
+	return order, err
 }
 
 func (db *DB) UpdateOrderStatus(orderId uuid.UUID, orderStatus models.OrderStatus) error {
@@ -88,18 +72,11 @@ func (db *DB) UpdateOrderStatus(orderId uuid.UUID, orderStatus models.OrderStatu
 		int(orderStatus), orderId,
 	)
 
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return err
 }
 
 func (database *DB) MarkOrderAsPaid(orderId uuid.UUID) error {
 	_, err := database.Sqlx.Exec("UPDATE orders SET is_paid=true WHERE id = $1", orderId)
-	if err != nil {
-		return err
-	}
 
-	return nil
+	return err
 }

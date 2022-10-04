@@ -2,20 +2,21 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"os"
 	"time"
 
-	_ "github.com/golang-migrate/migrate/v4/source/file"
-	_ "github.com/honeycombio/honeycomb-opentelemetry-go"
+	"github.com/go-playground/validator/v10"
 	"github.com/joelrose/crunch-merchant-service/config"
 	"github.com/joelrose/crunch-merchant-service/db"
 	"github.com/joelrose/crunch-merchant-service/middleware"
 	"github.com/joelrose/crunch-merchant-service/routes"
 	"github.com/joelrose/crunch-merchant-service/services/deliverect"
 	"github.com/joelrose/crunch-merchant-service/services/http_client"
-	red "github.com/joelrose/crunch-merchant-service/services/redis"
+	redisService "github.com/joelrose/crunch-merchant-service/services/redis"
 	"github.com/joelrose/crunch-merchant-service/services/tracing"
+	"github.com/joelrose/crunch-merchant-service/utils"
 	"github.com/labstack/echo/v4"
 	defaultMiddleware "github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
@@ -25,26 +26,18 @@ import (
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
 
-// @title           Crunch Backend API
-// @version         1.0
-// @description     This is the Crunch Backend API
-// @BasePath  /api/v1
-// @host localhost:8080
-// @securityDefinitions.apikey FirebaseToken
-// @in header
-// @name Authorization
-// @securityDefinitions.apikey Auth0Token
-// @in header
-// @name Authorization
-func main() {
+func run() error {
 	log.SetLevel(log.DEBUG)
 
-	c := config.LoadConfig()
+	c, err := config.LoadConfig()
+	if err != nil {
+		return fmt.Errorf("failed to load config: %v", err)
+	}
 
 	ctx := context.Background()
 	otelShutdown, err := tracing.InstallExportPipeline(ctx)
 	if err != nil {
-		log.Fatalf("error setting up OTel SDK - %e", err)
+		return fmt.Errorf("error setting up OTel SDK - %e", err)
 	}
 	defer func() {
 		if err := otelShutdown(ctx); err != nil {
@@ -58,19 +51,23 @@ func main() {
 		Transport: otelhttp.NewTransport(http.DefaultTransport),
 	})
 
-	database := db.NewDatabase(c.DatabaseUrl)
-	redis := red.NewClient(c.RedisUrl)
+	database, err := db.NewDatabase(c.DatabaseUrl)
+	if err != nil {
+		return fmt.Errorf("failed to connect to database: %v", err)
+	}
+
+	redis := redisService.NewClient(c.RedisUrl)
 	httpClient := http_client.NewClient()
 	deliverect := deliverect.NewDeliverectService(c, redis, httpClient)
 
 	e := echo.New()
 
 	e.Use(otelecho.Middleware("crunch-backend-service"))
+	e.Use(defaultMiddleware.RequestID())
 	e.Use(defaultMiddleware.Logger())
 	e.Use(middleware.ConfigContext(&c))
 	e.Use(middleware.DatabaseContext(&db.DB{Sqlx: *database}))
 	e.Use(middleware.RedisContext(redis))
-	// TODO: restrict echo contextutal inforamtion to route level
 	e.Use(middleware.DeliverectServiceContext(deliverect))
 
 	routes.SetupRoutes(e, c)
@@ -80,5 +77,22 @@ func main() {
 		port = "8080"
 	}
 
-	e.Logger.Fatal(e.Start(":" + port))
+	return e.Start(":" + port)
+}
+
+// @title           Crunch Backend API
+// @version         1.0
+// @description     This is the Crunch Backend API
+// @BasePath  /api/v1
+// @host localhost:8080
+// @securityDefinitions.apikey FirebaseToken
+// @in header
+// @name Authorization
+// @securityDefinitions.apikey Auth0Token
+// @in header
+// @name Authorization
+func main() {
+	if err := run(); err != nil {
+		log.Fatal(err)
+	}
 }

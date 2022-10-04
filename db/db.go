@@ -3,7 +3,6 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	"log"
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
@@ -16,24 +15,22 @@ type DB struct {
 	Sqlx sqlx.DB
 }
 
-func connect(databaseUrl string) *sqlx.DB {
+func connect(databaseUrl string) (*sqlx.DB, error) {
 	database, err := sqlx.Connect("postgres", databaseUrl)
-
 	if err != nil {
-		log.Fatalf("failed to connect to database: %v", err)
+		return nil, fmt.Errorf("failed to connect to database: %v", err)
 	}
 
 	err = database.Ping()
 	if err != nil {
-		log.Fatalf("failed to ping database: %v", err)
+		return nil, fmt.Errorf("failed to ping database: %v", err)
 	}
 
-	return database
+	return database, nil
 }
 
 func runMigrations(db *sql.DB) error {
 	driver, err := postgres.WithInstance(db, &postgres.Config{})
-
 	if err != nil {
 		return fmt.Errorf("create postgres driver instance: %v", err)
 	}
@@ -43,13 +40,11 @@ func runMigrations(db *sql.DB) error {
 		"postgres",
 		driver,
 	)
-
 	if err != nil {
 		return fmt.Errorf("create new migrate with db instance: %v", err)
 	}
 
 	err = m.Up()
-
 	if err != nil && err != migrate.ErrNoChange {
 		return fmt.Errorf("running the migration: %v", err)
 	}
@@ -57,14 +52,16 @@ func runMigrations(db *sql.DB) error {
 	return nil
 }
 
-func NewDatabase(databaseUrl string) *sqlx.DB {
-	db := connect(databaseUrl)
-
-	err := runMigrations(db.DB)
-
+func NewDatabase(databaseUrl string) (*sqlx.DB, error) {
+	db, err := connect(databaseUrl)
 	if err != nil {
-		log.Fatalf("migrations: %v", err)
+		return nil, err
 	}
 
-	return db
+	err = runMigrations(db.DB)
+	if err != nil {
+		return nil, err
+	}
+
+	return db, nil
 }

@@ -67,18 +67,17 @@ func (auth0 *Auth0) Middleware() echo.MiddlewareFunc {
 				validator.WithAllowedClockSkew(time.Minute),
 			)
 			if err != nil {
-				log.Fatalf("Failed to set up the jwt validator")
+				log.Errorf("Failed to set up the jwt validator")
 				return echo.NewHTTPError(http.StatusUnauthorized, "Failed to set up the jwt validator")
 			}
 
 			user, err := jwtValidator.ValidateToken(context.Background(), authHeader[1])
 			if err != nil {
-				log.Fatalf("Failed to validate the token: %v", err)
+				log.Infof("Failed to validate the token: %v", err)
 				return echo.NewHTTPError(http.StatusUnauthorized, "Failed to validate the token")
 			}
 
 			claims := user.(*validator.ValidatedClaims)
-
 			c.Set(AUTH0_USER_ID_CONTEXT_KEY, claims.RegisteredClaims.Subject)
 
 			return next(c)

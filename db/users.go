@@ -7,37 +7,24 @@ import (
 )
 
 func (database *DB) GetAllUsers() ([]models.User, error) {
-	users := []models.User{}
-
+	var users []models.User
 	err := database.Sqlx.Select(&users, "SELECT * FROM users")
 
-	if err != nil {
-		return nil, err
-	}
-
-	return users, nil
+	return users, err
 }
 
 func (database *DB) GetUserByFirebaseId(firebaseId string) (models.User, error) {
-	user := models.User{}
+	var user models.User
 	err := database.Sqlx.Get(&user, "SELECT * FROM users WHERE firebase_id = $1", firebaseId)
 
-	if err != nil {
-		return models.User{}, err
-	}
-
-	return user, nil
+	return user, err
 }
 
 func (database *DB) GetUserByUserId(userId uuid.UUID) (models.User, error) {
-	user := models.User{}
+	var user models.User
 	err := database.Sqlx.Get(&user, "SELECT * FROM users WHERE id = $1", userId)
 
-	if err != nil {
-		return models.User{}, err
-	}
-
-	return user, nil
+	return user, err
 }
 
 func (database *DB) CreateUser(firebaseId string, user dtos.CreateUserRequest) error {

@@ -23,7 +23,7 @@ func (d DeliverectService) getCachedMachineToMachineToken() (*string, error) {
 		return d.getMachineToMachineToken()
 	}
 
-	token := CreateMachineMachineTokenResponse{}
+	var token CreateMachineMachineTokenResponse
 	err = json.Unmarshal([]byte(tokenJson), &token)
 	if err != nil {
 		log.Errorf("failed to unmarshal token body: %v", err)
@@ -60,7 +60,7 @@ func (d DeliverectService) getMachineToMachineToken() (*string, error) {
 		return nil, err
 	}
 
-	token := CreateMachineMachineTokenResponse{}
+	var token CreateMachineMachineTokenResponse
 	err = json.Unmarshal(body, &token)
 	if err != nil {
 		log.Errorf("failed to unmarshal response body: %v", err)

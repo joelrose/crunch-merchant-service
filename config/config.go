@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"time"
 
@@ -45,17 +46,15 @@ func mustGetEnv(env string) string {
 	return val
 }
 
-func LoadConfig() Config {
-	// load .env file
+func LoadConfig() (Config, error) {
 	err := godotenv.Load(".env")
-
 	if err != nil {
 		log.Debugf("Could not load .env file")
 	}
 
 	timezone, err := time.LoadLocation("Europe/Berlin")
 	if err != nil {
-		log.Fatalf("failed to load timezone: %v", err)
+		return Config{}, fmt.Errorf("failed to load timezone: %v", err)
 	}
 
 	config := Config{
@@ -79,5 +78,5 @@ func LoadConfig() Config {
 		},
 	}
 
-	return config
+	return config, nil
 }

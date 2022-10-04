@@ -20,7 +20,7 @@ func convertToString(uuidArray []uuid.UUID) []string {
 }
 
 func SnoozeUnsnooze(c echo.Context) error {
-	request := dtos.SnoozeUnsnzoozeRequestDto{}
+	var request dtos.SnoozeUnsnzoozeRequestDto
 	err := c.Bind(&request)
 	if err != nil {
 		log.Errorf("failed to bind request: %v", err)

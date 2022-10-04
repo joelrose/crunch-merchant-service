@@ -22,9 +22,7 @@ func convertToEnum(status string) dtos.ChannelStatus {
 }
 
 func ChannelStatus(c echo.Context) error {
-	// Bind request body
-	channelStatusRequest := dtos.ChannelStatusRequest{}
-
+	var channelStatusRequest dtos.ChannelStatusRequest
 	err := c.Bind(&channelStatusRequest)
 	if err != nil {
 		log.Errorf("failed to bind request body: %v", err)

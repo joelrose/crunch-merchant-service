@@ -37,11 +37,8 @@ func (db *DB) CreateOrderItemWithParent(orderItem models.CreateOrderItem) (uuid.
 }
 
 func (database *DB) GetOrderItems(orderId uuid.UUID) ([]models.OrderItem, error) {
-	orderItems := []models.OrderItem{}
+	var orderItems []models.OrderItem
 	err := database.Sqlx.Select(&orderItems, "SELECT * FROM order_items WHERE order_id = $1", orderId)
-	if err != nil {
-		return nil, err
-	}
 
-	return orderItems, nil
+	return orderItems, err
 }
