@@ -38,6 +38,10 @@ func CreateUser(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "user model is invalid")
 	}
 
+	if err = c.Validate(userRequest); err != nil {
+		return err
+	}
+
 	err = db.CreateUser(token.UID, userRequest)
 	if err != nil {
 		log.Errorf("failed to create user: %v", err)

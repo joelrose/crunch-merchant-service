@@ -6,13 +6,14 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/joelrose/crunch-merchant-service/models/dtos"
 	"github.com/joelrose/crunch-merchant-service/test_helper"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestIsWhitelistedFound(t *testing.T) {
 	id := "found"
-	request := WhitelistRequest{
+	request := dtos.WhitelistRequest{
 		Id: id,
 	}
 
@@ -32,7 +33,7 @@ func TestIsWhitelistedFound(t *testing.T) {
 
 func TestIsWhitelistedNotFound(t *testing.T) {
 	id := "not_found"
-	request := WhitelistRequest{
+	request := dtos.WhitelistRequest{
 		Id: id,
 	}
 

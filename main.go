@@ -61,6 +61,7 @@ func run() error {
 	deliverect := deliverect.NewDeliverectService(c, redis, httpClient)
 
 	e := echo.New()
+	e.Validator = &utils.CustomValidator{Validator: validator.New()}
 
 	e.Use(otelecho.Middleware("crunch-backend-service"))
 	e.Use(defaultMiddleware.RequestID())
