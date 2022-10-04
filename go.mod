@@ -18,17 +18,17 @@ require (
 	github.com/labstack/gommon v0.3.1
 	github.com/lib/pq v1.10.7
 	github.com/stretchr/testify v1.8.0
-	github.com/stripe/stripe-go/v73 v73.10.0
+	github.com/stripe/stripe-go/v73 v73.11.0
 	github.com/swaggo/echo-swagger v1.3.4
-	github.com/swaggo/swag v1.8.5
-	go.opentelemetry.io/contrib/instrumentation/github.com/labstack/echo/otelecho v0.36.0
-	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.36.0
+	github.com/swaggo/swag v1.8.6
+	go.opentelemetry.io/contrib/instrumentation/github.com/labstack/echo/otelecho v0.36.1
+	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.36.1
 	go.opentelemetry.io/otel v1.10.0
-	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.9.0
-	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp v1.9.0
-	go.opentelemetry.io/otel/sdk v1.9.0
-	golang.org/x/exp v0.0.0-20220909182711-5c715a9e8561
-	google.golang.org/api v0.95.0
+	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.10.0
+	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp v1.10.0
+	go.opentelemetry.io/otel/sdk v1.10.0
+	golang.org/x/exp v0.0.0-20221002003631-540bb7301a08
+	google.golang.org/api v0.98.0
 )
 
 require (
@@ -73,10 +73,10 @@ require (
 	github.com/valyala/fasttemplate v1.2.1 // indirect
 	github.com/yuin/gopher-lua v0.0.0-20210529063254-f4c35e4016d9 // indirect
 	go.opencensus.io v0.23.0 // indirect
-	go.opentelemetry.io/otel/exporters/otlp/internal/retry v1.9.0 // indirect
-	go.opentelemetry.io/otel/metric v0.32.0 // indirect
+	go.opentelemetry.io/otel/exporters/otlp/internal/retry v1.10.0 // indirect
+	go.opentelemetry.io/otel/metric v0.32.1 // indirect
 	go.opentelemetry.io/otel/trace v1.10.0 // indirect
-	go.opentelemetry.io/proto/otlp v0.18.0 // indirect
+	go.opentelemetry.io/proto/otlp v0.19.0 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
 	golang.org/x/crypto v0.0.0-20220829220503-c86fa9a7ed90 // indirect
 	golang.org/x/net v0.0.0-20220909164309-bea034e7d591 // indirect
