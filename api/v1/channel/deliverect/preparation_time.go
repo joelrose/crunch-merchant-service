@@ -9,7 +9,7 @@ import (
 )
 
 func PreparationTime(c echo.Context) error {
-	request := dtos.PreparationTimeRequestDto{}
+	var request dtos.PreparationTimeRequestDto
 	err := c.Bind(&request)
 	if err != nil {
 		log.Errorf("failed to bind request: %v", err)

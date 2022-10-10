@@ -41,7 +41,7 @@ func (s *MenuService) build() (*MenuRedisModel, error) {
 		return nil, err
 	}
 
-	productMap := map[uuid.UUID]dtos.GetStoreProduct{}
+	productMap := make(map[uuid.UUID]dtos.GetStoreProduct, len(products))
 	for _, product := range products {
 		productMap[product.Id] = product
 	}
@@ -54,7 +54,7 @@ func (s *MenuService) build() (*MenuRedisModel, error) {
 			return nil, err
 		}
 
-		children := []dtos.GetStoreProduct{}
+		var children []dtos.GetStoreProduct
 		for _, childrenProductId := range childrenProductIds {
 			children = append(children, s.getChildrenRecursive(productMap, childrenProductId))
 		}

@@ -3,6 +3,7 @@ package stores
 import (
 	"net/http"
 
+	"github.com/joelrose/crunch-merchant-service/config"
 	"github.com/joelrose/crunch-merchant-service/db"
 	"github.com/joelrose/crunch-merchant-service/middleware"
 	"github.com/joelrose/crunch-merchant-service/utils"
@@ -21,6 +22,7 @@ import (
 // @Router       /stores [get]
 func GetStoresOverview(c echo.Context) error {
 	db := c.Get(middleware.DATABASE_CONTEXT_KEY).(db.DBInterface)
+	config := c.Get(middleware.CONFIG_CONTEXT_KEY).(config.Config)
 
 	stores, err := db.GetOpenStores()
 	if err != nil {
@@ -28,7 +30,7 @@ func GetStoresOverview(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusNotFound)
 	}
 
-	day, time := utils.GetDayAndTimestamp()
+	day, time := utils.GetDayAndTimestamp(config.Timezone)
 	for ind, store := range stores {
 		openingHours, err := db.GetOpeningHours(store.Id)
 		if err != nil {

@@ -7,25 +7,17 @@ import (
 )
 
 func (db *DB) GetChannelByStoreId(storeId uuid.UUID) (models.DeliverectChannel, error) {
-	channel := models.DeliverectChannel{}
+	var channel models.DeliverectChannel
 	err := db.Sqlx.Get(&channel, "SELECT * FROM deliverect_channels WHERE store_id = $1", storeId)
-
-	if err != nil {
-		return models.DeliverectChannel{}, err
-	}
-
-	return channel, nil
+	
+	return channel, err
 }
 
 func (db *DB) GetChannelByDeliverectLinkId(deliverectLinkId string) (models.DeliverectChannel, error) {
-	channel := models.DeliverectChannel{}
+	var channel models.DeliverectChannel
 	err := db.Sqlx.Get(&channel, "SELECT * FROM deliverect_channels WHERE deliverect_link_id = $1", deliverectLinkId)
 
-	if err != nil {
-		return models.DeliverectChannel{}, err
-	}
-
-	return channel, nil
+	return channel, err
 }
 
 func (db *DB) CreateChannel(storeId uuid.UUID, locationId string, deliverectChannelLinkId string, status dtos.ChannelStatus) error {
@@ -34,10 +26,7 @@ func (db *DB) CreateChannel(storeId uuid.UUID, locationId string, deliverectChan
 		storeId, locationId, deliverectChannelLinkId, status,
 	)
 
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
 func (db *DB) UpdateChannelStatus(status dtos.ChannelStatus, storeId uuid.UUID) error {
@@ -46,9 +35,5 @@ func (db *DB) UpdateChannelStatus(status dtos.ChannelStatus, storeId uuid.UUID) 
 		status, storeId,
 	)
 
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return err
 }

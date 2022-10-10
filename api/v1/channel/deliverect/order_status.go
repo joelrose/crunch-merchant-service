@@ -11,7 +11,7 @@ import (
 )
 
 func OrderStatus(c echo.Context) error {
-	request := dtos.UpdateOrderStatusRequest{}
+	var request dtos.UpdateOrderStatusRequest
 	err := c.Bind(&request)
 	if err != nil {
 		log.Errorf("failed to bind request: %v", err)

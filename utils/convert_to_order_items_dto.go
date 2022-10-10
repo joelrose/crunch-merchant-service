@@ -31,7 +31,7 @@ func convertHelper(parentMap map[uuid.UUID][]models.OrderItem, orderItems []mode
 }
 
 func ConvertOrderItemsToDto(orderItems []models.OrderItem) []dtos.OrderItem {
-	parentIdMap := make(map[uuid.UUID][]models.OrderItem)
+	parentIdMap := make(map[uuid.UUID][]models.OrderItem, len(orderItems))
 	for ind, orderItem := range orderItems {
 		if orderItem.ParentId.Valid {
 			parentIdMap[orderItem.ParentId.UUID] = append(parentIdMap[orderItem.ParentId.UUID], orderItems[ind])

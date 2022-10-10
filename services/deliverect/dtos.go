@@ -1,6 +1,8 @@
 package deliverect
 
-import "github.com/joelrose/crunch-merchant-service/models/dtos"
+import (
+	"github.com/joelrose/crunch-merchant-service/models/dtos"
+)
 
 type CreateMachineMachineTokenRequest struct {
 	CliendId     string `json:"client_id"`
@@ -34,4 +36,6 @@ type CreateOrderRequest struct {
 	OrderType             OrderType        `json:"orderType"`
 	OrderIsAlreadyPaid    bool             `json:"orderIsAlreadyPaid"`
 	DecimalDigits         int              `json:"decimalDigits"`
+	PickupTime            string           `json:"pickupTime"`
+	EstimatedPickupTime   string           `json:"estimatedPickupTime"`
 }

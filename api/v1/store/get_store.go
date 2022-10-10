@@ -25,23 +25,23 @@ import (
 // @Failure      500  {object}  error
 // @Router       /store/{id} [get]
 func GetStore(c echo.Context) error {
-	db := c.Get(middleware.DATABASE_CONTEXT_KEY).(db.DBInterface)
-
-	r := dtos.GetStoreRequest{}
-	err := c.Bind(&r)
+	var request dtos.GetStoreRequest
+	err := c.Bind(&request)
 	if err != nil {
 		log.Debugf("failed to bind request body: %v", err)
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
 
-	store, err := db.GetOpenStore(r.StoreId)
+	db := c.Get(middleware.DATABASE_CONTEXT_KEY).(db.DBInterface)
+
+	store, err := db.GetOpenStore(request.StoreId)
 	if err != nil {
 		log.Debugf("failed to get store: %v", err)
 		return echo.NewHTTPError(http.StatusNotFound)
 	}
 
 	rdb := c.Get(middleware.REDIS_CONTEXT_KEY).(*redis.Client)
-	menuService := menus.NewMenuService(db, rdb, r.StoreId)
+	menuService := menus.NewMenuService(db, rdb, request.StoreId)
 
 	menu, err := menuService.GetMenu()
 	if err != nil {

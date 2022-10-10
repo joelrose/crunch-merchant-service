@@ -19,6 +19,6 @@ var (
 		LanguageCode: "en",
 		Firstname:    "John",
 		Lastname:     "Doe",
-		CreatedAt:    time.Now().Add(-1 * time.Hour),
+		CreatedAt:    time.Now().UTC().Add(-1 * time.Hour),
 	}
 )

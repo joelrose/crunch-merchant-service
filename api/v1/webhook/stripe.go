@@ -77,16 +77,30 @@ func HandleStripe(c echo.Context) error {
 			return echo.NewHTTPError(http.StatusInternalServerError)
 		}
 
+		store, err := db.GetStoreById(order.StoreId)
+		if err != nil {
+			log.Errorf("failed to get store: %v", err)
+			return echo.NewHTTPError(http.StatusInternalServerError)
+		}
+
 		orderItemsDto := utils.ConvertOrderItemsToDto(orderItems)
 		amount := utils.CalculateOrderPrice(orderItemsDto)
 		orderId := order.Id.String()
+
+		time := utils.GetPickupTime(store.AveragePickupTime, config.Timezone)
+		pickupTimeString, err := time.MarshalText()
+		if err != nil {
+			log.Errorf("failed to get pickup time: %v", err)
+			return echo.NewHTTPError(http.StatusInternalServerError)
+		}
+
 		createOrderRequest := deliverect.CreateOrderRequest{
 			ChannelOrderId:        orderId,
 			ChannelOrderDisplayId: users.Firstname + "#" + orderId[len(orderId)-3:],
 			Items:                 orderItemsDto,
-			OrderType:          deliverect.PICKUP,
-			OrderIsAlreadyPaid: true,
-			DecimalDigits:      2,
+			OrderType:             deliverect.PICKUP,
+			OrderIsAlreadyPaid:    true,
+			DecimalDigits:         2,
 			Payment: deliverect.PaymentModel{
 				Amount: amount,
 				Type:   deliverect.CREDIT_CARD_ONLINE,
@@ -94,6 +108,8 @@ func HandleStripe(c echo.Context) error {
 			Customer: deliverect.CustomerModel{
 				Name: users.Firstname,
 			},
+			EstimatedPickupTime: string(pickupTimeString),
+			PickupTime:          string(pickupTimeString),
 		}
 
 		deliverectService := c.Get(middleware.DELIVERECT_SERVICE_CONTEXT_KEY).(deliverect.DeliverectInterface)

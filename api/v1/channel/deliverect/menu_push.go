@@ -2,7 +2,6 @@ package deliverect
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -19,20 +18,19 @@ import (
 )
 
 func MenuPush(c echo.Context) error {
-	// Bind request body
-	r := dtos.MenuPushRequest{}
-	err := c.Bind(&r)
+	var request dtos.MenuPushRequest
+	err := c.Bind(&request)
 	if err != nil {
 		log.Debugf("failed to bind request body: %v", err)
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
 
-	if len(r) != 1 {
+	if len(request) != 1 {
 		log.Errorf("deliverect menu push request body must have exactly one element")
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
 
-	menu := r[0]
+	menu := request[0]
 	db := c.Get(middleware.DATABASE_CONTEXT_KEY).(db.DBInterface)
 
 	channel, err := db.GetChannelByDeliverectLinkId(menu.ChannelLinkID)
@@ -51,7 +49,8 @@ func MenuPush(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
-	products := map[string]dtos.DeliverectMenuProduct{}
+	productsLength := len(menu.Products)+len(menu.ModifierGroups)+len(menu.Modifiers)+len(menu.Bundles)
+	products := make(map[string]dtos.DeliverectMenuProduct, productsLength)
 
 	maps.Copy(products, menu.Products)
 	maps.Copy(products, menu.ModifierGroups)
@@ -77,7 +76,7 @@ func MenuPush(c echo.Context) error {
 	}
 
 	// Save products
-	productIds := make(map[string]uuid.UUID)
+	productIds := make(map[string]uuid.UUID, len(products))
 	for _, product := range products {
 		productModel := models.MenuProduct{
 			Name:        product.Name,
@@ -161,7 +160,7 @@ func MenuPush(c echo.Context) error {
 	}
 
 	rdb := c.Get(middleware.REDIS_CONTEXT_KEY).(*redis.Client)
-	cmd := rdb.Del(context.Background(), fmt.Sprint(channel.StoreId))
+	cmd := rdb.Del(context.Background(), channel.StoreId.String())
 	if cmd.Err() != nil {
 		log.Errorf("failed to delete redis cache: %v", cmd)
 		return echo.NewHTTPError(http.StatusInternalServerError)

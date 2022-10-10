@@ -1,6 +1,8 @@
 package db
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/joelrose/crunch-merchant-service/models"
 	"github.com/joelrose/crunch-merchant-service/models/dtos"
@@ -25,6 +27,7 @@ type DBInterface interface {
 	DeleteProducts(storeId uuid.UUID) error
 	CreateProductRelation(childProductId uuid.UUID, parentProductId uuid.UUID) error
 	GetProducts(storeId uuid.UUID) ([]dtos.GetStoreProduct, error)
+	GetTopProducts(storeId uuid.UUID) ([]dtos.GetStoreProduct, error)
 	GetProductsByPlu(plu string, storeId uuid.UUID) ([]uuid.UUID, error)
 	GetProductChildren(parentProductId uuid.UUID) ([]uuid.UUID, error)
 	UpdateProductsSnooze(productIds []uuid.UUID, snooze bool) error
@@ -53,7 +56,7 @@ type DBInterface interface {
 	GetStoreById(storeId uuid.UUID) (models.Store, error)
 	GetStoreByMerchantUserId(merchantUserId string) (uuid.UUID, error)
 	GetOpenStore(storeId uuid.UUID) (models.Store, error)
-	GetAvailableStore(storeId uuid.UUID) (models.Store, error)
+	GetAvailableStore(storeId uuid.UUID, weekday time.Weekday, timestamp int) (models.Store, error)
 	GetOpenStores() ([]dtos.GetStoresOverviewResponse, error)
 	SetIsOpen(storeId uuid.UUID, isOpen bool) error
 	SetStoreImageUrl(storeId uuid.UUID, imageUrl string) error

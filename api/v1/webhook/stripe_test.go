@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"testing"
+	"time"
 
 	"github.com/golang/mock/gomock"
 	"github.com/google/uuid"
@@ -92,6 +93,12 @@ var (
 		Customer: deliverect.CustomerModel{
 			Name: mockUser.Firstname,
 		},
+		PickupTime:          gomock.Any().String(),
+		EstimatedPickupTime: gomock.Any().String(),
+	}
+	mockStore = models.Store{
+		Id:                mockStoreId,
+		AveragePickupTime: 5,
 	}
 )
 
@@ -121,6 +128,9 @@ func TestStripeWebhookNoHeaderSet(t *testing.T) {
 }
 
 func TestStripeWebhookSucceeds(t *testing.T) {
+	timezoneLocation, _ := time.LoadLocation("Europe/Berlin")
+	mockConfig.Timezone = timezoneLocation
+
 	chargeJSON, _ := json.Marshal(mockCharge)
 	mockRequestBody.Data.Raw = chargeJSON
 
@@ -141,12 +151,14 @@ func TestStripeWebhookSucceeds(t *testing.T) {
 
 	mockDB.EXPECT().GetUserByUserId(mockOrder.UserId).Return(mockUser, nil)
 
+	mockDB.EXPECT().GetStoreById(mockOrder.StoreId).Return(mockStore, nil)
+
 	ctrl := gomock.NewController(t)
 	mockDeliverect := mock_deliverect.NewMockDeliverectInterface(ctrl)
 
 	c.Set(middleware.DELIVERECT_SERVICE_CONTEXT_KEY, mockDeliverect)
 
-	mockDeliverect.EXPECT().CreateOrder(mockDeliverectObject, mockChannel.DeliverectLinkId).Return(nil)
+	mockDeliverect.EXPECT().CreateOrder(gomock.Any(), mockChannel.DeliverectLinkId).Return(nil)
 
 	err := HandleStripe(c)
 	if assert.Nil(t, err) {

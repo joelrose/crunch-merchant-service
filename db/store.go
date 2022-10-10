@@ -1,46 +1,35 @@
 package db
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/joelrose/crunch-merchant-service/models"
 	"github.com/joelrose/crunch-merchant-service/models/dtos"
-	"github.com/joelrose/crunch-merchant-service/utils"
 )
 
 func (db *DB) GetStoreById(storeId uuid.UUID) (models.Store, error) {
-	store := models.Store{}
+	var store models.Store
 	err := db.Sqlx.Get(&store, "SELECT * FROM stores WHERE id = $1", storeId)
 
-	if err != nil {
-		return models.Store{}, err
-	}
-
-	return store, nil
+	return store, err
 }
 
 func (db *DB) GetStoreByMerchantUserId(merchantUserId string) (uuid.UUID, error) {
-	storeId := uuid.UUID{}
+	var storeId uuid.UUID
 	err := db.Sqlx.Get(&storeId, "SELECT id FROM stores WHERE merchant_user_id = $1", merchantUserId)
 
-	if err != nil {
-		return uuid.UUID{}, err
-	}
-
-	return storeId, nil
+	return storeId, err
 }
 
 func (db *DB) GetOpenStore(storeId uuid.UUID) (models.Store, error) {
-	store := models.Store{}
+	var store models.Store
 	err := db.Sqlx.Get(&store, "SELECT * FROM stores WHERE id = $1 AND is_open = true", storeId)
 
-	if err != nil {
-		return models.Store{}, err
-	}
-
-	return store, nil
+	return store, err
 }
 
-func (db *DB) GetAvailableStore(storeId uuid.UUID) (models.Store, error) {
+func (db *DB) GetAvailableStore(storeId uuid.UUID, weekday time.Weekday, timestamp int) (models.Store, error) {
 	storeQuery := `
 	SELECT *
 	FROM stores s
@@ -55,16 +44,10 @@ func (db *DB) GetAvailableStore(storeId uuid.UUID) (models.Store, error) {
 			  AND o.end_timestamp >= $3
 		);`
 
-	weekday, timestamp := utils.GetDayAndTimestamp()
-
-	store := models.Store{}
+	var store models.Store
 	err := db.Sqlx.Get(&store, storeQuery, storeId, weekday, timestamp)
 
-	if err != nil {
-		return models.Store{}, err
-	}
-
-	return store, nil
+	return store, err
 }
 
 func (db *DB) GetOpenStores() ([]dtos.GetStoresOverviewResponse, error) {
@@ -73,14 +56,10 @@ func (db *DB) GetOpenStores() ([]dtos.GetStoresOverviewResponse, error) {
 	FROM stores
 	WHERE is_open = true`
 
-	stores := []dtos.GetStoresOverviewResponse{}
+	var stores []dtos.GetStoresOverviewResponse
 	err := db.Sqlx.Select(&stores, storesQuery)
 
-	if err != nil {
-		return []dtos.GetStoresOverviewResponse{}, err
-	}
-
-	return stores, nil
+	return stores, err
 }
 
 func (db *DB) SetIsOpen(storeId uuid.UUID, isOpen bool) error {
@@ -89,11 +68,7 @@ func (db *DB) SetIsOpen(storeId uuid.UUID, isOpen bool) error {
 		isOpen, storeId,
 	)
 
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return err
 }
 
 func (db *DB) SetStoreImageUrl(storeId uuid.UUID, imageUrl string) error {

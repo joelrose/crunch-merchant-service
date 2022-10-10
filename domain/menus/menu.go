@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/go-redis/redis/v9"
 	"github.com/google/uuid"
@@ -19,7 +20,8 @@ func (s *MenuService) cacheMenu(menu MenuRedisModel) error {
 		return fmt.Errorf("failed to marshal menu: %v", err)
 	}
 
-	err = s.rdb.Set(ctx, s.storeId.String(), json, 0).Err()
+	// TODO: find a more profound way to handle this
+	err = s.rdb.Set(ctx, s.storeId.String(), json, 1*time.Hour).Err()
 	if err != nil {
 		return fmt.Errorf("failed to save menu to redis: %v", err)
 	}

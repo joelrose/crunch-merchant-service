@@ -3,10 +3,10 @@ package orders
 import (
 	"math"
 	"net/http"
-	"time"
 
 	"firebase.google.com/go/auth"
 	"github.com/google/uuid"
+	"github.com/joelrose/crunch-merchant-service/config"
 	"github.com/joelrose/crunch-merchant-service/db"
 	"github.com/joelrose/crunch-merchant-service/middleware"
 	"github.com/joelrose/crunch-merchant-service/models"
@@ -16,6 +16,11 @@ import (
 	"github.com/labstack/gommon/log"
 	"github.com/stripe/stripe-go/v73"
 	"github.com/stripe/stripe-go/v73/paymentintent"
+)
+
+const (
+	// https://stripe.com/docs/currencies#minimum-and-maximum-charge-amounts
+	minStripeChargeAmount = 50
 )
 
 // Order godoc
@@ -34,6 +39,7 @@ import (
 func CreateOrder(c echo.Context) error {
 	db := c.Get(middleware.DATABASE_CONTEXT_KEY).(db.DBInterface)
 	token := c.Get(middleware.FIREBASE_CONTEXT_KEY).(*auth.Token)
+	config := c.Get(middleware.CONFIG_CONTEXT_KEY).(config.Config)
 
 	user, err := db.GetUserByFirebaseId(token.UID)
 
@@ -48,8 +54,9 @@ func CreateOrder(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "order model is invalid")
 	}
 
+	weekday, timestamp := utils.GetDayAndTimestamp(config.Timezone)
 	// make this check for
-	store, err := db.GetAvailableStore(orderRequest.StoreId)
+	store, err := db.GetAvailableStore(orderRequest.StoreId, weekday, timestamp)
 	if err != nil {
 		log.Errorf("failed to retrieve store: %v", err)
 		return echo.NewHTTPError(http.StatusNotFound)
@@ -67,13 +74,19 @@ func CreateOrder(c echo.Context) error {
 	}
 
 	price := utils.CalculateOrderPrice(orderRequest.OrderItems)
+	if price < minStripeChargeAmount {
+		log.Errorf("Order amount is less than minimum charge amount: %v", user.Id)
+		return echo.NewHTTPError(http.StatusBadRequest)
+	}
+
 	fee := float32(price) * store.Fee
+	enableAutomaticPaymentMethods := true
 	params := &stripe.PaymentIntentParams{
 		Amount:               stripe.Int64(int64(price)),
 		Currency:             stripe.String(string(stripe.CurrencyEUR)),
 		ApplicationFeeAmount: stripe.Int64(int64(fee)),
-		PaymentMethodTypes: []*string{
-			stripe.String("card"),
+		AutomaticPaymentMethods: &stripe.PaymentIntentAutomaticPaymentMethodsParams{
+			Enabled: &enableAutomaticPaymentMethods,
 		},
 		TransferData: &stripe.PaymentIntentTransferDataParams{
 			Destination: stripe.String(store.StripeAccountId.String),
@@ -86,11 +99,12 @@ func CreateOrder(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
+	time := utils.GetPickupTime(store.AveragePickupTime, config.Timezone)
 	// TODO: why do we need this?
 	orderFee := math.Round(float64(store.Fee)*100) / 100
 	order := models.CreateOrder{
 		Status:              models.New,
-		EstimatedPickupTime: time.Now(),
+		EstimatedPickupTime: time,
 		Price:               price,
 		StripeOrderId:       paymentIntent.ID,
 		IsPaid:              false,
