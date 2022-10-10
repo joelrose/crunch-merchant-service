@@ -39,7 +39,7 @@ const (
 func CreateOrder(c echo.Context) error {
 	db := c.Get(middleware.DATABASE_CONTEXT_KEY).(db.DBInterface)
 	token := c.Get(middleware.FIREBASE_CONTEXT_KEY).(*auth.Token)
-	config := c.Get(middleware.CONFIG_CONTEXT_KEY).(config.Config)
+	config := c.Get(middleware.CONFIG_CONTEXT_KEY).(*config.Config)
 
 	user, err := db.GetUserByFirebaseId(token.UID)
 

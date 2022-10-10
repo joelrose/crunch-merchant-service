@@ -136,7 +136,7 @@ func TestGetStoresOverviewNotFound(t *testing.T) {
 	_, c, mockDB := test_helper.NewRequest(t, http.MethodGet, "")
 
 	timezone, _ := time.LoadLocation("Europe/Berlin")
-	c.Set(middleware.CONFIG_CONTEXT_KEY, config.Config{Timezone: timezone})
+	c.Set(middleware.CONFIG_CONTEXT_KEY, &config.Config{Timezone: timezone})
 
 	mockDB.
 		EXPECT().
@@ -159,7 +159,7 @@ func TestGetStoresOverviewFound(t *testing.T) {
 	rec, c, mockDB := test_helper.NewRequest(t, http.MethodGet, "")
 
 	timezone, _ := time.LoadLocation("Europe/Berlin")
-	c.Set(middleware.CONFIG_CONTEXT_KEY, config.Config{Timezone: timezone})
+	c.Set(middleware.CONFIG_CONTEXT_KEY, &config.Config{Timezone: timezone})
 
 	mockDB.
 		EXPECT().

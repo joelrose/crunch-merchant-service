@@ -22,7 +22,7 @@ import (
 // @Router       /stores [get]
 func GetStoresOverview(c echo.Context) error {
 	db := c.Get(middleware.DATABASE_CONTEXT_KEY).(db.DBInterface)
-	config := c.Get(middleware.CONFIG_CONTEXT_KEY).(config.Config)
+	config := c.Get(middleware.CONFIG_CONTEXT_KEY).(*config.Config)
 
 	stores, err := db.GetOpenStores()
 	if err != nil {
