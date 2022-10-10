@@ -30,6 +30,7 @@ func SetupRoutes(e *echo.Echo, config config.Config) {
 	e.GET("/", okHandler)
 
 	apiV1 := e.Group("/api/v1")
+	v1 := e.Group("/v1")
 
 	apiV1.POST("/whitelist", whitelist.IsWhitelisted)
 	apiV1.GET("/stores", stores.GetStoresOverview)
@@ -37,7 +38,7 @@ func SetupRoutes(e *echo.Echo, config config.Config) {
 
 	apiV1.POST("/webhook/stripe", webhook.HandleStripe)
 
-	channelGroup := apiV1.Group("/channel")
+	channelGroup := v1.Group("/channel")
 	deliverectGroup := channelGroup.Group("/deliverect")
 
 	deliverectGroup.POST("/channel_status", deliverect.ChannelStatus)
