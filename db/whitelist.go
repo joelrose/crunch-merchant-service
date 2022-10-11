@@ -8,5 +8,5 @@ func (db *DB) IsWhitelisted(identifier string) bool {
 	var model models.Whitelist
 	err := db.Sqlx.Get(&model, "SELECT * FROM whitelist WHERE identifier = $1", identifier)
 
-	return err != nil
+	return err == nil
 }
