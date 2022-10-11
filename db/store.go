@@ -56,7 +56,7 @@ func (db *DB) GetOpenStores() ([]dtos.GetStoresOverviewResponse, error) {
 	FROM stores
 	WHERE is_open = true`
 
-	var stores []dtos.GetStoresOverviewResponse
+	stores := []dtos.GetStoresOverviewResponse{}
 	err := db.Sqlx.Select(&stores, storesQuery)
 
 	return stores, err
