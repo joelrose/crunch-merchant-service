@@ -6,6 +6,10 @@ import (
 	"time"
 )
 
+const (
+	DeliverectTimeFormat = "2006-01-02T15:04:05Z"
+)
+
 func ConvertToTimestamp(hour int, minute int) int {
 	return (hour * 60) + minute
 }

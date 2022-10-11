@@ -87,12 +87,8 @@ func HandleStripe(c echo.Context) error {
 		amount := utils.CalculateOrderPrice(orderItemsDto)
 		orderId := order.Id.String()
 
-		time := utils.GetPickupTime(store.AveragePickupTime, config.Timezone)
-		pickupTimeString, err := time.MarshalText()
-		if err != nil {
-			log.Errorf("failed to get pickup time: %v", err)
-			return echo.NewHTTPError(http.StatusInternalServerError)
-		}
+		pickupTime := utils.GetPickupTime(store.AveragePickupTime, config.Timezone)
+		pickupTimeString := pickupTime.Format(utils.DeliverectTimeFormat)
 
 		createOrderRequest := deliverect.CreateOrderRequest{
 			ChannelOrderId:        orderId,
