@@ -39,7 +39,7 @@ func (database *DB) GetOrdersByUserId(userId uuid.UUID) ([]dtos.GetOrdersRespons
 		WHERE user_id = $1 AND is_paid = true
 		ORDER BY created_at DESC`
 
-	var orders []dtos.GetOrdersResponse
+	orders := []dtos.GetOrdersResponse{}
 	err := database.Sqlx.Select(&orders, query, userId)
 
 	return orders, err
