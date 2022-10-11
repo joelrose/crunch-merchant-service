@@ -34,7 +34,7 @@ func ChannelStatus(c echo.Context) error {
 	// [ChannelLocationId=StoreId]
 	_, err = db.GetStoreById(channelStatusRequest.ChannelLocationId)
 	if err != nil {
-		log.Errorf("failed to get store: %v", err)
+		log.Errorf("failed to get store [%v]: %v", channelStatusRequest.ChannelLocationId, err)
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
 
