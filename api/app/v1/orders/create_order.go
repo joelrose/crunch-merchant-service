@@ -1,7 +1,6 @@
 package orders
 
 import (
-	"math"
 	"net/http"
 
 	"firebase.google.com/go/auth"
@@ -100,8 +99,6 @@ func CreateOrder(c echo.Context) error {
 	}
 
 	time := utils.GetPickupTime(store.AveragePickupTime)
-	// TODO: why do we need this?
-	orderFee := math.Round(float64(store.Fee)*100) / 100
 	order := models.CreateOrder{
 		Status:              models.New,
 		EstimatedPickupTime: time,
@@ -110,7 +107,7 @@ func CreateOrder(c echo.Context) error {
 		IsPaid:              false,
 		StoreId:             orderRequest.StoreId,
 		UserId:              user.Id,
-		Fee:                 float32(orderFee),
+		Fee:                 fee,
 	}
 
 	orderDatabaseId, err := db.CreateOrder(order)
