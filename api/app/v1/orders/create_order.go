@@ -99,7 +99,7 @@ func CreateOrder(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
-	time := utils.GetPickupTime(store.AveragePickupTime, config.Timezone)
+	time := utils.GetPickupTime(store.AveragePickupTime)
 	// TODO: why do we need this?
 	orderFee := math.Round(float64(store.Fee)*100) / 100
 	order := models.CreateOrder{

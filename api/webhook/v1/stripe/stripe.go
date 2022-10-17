@@ -87,7 +87,7 @@ func WebhookHandler(c echo.Context) error {
 		amount := utils.CalculateOrderPrice(orderItemsDto)
 		orderId := order.Id.String()
 
-		pickupTime := utils.GetPickupTime(store.AveragePickupTime, config.Timezone)
+		pickupTime := utils.GetPickupTime(store.AveragePickupTime)
 		pickupTimeString := pickupTime.Format(utils.DeliverectTimeFormat)
 
 		createOrderRequest := deliverect.CreateOrderRequest{
