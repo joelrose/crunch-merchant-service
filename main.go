@@ -37,7 +37,7 @@ func run() error {
 	ctx := context.Background()
 	otelShutdown, err := tracing.InstallExportPipeline(ctx)
 	if err != nil {
-		return fmt.Errorf("error setting up OTel SDK - %e", err)
+		return fmt.Errorf("error setting up OTel SDK - %v", err)
 	}
 	defer func() {
 		if err := otelShutdown(ctx); err != nil {
@@ -84,7 +84,7 @@ func run() error {
 // @title           Crunch Backend API
 // @version         1.0
 // @description     This is the Crunch Backend API
-// @BasePath  /api/v1
+// @BasePath  /
 // @host localhost:8080
 // @securityDefinitions.apikey FirebaseToken
 // @in header
