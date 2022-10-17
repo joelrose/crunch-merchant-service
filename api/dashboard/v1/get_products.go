@@ -19,7 +19,7 @@ import (
 // @Success      200  {object}  []dtos.GetStoreProduct
 // @Success      400  {object} 	error
 // @Failure      500  {object}  error
-// @Router       /dashboard/products [get]
+// @Router       /dashboard/v1/products [get]
 func GetProducts(c echo.Context) error {
 	db := c.Get(middleware.DATABASE_CONTEXT_KEY).(db.DBInterface)
 

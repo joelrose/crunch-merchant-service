@@ -19,7 +19,7 @@ import (
 // @Security 	 FirebaseToken
 // @Success      200  {object}  []dtos.GetStoresOverviewResponse
 // @Failure      500  {object}  error
-// @Router       /stores [get]
+// @Router       /app/v1/stores [get]
 func GetStoresOverview(c echo.Context) error {
 	db := c.Get(middleware.DATABASE_CONTEXT_KEY).(db.DBInterface)
 	config := c.Get(middleware.CONFIG_CONTEXT_KEY).(*config.Config)

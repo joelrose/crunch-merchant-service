@@ -1,9 +1,8 @@
-package orders
+package dashboard
 
 import (
 	"net/http"
 
-	"firebase.google.com/go/auth"
 	"github.com/joelrose/crunch-merchant-service/db"
 	"github.com/joelrose/crunch-merchant-service/middleware"
 	"github.com/joelrose/crunch-merchant-service/utils"
@@ -12,25 +11,28 @@ import (
 )
 
 // GetOrders godoc
-// @Summary      Get all orders from a user
-// @Tags         orders
+// @Summary      Get all orders from a store
+// @Tags         dashboard
 // @Accept       json
 // @Produce      json
-// @Security 	 FirebaseToken
+// @Security 	 Auth0Token
 // @Success      200  {object}  []dtos.GetOrdersResponse
 // @Success      400  {object} 	error
 // @Failure      500  {object}  error
-// @Router       /orders [get]
+// @Router       /dashboard/v1/orders [get]
 func GetOrders(c echo.Context) error {
 	db := c.Get(middleware.DATABASE_CONTEXT_KEY).(db.DBInterface)
-	token := c.Get(middleware.FIREBASE_CONTEXT_KEY).(*auth.Token)
 
-	user, err := db.GetUserByFirebaseId(token.UID)
+	userId := c.Get(middleware.AUTH0_USER_ID_CONTEXT_KEY)
+	userIdString := userId.(string)
+
+	storeId, err := db.GetStoreByMerchantUserId(userIdString)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest)
+		log.Errorf("Failed to get store by merchant user id: %v", err)
+		return echo.NewHTTPError(http.StatusForbidden)
 	}
 
-	orders, err := db.GetOrdersByUserId(user.Id)
+	orders, err := db.GetOrdersByStoreId(storeId)
 	if err != nil {
 		log.Errorf("failed to get orders: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError)

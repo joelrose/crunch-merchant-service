@@ -21,7 +21,7 @@ import (
 // @Success      200  {object}  []menus.MenuRedisModel
 // @Success      400  {object} 	error
 // @Failure      500  {object}  error
-// @Router       /dashboard/menu [get]
+// @Router       /dashboard/v1/menu [get]
 func GetMenu(c echo.Context) error {
 	db := c.Get(middleware.DATABASE_CONTEXT_KEY).(db.DBInterface)
 

@@ -1,4 +1,4 @@
-package webhook
+package stripe
 
 import (
 	"encoding/json"
@@ -16,7 +16,7 @@ import (
 	"github.com/stripe/stripe-go/v73/webhook"
 )
 
-func HandleStripe(c echo.Context) error {
+func WebhookHandler(c echo.Context) error {
 	request := c.Request()
 	payload, err := io.ReadAll(request.Body)
 	if err != nil {
@@ -108,6 +108,8 @@ func HandleStripe(c echo.Context) error {
 			PickupTime:          string(pickupTimeString),
 		}
 
+		log.Debugf("Sending order to Deliverect: %v\n", pickupTimeString)
+
 		deliverectService := c.Get(middleware.DELIVERECT_SERVICE_CONTEXT_KEY).(deliverect.DeliverectInterface)
 		err = deliverectService.CreateOrder(createOrderRequest, channel.DeliverectLinkId)
 		if err != nil {
@@ -116,8 +118,8 @@ func HandleStripe(c echo.Context) error {
 		}
 
 		return c.NoContent(http.StatusOK)
-	} else {
-		log.Errorf("Unhandled event type: %v\n", event.Type)
-		return echo.NewHTTPError(http.StatusBadRequest)
 	}
+
+	log.Errorf("Unhandled event type: %v\n", event.Type)
+	return echo.NewHTTPError(http.StatusBadRequest)
 }

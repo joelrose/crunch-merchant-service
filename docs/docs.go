@@ -16,121 +16,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/dashboard/menu": {
-            "get": {
-                "security": [
-                    {
-                        "Auth0Token": []
-                    }
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "dashboard"
-                ],
-                "summary": "Get the menu for a store",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Menu"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {}
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {}
-                    }
-                }
-            }
-        },
-        "/dashboard/orders": {
-            "get": {
-                "security": [
-                    {
-                        "Auth0Token": []
-                    }
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "dashboard"
-                ],
-                "summary": "Get all orders from a store",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/GetOrdersResponse"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {}
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {}
-                    }
-                }
-            }
-        },
-        "/dashboard/products": {
-            "get": {
-                "security": [
-                    {
-                        "Auth0Token": []
-                    }
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "dashboard"
-                ],
-                "summary": "Get all products from a store",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/GetStoreProduct"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {}
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {}
-                    }
-                }
-            }
-        },
-        "/orders": {
+        "/app/v1/orders": {
             "get": {
                 "security": [
                     {
@@ -220,7 +106,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/store/{id}": {
+        "/app/v1/store/{id}": {
             "get": {
                 "security": [
                     {
@@ -268,7 +154,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/stores": {
+        "/app/v1/stores": {
             "get": {
                 "security": [
                     {
@@ -302,7 +188,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users": {
+        "/app/v1/users": {
             "get": {
                 "security": [
                     {
@@ -386,7 +272,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/whitelist": {
+        "/app/v1/whitelist": {
             "post": {
                 "description": "get string by ID",
                 "consumes": [
@@ -431,6 +317,120 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/dashboard/v1/menu": {
+            "get": {
+                "security": [
+                    {
+                        "Auth0Token": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "dashboard"
+                ],
+                "summary": "Get the menu for a store",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Menu"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {}
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {}
+                    }
+                }
+            }
+        },
+        "/dashboard/v1/orders": {
+            "get": {
+                "security": [
+                    {
+                        "Auth0Token": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "dashboard"
+                ],
+                "summary": "Get all orders from a store",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/GetOrdersResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {}
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {}
+                    }
+                }
+            }
+        },
+        "/dashboard/v1/products": {
+            "get": {
+                "security": [
+                    {
+                        "Auth0Token": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "dashboard"
+                ],
+                "summary": "Get all products from a store",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/GetStoreProduct"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {}
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {}
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -458,6 +458,11 @@ const docTemplate = `{
         },
         "CreateUserRequest": {
             "type": "object",
+            "required": [
+                "firstname",
+                "language_code",
+                "lastname"
+            ],
             "properties": {
                 "firstname": {
                     "type": "string"
@@ -766,6 +771,9 @@ const docTemplate = `{
         },
         "WhitelistRequest": {
             "type": "object",
+            "required": [
+                "identifier"
+            ],
             "properties": {
                 "identifier": {
                     "type": "string"
@@ -791,7 +799,7 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "localhost:8080",
-	BasePath:         "/api/v1",
+	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "Crunch Backend API",
 	Description:      "This is the Crunch Backend API",

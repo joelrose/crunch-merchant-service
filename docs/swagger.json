@@ -7,123 +7,9 @@
         "version": "1.0"
     },
     "host": "localhost:8080",
-    "basePath": "/api/v1",
+    "basePath": "/",
     "paths": {
-        "/dashboard/menu": {
-            "get": {
-                "security": [
-                    {
-                        "Auth0Token": []
-                    }
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "dashboard"
-                ],
-                "summary": "Get the menu for a store",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Menu"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {}
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {}
-                    }
-                }
-            }
-        },
-        "/dashboard/orders": {
-            "get": {
-                "security": [
-                    {
-                        "Auth0Token": []
-                    }
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "dashboard"
-                ],
-                "summary": "Get all orders from a store",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/GetOrdersResponse"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {}
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {}
-                    }
-                }
-            }
-        },
-        "/dashboard/products": {
-            "get": {
-                "security": [
-                    {
-                        "Auth0Token": []
-                    }
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "dashboard"
-                ],
-                "summary": "Get all products from a store",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/GetStoreProduct"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {}
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {}
-                    }
-                }
-            }
-        },
-        "/orders": {
+        "/app/v1/orders": {
             "get": {
                 "security": [
                     {
@@ -213,7 +99,7 @@
                 }
             }
         },
-        "/store/{id}": {
+        "/app/v1/store/{id}": {
             "get": {
                 "security": [
                     {
@@ -261,7 +147,7 @@
                 }
             }
         },
-        "/stores": {
+        "/app/v1/stores": {
             "get": {
                 "security": [
                     {
@@ -295,7 +181,7 @@
                 }
             }
         },
-        "/users": {
+        "/app/v1/users": {
             "get": {
                 "security": [
                     {
@@ -379,7 +265,7 @@
                 }
             }
         },
-        "/whitelist": {
+        "/app/v1/whitelist": {
             "post": {
                 "description": "get string by ID",
                 "consumes": [
@@ -424,6 +310,120 @@
                     }
                 }
             }
+        },
+        "/dashboard/v1/menu": {
+            "get": {
+                "security": [
+                    {
+                        "Auth0Token": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "dashboard"
+                ],
+                "summary": "Get the menu for a store",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Menu"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {}
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {}
+                    }
+                }
+            }
+        },
+        "/dashboard/v1/orders": {
+            "get": {
+                "security": [
+                    {
+                        "Auth0Token": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "dashboard"
+                ],
+                "summary": "Get all orders from a store",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/GetOrdersResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {}
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {}
+                    }
+                }
+            }
+        },
+        "/dashboard/v1/products": {
+            "get": {
+                "security": [
+                    {
+                        "Auth0Token": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "dashboard"
+                ],
+                "summary": "Get all products from a store",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/GetStoreProduct"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {}
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {}
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -451,6 +451,11 @@
         },
         "CreateUserRequest": {
             "type": "object",
+            "required": [
+                "firstname",
+                "language_code",
+                "lastname"
+            ],
             "properties": {
                 "firstname": {
                     "type": "string"
@@ -759,6 +764,9 @@
         },
         "WhitelistRequest": {
             "type": "object",
+            "required": [
+                "identifier"
+            ],
             "properties": {
                 "identifier": {
                     "type": "string"

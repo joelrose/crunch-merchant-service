@@ -1,0 +1,1 @@
+replace time.Weekday int

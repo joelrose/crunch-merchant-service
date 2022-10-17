@@ -35,7 +35,7 @@ const (
 // @Failure      401  {object}  error
 // @Failure      409  {object}  error
 // @Failure      500  {object}  error
-// @Router       /orders [post]
+// @Router       /app/v1/orders [post]
 func CreateOrder(c echo.Context) error {
 	db := c.Get(middleware.DATABASE_CONTEXT_KEY).(db.DBInterface)
 	token := c.Get(middleware.FIREBASE_CONTEXT_KEY).(*auth.Token)
