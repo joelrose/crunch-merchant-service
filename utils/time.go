@@ -15,7 +15,7 @@ func ConvertToTimestamp(hour int, minute int) int {
 }
 
 func GetPickupTime(averagePickupTime int, timezoneLocale *time.Location) time.Time {
-	return time.Now().In(timezoneLocale).Add(time.Minute * time.Duration(averagePickupTime))
+	return time.Now().UTC().In(timezoneLocale).Add(time.Minute * time.Duration(averagePickupTime))
 }
 
 func ParseDeliverectDayOfWeek(day int) time.Weekday {
@@ -45,7 +45,7 @@ func ParseTimestamp(time string) int {
 }
 
 func GetDayAndTimestamp(timezone *time.Location) (time.Weekday, int) {
-	time := time.Now().In(timezone)
+	time := time.Now().UTC().In(timezone)
 
 	timestamp := ConvertToTimestamp(time.Hour(), time.Minute())
 
