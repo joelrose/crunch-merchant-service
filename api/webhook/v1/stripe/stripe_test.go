@@ -1,4 +1,4 @@
-package webhook
+package stripe
 
 import (
 	"encoding/json"
@@ -109,7 +109,7 @@ func TestStripeWebhookWrongWebhookSecret(t *testing.T) {
 	c.Request().Header["Stripe-Signature"] = []string{stripeWebhookSecretWrong}
 	c.Set(middleware.CONFIG_CONTEXT_KEY, &mockConfig)
 
-	err := HandleStripe(c)
+	err := WebhookHandler(c)
 	if assert.NotNil(t, err) {
 		assert.Equal(t, echo.NewHTTPError(http.StatusBadRequest), err)
 	}
@@ -121,7 +121,7 @@ func TestStripeWebhookNoHeaderSet(t *testing.T) {
 
 	c.Set(middleware.CONFIG_CONTEXT_KEY, &mockConfig)
 
-	err := HandleStripe(c)
+	err := WebhookHandler(c)
 	if assert.NotNil(t, err) {
 		assert.Equal(t, echo.NewHTTPError(http.StatusBadRequest), err)
 	}
@@ -160,7 +160,7 @@ func TestStripeWebhookSucceeds(t *testing.T) {
 
 	mockDeliverect.EXPECT().CreateOrder(gomock.Any(), mockChannel.DeliverectLinkId).Return(nil)
 
-	err := HandleStripe(c)
+	err := WebhookHandler(c)
 	if assert.Nil(t, err) {
 		assert.Equal(t, http.StatusOK, rec.Code)
 	}

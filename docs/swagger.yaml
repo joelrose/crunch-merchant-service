@@ -1,4 +1,4 @@
-basePath: /api/v1
+basePath: /
 definitions:
   CreateOrderRequest:
     properties:
@@ -22,6 +22,10 @@ definitions:
         type: string
       lastname:
         type: string
+    required:
+    - firstname
+    - language_code
+    - lastname
     type: object
   GetOrdersResponse:
     properties:
@@ -220,6 +224,8 @@ definitions:
     properties:
       identifier:
         type: string
+    required:
+    - identifier
     type: object
 host: localhost:8080
 info:
@@ -228,79 +234,7 @@ info:
   title: Crunch Backend API
   version: "1.0"
 paths:
-  /dashboard/menu:
-    get:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/Menu'
-            type: array
-        "400":
-          description: Bad Request
-          schema: {}
-        "500":
-          description: Internal Server Error
-          schema: {}
-      security:
-      - Auth0Token: []
-      summary: Get the menu for a store
-      tags:
-      - dashboard
-  /dashboard/orders:
-    get:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/GetOrdersResponse'
-            type: array
-        "400":
-          description: Bad Request
-          schema: {}
-        "500":
-          description: Internal Server Error
-          schema: {}
-      security:
-      - Auth0Token: []
-      summary: Get all orders from a store
-      tags:
-      - dashboard
-  /dashboard/products:
-    get:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/GetStoreProduct'
-            type: array
-        "400":
-          description: Bad Request
-          schema: {}
-        "500":
-          description: Internal Server Error
-          schema: {}
-      security:
-      - Auth0Token: []
-      summary: Get all products from a store
-      tags:
-      - dashboard
-  /orders:
+  /app/v1/orders:
     get:
       consumes:
       - application/json
@@ -358,7 +292,7 @@ paths:
       summary: Create Order for a store
       tags:
       - orders
-  /store/{id}:
+  /app/v1/store/{id}:
     get:
       consumes:
       - application/json
@@ -389,7 +323,7 @@ paths:
       summary: Get menu for a given store
       tags:
       - store
-  /stores:
+  /app/v1/stores:
     get:
       consumes:
       - application/json
@@ -410,7 +344,7 @@ paths:
       summary: Get all open stores
       tags:
       - stores
-  /users:
+  /app/v1/users:
     get:
       consumes:
       - application/json
@@ -464,7 +398,7 @@ paths:
       summary: Create User associated with the given Firebase Token
       tags:
       - users
-  /whitelist:
+  /app/v1/whitelist:
     post:
       consumes:
       - application/json
@@ -495,6 +429,78 @@ paths:
       summary: Check if identifier is whitelisted
       tags:
       - whitelist
+  /dashboard/v1/menu:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/Menu'
+            type: array
+        "400":
+          description: Bad Request
+          schema: {}
+        "500":
+          description: Internal Server Error
+          schema: {}
+      security:
+      - Auth0Token: []
+      summary: Get the menu for a store
+      tags:
+      - dashboard
+  /dashboard/v1/orders:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/GetOrdersResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema: {}
+        "500":
+          description: Internal Server Error
+          schema: {}
+      security:
+      - Auth0Token: []
+      summary: Get all orders from a store
+      tags:
+      - dashboard
+  /dashboard/v1/products:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/GetStoreProduct'
+            type: array
+        "400":
+          description: Bad Request
+          schema: {}
+        "500":
+          description: Internal Server Error
+          schema: {}
+      security:
+      - Auth0Token: []
+      summary: Get all products from a store
+      tags:
+      - dashboard
 securityDefinitions:
   Auth0Token:
     in: header

@@ -3,14 +3,14 @@ package routes
 import (
 	"net/http"
 
-	"github.com/joelrose/crunch-merchant-service/api/v1/channel/deliverect"
-	"github.com/joelrose/crunch-merchant-service/api/v1/dashboard"
-	"github.com/joelrose/crunch-merchant-service/api/v1/orders"
-	"github.com/joelrose/crunch-merchant-service/api/v1/store"
-	"github.com/joelrose/crunch-merchant-service/api/v1/stores"
-	"github.com/joelrose/crunch-merchant-service/api/v1/users"
-	"github.com/joelrose/crunch-merchant-service/api/v1/webhook"
-	"github.com/joelrose/crunch-merchant-service/api/v1/whitelist"
+	"github.com/joelrose/crunch-merchant-service/api/app/v1/orders"
+	"github.com/joelrose/crunch-merchant-service/api/app/v1/store"
+	"github.com/joelrose/crunch-merchant-service/api/app/v1/stores"
+	"github.com/joelrose/crunch-merchant-service/api/app/v1/users"
+	"github.com/joelrose/crunch-merchant-service/api/app/v1/whitelist"
+	"github.com/joelrose/crunch-merchant-service/api/channel/v1/deliverect"
+	"github.com/joelrose/crunch-merchant-service/api/dashboard/v1"
+	"github.com/joelrose/crunch-merchant-service/api/webhook/v1/stripe"
 	"github.com/joelrose/crunch-merchant-service/config"
 	_ "github.com/joelrose/crunch-merchant-service/docs"
 	"github.com/joelrose/crunch-merchant-service/middleware"
@@ -20,26 +20,34 @@ import (
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
-func SetupRoutes(e *echo.Echo, config config.Config) {
-	okHandler := func(c echo.Context) error {
+var (
+	okHandler = func(c echo.Context) error {
 		return c.String(http.StatusOK, "ok")
 	}
+)
 
-	e.GET("/swagger/*", echoSwagger.WrapHandler)
+func setupAppRoutes(e *echo.Echo, config config.Config) {
+	appV1 := e.Group("/app/v1")
 
-	e.GET("/", okHandler)
+	appV1.Use(middleware.AppVersion(config.AllowedAppBuilds))
 
-	apiV1 := e.Group("/api/v1")
-	v1 := e.Group("/v1")
+	appV1.POST("/whitelist", whitelist.IsWhitelisted)
+	appV1.GET("/stores", stores.GetStoresOverview)
+	appV1.GET("/store/:id", store.GetStore)
 
-	apiV1.POST("/whitelist", whitelist.IsWhitelisted)
-	apiV1.GET("/stores", stores.GetStoresOverview)
-	apiV1.GET("/store/:id", store.GetStore)
+	usersGroup := appV1.Group("/users", middleware.FirebaseAuth(config.FirebaseConfig))
+	usersGroup.GET("", users.GetUser)
+	usersGroup.POST("", users.CreateUser)
 
-	apiV1.POST("/webhook/stripe", webhook.HandleStripe)
+	ordersGroup := appV1.Group("/orders", middleware.FirebaseAuth(config.FirebaseConfig))
+	ordersGroup.POST("", orders.CreateOrder)
+	ordersGroup.GET("", orders.GetOrders)
+}
 
-	channelGroup := v1.Group("/channel")
-	deliverectGroup := channelGroup.Group("/deliverect")
+func setupIntegrationRoutes(e *echo.Echo, config config.Config) {
+	e.POST("/webhook/v1/stripe", stripe.WebhookHandler)
+
+	deliverectGroup := e.Group("/v1/channel/deliverect")
 
 	deliverectGroup.POST("/channel_status", deliverect.ChannelStatus)
 	deliverectGroup.POST("/menu_push", deliverect.MenuPush)
@@ -47,8 +55,10 @@ func SetupRoutes(e *echo.Echo, config config.Config) {
 	deliverectGroup.POST("/busy_mode", deliverect.BusyMode)
 	deliverectGroup.POST("/prep_time", deliverect.PreparationTime)
 	deliverectGroup.POST("/order_status", deliverect.OrderStatus)
+}
 
-	dashboardGroup := apiV1.Group("/dashboard")
+func setupDashboardRoutes(e *echo.Echo, config config.Config) {
+	dashboardGroup := e.Group("/dashboard/v1/")
 
 	// TODO: only allow specific origins and methods
 	dashboardGroup.Use(defaultMiddleware.CORSWithConfig(defaultMiddleware.CORSConfig{
@@ -61,20 +71,16 @@ func SetupRoutes(e *echo.Echo, config config.Config) {
 
 	dashboardGroup.Use(validator.Middleware())
 
-	dashboardGroup.GET("/status", okHandler)
 	dashboardGroup.GET("/orders", dashboard.GetOrders)
 	dashboardGroup.GET("/menu", dashboard.GetMenu)
 	dashboardGroup.GET("/products", dashboard.GetProducts)
+}
 
-	usersGroup := apiV1.Group("/users", middleware.FirebaseAuth(config.FirebaseConfig))
+func SetupRoutes(e *echo.Echo, config config.Config) {
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
+	e.GET("/", okHandler)
 
-	usersGroup.GET("/status", okHandler)
-
-	usersGroup.GET("", users.GetUser)
-	usersGroup.POST("", users.CreateUser)
-
-	ordersGroup := apiV1.Group("/orders", middleware.FirebaseAuth(config.FirebaseConfig))
-
-	ordersGroup.POST("", orders.CreateOrder)
-	ordersGroup.GET("", orders.GetOrders)
+	setupAppRoutes(e, config)
+	setupIntegrationRoutes(e, config)
+	setupDashboardRoutes(e, config)
 }

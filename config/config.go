@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -27,13 +28,14 @@ type Auth0 struct {
 }
 
 type Config struct {
-	FirebaseConfig string
-	DatabaseUrl    string
-	RedisUrl       string
-	Timezone       *time.Location
-	Stripe         Stripe
-	Deliverect     Deliverect
-	Auth0          Auth0
+	FirebaseConfig   string
+	DatabaseUrl      string
+	RedisUrl         string
+	Timezone         *time.Location
+	Stripe           Stripe
+	Deliverect       Deliverect
+	Auth0            Auth0
+	AllowedAppBuilds []string
 }
 
 func mustGetEnv(env string) string {
@@ -44,6 +46,16 @@ func mustGetEnv(env string) string {
 	}
 
 	return val
+}
+
+func mustGetEnvArr(env string) []string {
+	val, exists := os.LookupEnv(env)
+
+	if !exists {
+		log.Fatalf("%s environment variable is not set", env)
+	}
+
+	return strings.Split(val, ",")
 }
 
 func LoadConfig() (Config, error) {
@@ -76,6 +88,7 @@ func LoadConfig() (Config, error) {
 			Authority: mustGetEnv("AUTH0_AUTHORITY"),
 			Audience:  mustGetEnv("AUTH0_AUDIENCE"),
 		},
+		AllowedAppBuilds: mustGetEnvArr("ALLOWED_APP_BUILDS"),
 	}
 
 	return config, nil

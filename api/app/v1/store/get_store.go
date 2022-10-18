@@ -23,7 +23,7 @@ import (
 // @Success      400  {object} 	error
 // @Success      404  {object} 	error
 // @Failure      500  {object}  error
-// @Router       /store/{id} [get]
+// @Router       /app/v1/store/{id} [get]
 func GetStore(c echo.Context) error {
 	var request dtos.GetStoreRequest
 	err := c.Bind(&request)

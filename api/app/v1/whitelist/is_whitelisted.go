@@ -3,8 +3,6 @@ package whitelist
 import (
 	"net/http"
 
-	"github.com/joelrose/crunch-merchant-service/db"
-	"github.com/joelrose/crunch-merchant-service/middleware"
 	"github.com/joelrose/crunch-merchant-service/models/dtos"
 	"github.com/labstack/echo/v4"
 )
@@ -15,12 +13,12 @@ import (
 // @Tags         whitelist
 // @Accept       json
 // @Produce      json
-// @Param request body WhitelistRequest true "body"
+// @Param request body dtos.WhitelistRequest true "body"
 // @Success      200  {object}  bool
 // @Failure      400  {object}  error
 // @Failure      404  {object}  error
 // @Failure      500  {object}  error
-// @Router       /whitelist [post]
+// @Router       /app/v1/whitelist [post]
 func IsWhitelisted(c echo.Context) error {
 	var request dtos.WhitelistRequest
 	err := c.Bind(&request)
@@ -32,8 +30,9 @@ func IsWhitelisted(c echo.Context) error {
 		return err
 	}
 
-	db := c.Get(middleware.DATABASE_CONTEXT_KEY).(db.DBInterface)
-	isWhitelisted := db.IsWhitelisted(request.Id)
+	//db := c.Get(middleware.DATABASE_CONTEXT_KEY).(db.DBInterface)
+	//isWhitelisted := db.IsWhitelisted(request.Id)
+	isWhitelisted := true
 
 	return c.JSON(http.StatusOK, isWhitelisted)
 }

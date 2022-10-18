@@ -1,7 +1,6 @@
 package orders
 
 import (
-	"math"
 	"net/http"
 
 	"firebase.google.com/go/auth"
@@ -35,7 +34,7 @@ const (
 // @Failure      401  {object}  error
 // @Failure      409  {object}  error
 // @Failure      500  {object}  error
-// @Router       /orders [post]
+// @Router       /app/v1/orders [post]
 func CreateOrder(c echo.Context) error {
 	db := c.Get(middleware.DATABASE_CONTEXT_KEY).(db.DBInterface)
 	token := c.Get(middleware.FIREBASE_CONTEXT_KEY).(*auth.Token)
@@ -99,9 +98,7 @@ func CreateOrder(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
-	time := utils.GetPickupTime(store.AveragePickupTime, config.Timezone)
-	// TODO: why do we need this?
-	orderFee := math.Round(float64(store.Fee)*100) / 100
+	time := utils.GetPickupTime(store.AveragePickupTime)
 	order := models.CreateOrder{
 		Status:              models.New,
 		EstimatedPickupTime: time,
@@ -110,7 +107,7 @@ func CreateOrder(c echo.Context) error {
 		IsPaid:              false,
 		StoreId:             orderRequest.StoreId,
 		UserId:              user.Id,
-		Fee:                 float32(orderFee),
+		Fee:                 fee,
 	}
 
 	orderDatabaseId, err := db.CreateOrder(order)

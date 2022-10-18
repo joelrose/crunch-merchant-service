@@ -1,4 +1,4 @@
-package webhook
+package stripe
 
 import (
 	"encoding/json"
@@ -16,7 +16,7 @@ import (
 	"github.com/stripe/stripe-go/v73/webhook"
 )
 
-func HandleStripe(c echo.Context) error {
+func WebhookHandler(c echo.Context) error {
 	request := c.Request()
 	payload, err := io.ReadAll(request.Body)
 	if err != nil {
@@ -87,12 +87,8 @@ func HandleStripe(c echo.Context) error {
 		amount := utils.CalculateOrderPrice(orderItemsDto)
 		orderId := order.Id.String()
 
-		time := utils.GetPickupTime(store.AveragePickupTime, config.Timezone)
-		pickupTimeString, err := time.MarshalText()
-		if err != nil {
-			log.Errorf("failed to get pickup time: %v", err)
-			return echo.NewHTTPError(http.StatusInternalServerError)
-		}
+		pickupTime := utils.GetPickupTime(store.AveragePickupTime)
+		pickupTimeString := pickupTime.Format(utils.DeliverectTimeFormat)
 
 		createOrderRequest := deliverect.CreateOrderRequest{
 			ChannelOrderId:        orderId,
@@ -112,6 +108,8 @@ func HandleStripe(c echo.Context) error {
 			PickupTime:          string(pickupTimeString),
 		}
 
+		log.Debugf("Sending order to Deliverect: %v\n", pickupTimeString)
+
 		deliverectService := c.Get(middleware.DELIVERECT_SERVICE_CONTEXT_KEY).(deliverect.DeliverectInterface)
 		err = deliverectService.CreateOrder(createOrderRequest, channel.DeliverectLinkId)
 		if err != nil {
@@ -120,8 +118,8 @@ func HandleStripe(c echo.Context) error {
 		}
 
 		return c.NoContent(http.StatusOK)
-	} else {
-		log.Errorf("Unhandled event type: %v\n", event.Type)
-		return echo.NewHTTPError(http.StatusBadRequest)
 	}
+
+	log.Errorf("Unhandled event type: %v\n", event.Type)
+	return echo.NewHTTPError(http.StatusBadRequest)
 }

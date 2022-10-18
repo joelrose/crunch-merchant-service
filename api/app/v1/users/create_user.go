@@ -23,7 +23,7 @@ import (
 // @Failure      401  {object}  error
 // @Failure      409  {object}  error
 // @Failure      500  {object}  error
-// @Router       /users [post]
+// @Router       /app/v1/users [post]
 func CreateUser(c echo.Context) error {
 	db := c.Get(middleware.DATABASE_CONTEXT_KEY).(db.DBInterface)
 	token := c.Get(middleware.FIREBASE_CONTEXT_KEY).(*auth.Token)
