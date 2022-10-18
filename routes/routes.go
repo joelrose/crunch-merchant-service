@@ -58,7 +58,7 @@ func setupIntegrationRoutes(e *echo.Echo, config config.Config) {
 }
 
 func setupDashboardRoutes(e *echo.Echo, config config.Config) {
-	dashboardGroup := e.Group("/dashboard/v1/")
+	dashboardGroup := e.Group("/dashboard/v1")
 
 	// TODO: only allow specific origins and methods
 	dashboardGroup.Use(defaultMiddleware.CORSWithConfig(defaultMiddleware.CORSConfig{
@@ -68,7 +68,6 @@ func setupDashboardRoutes(e *echo.Echo, config config.Config) {
 	}))
 
 	validator := middleware.NewValidator(config.Auth0.Audience, config.Auth0.Authority)
-
 	dashboardGroup.Use(validator.Middleware())
 
 	dashboardGroup.GET("/orders", dashboard.GetOrders)
